@@ -50,6 +50,7 @@ end
 
 group :production, :test do
   gem 'pg'
+  gem 'rails12factor'
 end
 
 group :development do
