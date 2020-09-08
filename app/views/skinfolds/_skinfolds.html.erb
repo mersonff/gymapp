@@ -112,18 +112,20 @@
                 <p> <%= skinfold.calf %> mm</p>
             </div>
           </div>
+          <% if Skinfold.exists? client_id: @client.id %>
             <div class="row">
-            <div class="col s3 offset-s3">
-              <p>
-                <label>
-                  Gordura Corporal: 
-                </label>
-              </p>
+              <div class="col s3 offset-s3">
+                <p>
+                  <label>
+                    Gordura Corporal: 
+                  </label>
+                </p>
+              </div>
+              <div class="col s3">
+                  <p> <%= @client.fat_percentage(skinfold.id) %> %</p>
+              </div>
             </div>
-            <div class="col s3">
-                <p> <%= @client.fat_percentage(skinfold.id) %> %</p>
-            </div>
-          </div>
+          <% end %>
         </div>
         <div class="modal-footer">
           <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
