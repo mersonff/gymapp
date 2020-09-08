@@ -120,9 +120,11 @@
                 </label>
               </p>
             </div>
-            <div class="col s3">
-                <p> <%= @client.fat_percentage(skinfold.id) %> %</p>
-            </div>
+            <%  if @client.skinfolds != nil %>
+              <div class="col s3">
+                <p> <%= @client.fat_percentage(skinfold.id) %> </p>
+              </div>
+            <% end %>
           </div>
         </div>
         <div class="modal-footer">

@@ -193,3 +193,34 @@ tab14 { padding-left: 56em; }
 tab15 { padding-left: 60em; }
 tab16 { padding-left: 64em; }
 
+input[type="text"] + label {
+    pointer-events: none;
+
+    * {
+        pointer-events: all;
+    }
+}
+
+input[type="number"] + label {
+    pointer-events: none;
+
+    * {
+        pointer-events: all;
+    }
+}
+
+input[type="password"] + label {
+    pointer-events: none;
+
+    * {
+        pointer-events: all;
+    }
+}
+
+textarea + label {
+    pointer-events: none;
+
+    * {
+        pointer-events: all;
+    }
+}

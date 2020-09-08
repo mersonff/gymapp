@@ -9,7 +9,7 @@
             <div class="row">
               <div class="input-field col s6 offset-s2">
                 <i class="material-icons prefix">account_box</i>
-                <%= f.text_field :name, class: "validate" %>
+                <%= f.text_field :name %>
                 <label for="name">Nome Completo</label>
               </div>
             </div>
@@ -72,59 +72,59 @@
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= m_f.number_field :height, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">ALTURA: </label>
+              <label for="height">ALTURA: </label>
               <span class="helper-text">Centímentros (Ex: 1.77m = 177cm)</span>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= m_f.number_field :weight, step: 0.1, class: "weight_mask"  %>
-              <label for="name">PESO: </label>
+              <label for="weight">PESO: </label>
               <span class="helper-text">Quilogramas</span>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= m_f.number_field :chest, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">TÓRAX: </label>
+              <label for="chest">TÓRAX: </label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= m_f.number_field :left_arm, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">BRAÇO (E): </label>
+              <label for="left_arm">BRAÇO (E): </label>
             </div>
             <div class="input-field col s3">
               <%= m_f.number_field :right_arm, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">BRAÇO (D): </label>
+              <label for="right_arm">BRAÇO (D): </label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= m_f.number_field :waist, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">CINTURA: </label>
+              <label for="waist">CINTURA: </label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= m_f.number_field :abdomen, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">ABDOMEN: </label>
+              <label for="abdomen">ABDOMEN: </label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= m_f.number_field :hips, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">QUADRIL: </label>
+              <label for="hips">QUADRIL: </label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= m_f.number_field :left_thigh, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">COXA (E): </label>
+              <label for="left_thigh">COXA (E): </label>
             </div>
             <div class="input-field col s3">
               <%= m_f.number_field :righ_thigh, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">COXA (D): </label>
+              <label for="righ_thigh">COXA (D): </label>
             </div>
           </div>
         <% end %>
@@ -142,47 +142,47 @@
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= sf_f.number_field :chest, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">PEITORAL: </label>
+              <label for="chest">PEITORAL: </label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= sf_f.number_field :midaxilary, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">AXILAR MÉDIA: </label>
+              <label for="midaxilary">AXILAR MÉDIA: </label>
             </div>
             <div class="input-field col s3">
               <%= sf_f.number_field :subscapular, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">SUBESCAPULAR: </label>
+              <label for="subscapular">SUBESCAPULAR: </label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= sf_f.number_field :bicep, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">BÍCEPS (D): </label>
+              <label for="bicep">BÍCEPS (D): </label>
             </div>
             <div class="input-field col s3">
               <%= sf_f.number_field :tricep, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">TRÍCEPS: </label>
+              <label for="tricep">TRÍCEPS: </label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= sf_f.number_field :abdominal, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">ABDOMINAL: </label>
+              <label for="abdominal">ABDOMINAL: </label>
             </div>
             <div class="input-field col s3">
               <%= sf_f.number_field :suprailiac, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">SUPRA-ILÍACA: </label>
+              <label for="suprailiac">SUPRA-ILÍACA: </label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s3 offset-s2">
               <%= sf_f.number_field :thigh, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">COXA: </label>
+              <label for="thigh">COXA: </label>
             </div>
             <div class="input-field col s3">
               <%= sf_f.number_field :calf, :onkeypress => "return isNumberKey(event)" %>
-              <label for="name">PANTURRILHA: </label>
+              <label for="calf">PANTURRILHA: </label>
             </div>
           </div>
         <% end %>
@@ -200,13 +200,13 @@
             <div class="row">
               <div class="input-field col s3 offset-s2">
                 <%= p_f.text_field :payment_date, class: "datepicker" %>          
-                <label for="name">Data da Matrícula: </label>
+                <label for="payment_date">Data da Matrícula: </label>
               </div>
             </div>
             <div class="row">
               <div class="input-field col s3 offset-s2">
                 <%= p_f.collection_select :value, current_user.plans, :value, :plan_string %>
-                <label>Valor: </label>
+                <label for="value">Valor: </label>
               </div>
             </div>
           <% end %>
