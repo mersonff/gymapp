@@ -1,0 +1,48 @@
+<header>
+  <ul id="dropdown1" class="dropdown-content black">
+    <li><%= link_to "Novo", new_client_path %></li>
+    <li><%= link_to "Renovar", indebts_path %></li>
+    <li><%= link_to "Listar", clients_path %></li>
+  </ul>
+  <ul id="dropdown2" class="dropdown-content black">
+    <% if logged_in? %>
+        <li><%= link_to "Editar perfil", edit_user_path(current_user) %></li>
+        <li><%= link_to "Ver Perfil", user_path(current_user) %></li>
+        <li><%= link_to "Log out", logout_path, method: :delete %></li>
+      <% else %>
+        <li><%= link_to "Log in", login_path %></li>
+        <li><%= link_to "Sign up", signup_path %></li>
+      <% end %>
+  </ul>
+  <ul id="dropdown3" class="dropdown-content black">
+    <li><a href="#!">one</a></li>
+    <li><a href="#!">two</a></li>
+    <li class="divider"></li>
+    <li><a href="#!">three</a></li>
+  </ul>
+  <ul id="dropdown4" class="dropdown-content black">
+    <li><a href="#!">one</a></li>
+    <li><a href="#!">two</a></li>
+    <li class="divider"></li>
+    <li><a href="#!">three</a></li>
+  </ul>
+  <nav class="nav black">
+    <div class="container">
+      <div class="nav-wrapper">
+          <a href="#" class="brand-logo right"><span class="tamanho-logo">GYMAPP</a>
+          <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+          <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <li><%= link_to "Início", root_path %></li>
+            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Clientes<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Seu Perfil <%= "(admin)" if current_user.admin? %><i class="material-icons right">arrow_drop_down</i></a></li>
+          </ul>
+          <ul class="sidenav" id="mobile-demo">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Clientes</a></li>
+            <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Clientes<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a class="dropdown-trigger" href="#!" data-target="dropdown4">Configurações<i class="material-icons right">arrow_drop_down</i></a></li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+</header>

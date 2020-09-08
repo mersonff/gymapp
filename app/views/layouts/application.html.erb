@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GymAPP</title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.css"/>
+  </head>
+  <body>
+    <% if logged_in? %>
+      <%= render 'layouts/navigation' %>
+    <% end %>
+    <%= render 'layouts/messages' %>
+    <main>
+      <div id="content" class="container">
+          <%= yield %>
+      </div>
+    </main>
+    <% if logged_in? %>
+      <%= render 'layouts/footer' %>
+    <% end %>
+  </body>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+  </style>
+</html>

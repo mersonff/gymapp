@@ -1,0 +1,134 @@
+<% @client.skinfolds.each do |skinfold| %>
+  <tr>
+    <td><%= skinfold.created_at.strftime("%d/%m/%Y") %></td>
+    <td>
+      <!-- Modal Trigger -->
+      <button data-target="skinfold_modal_<%= skinfold.id %>" data-toggle="modal" class="btn indigo modal-trigger tooltipped"
+        data-positon="bottom" data-tooltip="Vizualizar Dados"><i class="material-icons">folder</i></button>
+      <!-- Modal Structure -->
+      <div id="skinfold_modal_<%= skinfold.id %>"  class="modal">
+        <div class="modal-content">
+          <div class="row">
+            <h2><b>DOBRAS CUTÂNEAS</b></h2>
+          </div>
+          <div class="row">
+            <h3>
+              <label>
+                Data da Coleta:                         
+              </label>
+              <%= skinfold.created_at.strftime("%d/%m/%Y") %>
+            </h3>
+          </div>
+          <hr class="modal-hr">
+          <div class="row">
+            <div class="col s2 offset-s2">
+              <p>
+                <label>
+                  Peitoral: 
+                </label>
+              </p>
+            </div>
+            <div class="col s2">
+                <p> <%= skinfold.chest %> mm</p>
+            </div>
+            
+            <div class="col s2">
+              <p>
+                <label>
+                  Axilar Média: 
+                </label>
+              </p>
+            </div>
+            <div class="col s2">
+                <p> <%= skinfold.midaxilary %> mm</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s2 offset-s2">
+              <p>
+                <label>
+                  Subescapular: 
+                </label>
+              </p>
+            </div>
+            <div class="col s2">
+                <p> <%= skinfold.subscapular %> mm</p>
+            </div>
+            
+            <div class="col s2">
+              <p>
+                <label>
+                  Biciptal: 
+                </label>
+              </p>
+            </div>
+            <div class="col s2">
+                <p> <%= skinfold.bicep %> mm</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s2 offset-s2">
+              <p>
+                <label>
+                  Tricipital: 
+                </label>
+              </p>
+            </div>
+            <div class="col s2">
+                <p> <%= skinfold.tricep %> mm</p>
+            </div>
+            
+            <div class="col s2">
+              <p>
+                <label>
+                  Abdominal: 
+                </label>
+              </p>
+            </div>
+            <div class="col s2">
+                <p> <%= skinfold.abdominal %> mm</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s2 offset-s2">
+              <p>
+                <label>
+                  Coxa: 
+                </label>
+              </p>
+            </div>
+            <div class="col s2">
+                <p> <%= skinfold.thigh %> mm</p>
+            </div>
+            
+            <div class="col s2">
+              <p>
+                <label>
+                  Panturrilha: 
+                </label>
+              </p>
+            </div>
+            <div class="col s2">
+                <p> <%= skinfold.calf %> mm</p>
+            </div>
+          </div>
+            <div class="row">
+            <div class="col s3 offset-s3">
+              <p>
+                <label>
+                  Gordura Corporal: 
+                </label>
+              </p>
+            </div>
+            <div class="col s3">
+                <p> <%= @client.fat_percentage(skinfold.id) %> %</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+        </div>
+      </div>
+    </td>
+  </tr>
+<% end %>

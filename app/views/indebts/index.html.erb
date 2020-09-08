@@ -1,0 +1,73 @@
+<h1 align="center">Clientes em Atraso</h1>
+
+<div align="center">
+  <div class="row">
+    <div class="col s12">
+      <table id="clients_table" class="stripe centered">
+        <thead>
+          <tr>
+              <th>#ID</th>
+              <th>Nome</th>
+              <th>Celular</th>
+              <th>Vencido há</th>
+              <th>Açõces</th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @clients_indebt.each do |client| %>
+          <tr>
+            <td><%= client.id %></td>
+            <td><%= client.name %></td>
+            <td><%= client.cellphone %></td>
+            <td class="red-text"><%= (Date.today - @day_of_payment).round(1).to_i %> Dias</td>
+            <td>
+              <%= link_to new_client_payment_path(client), :class => "waves-effect waves-light indigo btn tooltipped", 
+                data: { position: "bottom", tooltip: "Renovar" } do %>
+                <i class="material-icons">account_box</i>
+              <% end %>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready( function () {
+    $('#clients_table').DataTable({
+      language: {
+				processing: 'Processando...',
+				search: 'Procurar',
+				lengthMenu: 'Mostrando _MENU_ registros',
+				info: 'Mostrando página _PAGE_ 	de _PAGES_',
+				infoEmpty: 'Nenhum registro para mostrar',
+				infoFiltered: '(filtrado do total de _MAX_ registro(s))',
+				infoPostFix: "",
+				loadingRecords: 'Por favor espere - carregando...',
+				zeroRecords: 'Nenhum registro com esse dado encontrado',
+				emptyTable: 'Nenhum dado disponível na tabela',
+				paginate: {
+					first: 'Primeira página',
+					last: 'Última página',
+					next: 'Próx',
+					previous: 'Ant'
+				},
+				aria: {
+					sortAscending: 'Ative para ordernar a tabela de forma ascendente',
+					sortDescending: 'Ative para ordernar a tabela de forma descendente'
+				}
+			},
+			"search": {
+        "caseInsensitive": false
+      },
+    });
+  });
+  
+  $(document).ready(function(){
+    $('.tooltipped').tooltip();
+  });
+  
+
+</script>

@@ -1,0 +1,79 @@
+<h1 align="center">Clientes Cadastrados</h1>
+
+<div align="center">
+  <div class="row">
+    <div class="col s12">
+      <table id="clients_table" class="stripe centered">
+        <thead>
+          <tr>
+              <th>#ID</th>
+              <th>Nome</th>
+              <th>Celular</th>
+              <th>Açõces</th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @clients.each do |client| %>
+          <tr>
+            <td><%= client.id %></td>
+            <td><%= client.name %></td>
+            <td><%= client.cellphone %></td>
+            <td>
+              <%= link_to client_path(client), :class => "waves-effect waves-light indigo btn tooltipped", 
+                data: { position: "bottom", tooltip: "Vizualizar Informações" } do %>
+                <i class="material-icons">account_box</i>
+              <% end %>
+              <%= link_to edit_client_path(client), :class => "waves-effect waves-light amber btn tooltipped", 
+                data: { position: "bottom", tooltip: "Editar" } do %>
+                <i class="material-icons">edit</i>
+              <% end %>
+              <%= link_to client_path(client), method: :delete, data: { confirm: "", position: "bottom", tooltip: "Excluir" }, 
+                :class => "waves-effect waves-light red btn tooltipped" do %>
+                <i class="material-icons">delete</i>
+              <% end %>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready( function () {
+    $('#clients_table').DataTable({
+      language: {
+				processing: 'Processando...',
+				search: 'Procurar',
+				lengthMenu: 'Mostrando _MENU_ registros',
+				info: 'Mostrando página _PAGE_ 	de _PAGES_',
+				infoEmpty: 'Nenhum registro para mostrar',
+				infoFiltered: '(filtrado do total de _MAX_ registro(s))',
+				infoPostFix: "",
+				loadingRecords: 'Por favor espere - carregando...',
+				zeroRecords: 'Nenhum registro com esse dado encontrado',
+				emptyTable: 'Nenhum dado disponível na tabela',
+				paginate: {
+					first: 'Primeira página',
+					last: 'Última página',
+					next: 'Próx',
+					previous: 'Ant'
+				},
+				aria: {
+					sortAscending: 'Ative para ordernar a tabela de forma ascendente',
+					sortDescending: 'Ative para ordernar a tabela de forma descendente'
+				}
+			},
+			"search": {
+        "caseInsensitive": false
+      },
+    });
+  });
+  
+  $(document).ready(function(){
+    $('.tooltipped').tooltip();
+  });
+  
+
+</script>

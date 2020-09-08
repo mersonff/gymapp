@@ -1,0 +1,252 @@
+
+<h1 align="center"><%= @client.name %></h1>
+<hr>
+
+<div class="row">
+  <div class="col s12">
+    <ul class="tabs">
+      <li class="tab col s3"><a href="#test1">Informações Pessoais</a></li>
+      <li class="tab col s3"><a href="#test2">Histórico de Pagamentos</a></li>
+      <li class="tab col s3"><a href="#test3">Perimetrias</a></li>
+      <li class="tab col s3"><a href="#test4">Dobras Cutâneas</a></li>
+    </ul>
+  </div>
+  <div id="test1" class="col s12">
+    <div class="user-show-page">
+      <div class="col s12">
+        <div class="row">
+          <div class="col s6 right-align">
+            <p>
+              <label>
+                Data de Nascimento:
+              </label>
+            </p>
+          </div>
+          <div class="col s6">
+              <p><%= @client.birthdate.strftime("%d/%m/%Y") %></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s6 right-align">
+            <p>
+              <label>
+                Idade:
+              </label>
+            </p>
+          </div>
+          <div class="col s6">
+              <p><%= ((Time.zone.now - @client.birthdate.to_time) / 1.year.seconds).floor %> </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s6 right-align">
+            <p>
+              <label>
+                Endereço: 
+              </label>
+            </p>
+          </div>
+          <div class="col s6">
+              <p><%= @client.address %></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s6 right-align">
+            <p>
+              <label>
+                Celular:
+              </label>
+            </p>
+          </div>
+          <div class="col s6">
+              <p><%= @client.cellphone %></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s6 right-align">
+            <p>
+              <label>
+                Gênero:
+              </label>
+            </p>
+          </div>
+          <div class="col s6">
+              <p><%= @client.gender %></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s6 right-align">
+            <p>
+              <label class="red-text">
+                Próximo Vencimento:
+              </label>
+            </p>
+          </div>
+          <div class="col s6">
+              <p><%= @day_of_payment.strftime("%d/%m/%Y") %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="test2" class="col s12">
+    <div class="user-show-page">
+      <div class="col s8 offset-s2">
+        <table class="centered striped" id="payments_table">
+          <thead>
+            <tr>
+                <th>Data</th>
+                <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @client.payments.each do |payment| %>
+              <tr>
+                <td><%= payment.payment_date.strftime("%d/%m/%Y") %></td>
+                <td><%= number_to_currency(payment.value, unit: "R$ ", separator: ",", delimiter: "") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="test3" class="col s12">
+    <div class="user-show-page">
+      <div class="col s8 offset-s2">
+        <table class="centered striped" id="measurements_table">
+          <thead>
+            <tr>
+                <th>Data</th>
+                <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= render 'measurements/measurements' %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="test4" class="col s12">
+    <div class="user-show-page">
+      <div class="col s8 offset-s2">
+        <table class="centered striped" id="skinfolds_table">
+          <thead>
+            <tr>
+                <th>Data</th>
+                <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= render 'skinfolds/skinfolds' %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  
+  $(document).ready(function(){
+    $('.tabs').tabs();
+    
+    $("#payments_table").DataTable({
+      language: {
+				processing: 'Processando...',
+				search: 'Procurar',
+				lengthMenu: 'Mostrando _MENU_ registros',
+				info: 'Mostrando página _PAGE_ 	de _PAGES_',
+				infoEmpty: 'Nenhum registro para mostrar',
+				infoFiltered: '(filtrado do total de _MAX_ registro(s))',
+				infoPostFix: "",
+				loadingRecords: 'Por favor espere - carregando...',
+				zeroRecords: 'Nenhum registro com esse dado encontrado',
+				emptyTable: 'Nenhum dado disponível na tabela',
+				paginate: {
+					first: 'Primeira página',
+					last: 'Última página',
+					next: 'Próx',
+					previous: 'Ant'
+				},
+				aria: {
+					sortAscending: 'Ative para ordernar a tabela de forma ascendente',
+					sortDescending: 'Ative para ordernar a tabela de forma descendente'
+				}
+			},
+      "searching": false,
+      "order": [0, 'desc'],
+      columnDefs: [
+       { type: 'date-euro', targets: 0 }
+      ]
+    });
+    
+    $("#measurements_table").DataTable({
+      language: {
+				processing: 'Processando...',
+				search: 'Procurar',
+				lengthMenu: 'Mostrando _MENU_ registros',
+				info: 'Mostrando página _PAGE_ 	de _PAGES_',
+				infoEmpty: 'Nenhum registro para mostrar',
+				infoFiltered: '(filtrado do total de _MAX_ registro(s))',
+				infoPostFix: "",
+				loadingRecords: 'Por favor espere - carregando...',
+				zeroRecords: 'Nenhum registro com esse dado encontrado',
+				emptyTable: 'Nenhum dado disponível na tabela',
+				paginate: {
+					first: 'Primeira página',
+					last: 'Última página',
+					next: 'Próx',
+					previous: 'Ant'
+				},
+				aria: {
+					sortAscending: 'Ative para ordernar a tabela de forma ascendente',
+					sortDescending: 'Ative para ordernar a tabela de forma descendente'
+				}
+			},
+      "searching": false,
+      "order": [0, 'desc'],
+      columnDefs: [
+       { type: 'date-euro', targets: 0 }
+      ]
+    });
+    
+    $("#skinfolds_table").DataTable({
+      language: {
+				processing: 'Processando...',
+				search: 'Procurar',
+				lengthMenu: 'Mostrando _MENU_ registros',
+				info: 'Mostrando página _PAGE_ 	de _PAGES_',
+				infoEmpty: 'Nenhum registro para mostrar',
+				infoFiltered: '(filtrado do total de _MAX_ registro(s))',
+				infoPostFix: "",
+				loadingRecords: 'Por favor espere - carregando...',
+				zeroRecords: 'Nenhum registro com esse dado encontrado',
+				emptyTable: 'Nenhum dado disponível na tabela',
+				paginate: {
+					first: 'Primeira página',
+					last: 'Última página',
+					next: 'Próx',
+					previous: 'Ant'
+				},
+				aria: {
+					sortAscending: 'Ative para ordernar a tabela de forma ascendente',
+					sortDescending: 'Ative para ordernar a tabela de forma descendente'
+				}
+			},
+      "searching": false,
+      "order": [0, 'desc'],
+      columnDefs: [
+       { type: 'date-euro', targets: 0 }
+      ]
+    });
+  });
+  
+  $(document).ready(function(){
+    $('.tooltipped').tooltip();
+  });
+  
+  
+</script>
+

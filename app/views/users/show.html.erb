@@ -1,0 +1,88 @@
+
+<h1 align="center">Academia <%= @user.business_name %></h1>
+
+<div class="user-show-page">
+  <div class="col s12">
+    <div class="row">
+      <div class="col s6 right-align">
+        <p>
+          <label>
+            Nome de Usuário: 
+          </label>
+        </p>
+      </div>
+      <div class="col s6">
+          <p><%= @user.username %></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s6 right-align">
+        <p>
+          <label>
+            Nome Fantasia: 
+          </label>
+        </p>
+      </div>
+      <div class="col s6">
+          <p><%= @user.business_name %></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s6 right-align">
+        <p>
+          <label>
+            Email:
+          </label>
+        </p>
+      </div>
+      <div class="col s6">
+          <p><%= @user.email %></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s8 offset-s2 center-align plan-line">
+        <p>
+          <label>
+            Planos 
+          </label>
+        </p>
+        <p><hr></p>
+      </div>
+      <div class="col s8 offset-s2 center-align">
+        <table class="striped centered">
+          <thead>
+              <tr>
+                  <th>#ID</th>
+                  <th>Descrição</th>
+                  <th>Valor</th>
+                  <th>Atualizado em</th>
+                  <th>Ações</th>
+              </tr>
+          </thead>
+          <tbody>
+            <% @user_plans.each do |plan| %>
+              <tr>
+                <td><%= plan.id %></td>
+                <td><%= plan.description %></td>
+                <td><%= number_to_currency(plan.value, unit: "R$ ", separator: ",", delimiter: "")%></td>
+                <td><%= plan.updated_at.to_s(:br_data) %></td>
+                <td>
+                  <%= link_to edit_plan_path(plan), :class => "waves-effect waves-light amber btn" do %>
+                    <i class="material-icons">edit</i>
+                  <% end %>
+                  <%= link_to plan_path(plan), method: :delete, data: {confirm: ""}, :class => "waves-effect waves-light red btn" do %>
+                    <i class="material-icons">delete</i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <p>
+          <%= link_to 'Adicionar Plano', new_plan_path, :class  =>"waves-effect waves-light btn" %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+

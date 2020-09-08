@@ -1,0 +1,57 @@
+<h1 align="center">Renovar Matrícula de:</h1>
+<h2 align="center"><%= @client.name %></h2>
+
+<div class="row">
+  <div class="col s12">
+    <%= form_with(model: [@client, @payment], local: true) do |form| %>
+      <div class="row">
+        <div class="input-field col s4 offset-s4">
+          <%= form.text_field :payment_date, class: "datepicker" %>          
+          <label for="name">Data da Renovação: </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s4 offset-s4">
+          <%= form.collection_select :value, current_user.plans, :value, :plan_string %>
+          <label>Plano: </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s4 offset-s4 center-align">
+          <%= form.submit "Salvar", class: "waves-effect waves-light btn" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $('select').formSelect();
+  });
+  
+  $(document).ready(function(){
+    $('.datepicker').datepicker({
+      i18n: {
+        months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabádo'],
+        weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+        weekdaysAbbrev: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+        today: 'Hoje',
+        clear: 'Limpar',
+        cancel: 'Sair',
+        done: 'Confirmar',
+        labelMonthNext: 'Próximo mês',
+        labelMonthPrev: 'Mês anterior',
+        labelMonthSelect: 'Selecione um mês',
+        labelYearSelect: 'Selecione um ano',
+        selectMonths: true,
+        selectYears: 15,
+      },
+      format: 'dd/mm/yyyy',
+      container: 'body',
+      yearRange: [1940, 2040]
+    });
+  });
+</script>
