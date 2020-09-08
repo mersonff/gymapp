@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_02_200826) do
+ActiveRecord::Schema.define(version: 2020_09_08_195528) do
 
   create_table "clients", force: :cascade do |t|
     t.string "name"
@@ -25,19 +25,19 @@ ActiveRecord::Schema.define(version: 2020_09_02_200826) do
   end
 
   create_table "measurements", force: :cascade do |t|
-    t.integer "height"
-    t.integer "chest"
-    t.integer "left_arm"
-    t.integer "right_arm"
-    t.integer "waist"
-    t.integer "abdomen"
-    t.integer "hips"
-    t.integer "left_thigh"
-    t.integer "righ_thigh"
+    t.integer "height", default: 0
+    t.integer "chest", default: 0
+    t.integer "left_arm", default: 0
+    t.integer "right_arm", default: 0
+    t.integer "waist", default: 0
+    t.integer "abdomen", default: 0
+    t.integer "hips", default: 0
+    t.integer "left_thigh", default: 0
+    t.integer "righ_thigh", default: 0
     t.integer "client_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal "weight"
+    t.integer "weight", default: 0
   end
 
   create_table "payments", force: :cascade do |t|
@@ -57,16 +57,16 @@ ActiveRecord::Schema.define(version: 2020_09_02_200826) do
   end
 
   create_table "skinfolds", force: :cascade do |t|
-    t.integer "chest"
-    t.integer "midaxilary"
-    t.integer "subscapular"
-    t.integer "bicep"
-    t.integer "tricep"
-    t.integer "lower_back"
-    t.integer "abdominal"
-    t.integer "suprailiac"
-    t.integer "thigh"
-    t.integer "calf"
+    t.integer "chest", default: 0
+    t.integer "midaxilary", default: 0
+    t.integer "subscapular", default: 0
+    t.integer "bicep", default: 0
+    t.integer "tricep", default: 0
+    t.integer "lower_back", default: 0
+    t.integer "abdominal", default: 0
+    t.integer "suprailiac", default: 0
+    t.integer "thigh", default: 0
+    t.integer "calf", default: 0
     t.integer "client_id"
     t.datetime "created_at"
     t.datetime "updated_at"

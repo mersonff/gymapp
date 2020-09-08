@@ -18,13 +18,13 @@ class Client < ApplicationRecord
   def fat_percentage(skinfold_id)
     skinfold = Skinfold.find(skinfold_id)
     
-    total = skinfold.chest + 
-            skinfold.midaxilary +
-            skinfold.subscapular +
-            skinfold.tricep +
-            skinfold.abdominal +
-            skinfold.suprailiac +
-            skinfold.thigh 
+    total = skinfold.chest.to_i + 
+            skinfold.midaxilary.to_i +
+            skinfold.subscapular.to_i + 0 +
+            skinfold.tricep.to_i +
+            skinfold.abdominal.to_i +
+            skinfold.suprailiac.to_i +
+            skinfold.thigh.to_i 
     
     age = ((Time.zone.now - self.birthdate.to_time) / 1.year.seconds).floor 
     
