@@ -16,29 +16,33 @@ class Client < ApplicationRecord
   
   
   def fat_percentage(skinfold_id)
-    skinfold = Skinfold.find(skinfold_id)
-    
-    total = skinfold.chest + 
-            skinfold.midaxilary +
-            skinfold.subscapular +
-            skinfold.tricep +
-            skinfold.abdominal +
-            skinfold.suprailiac +
-            skinfold.thigh 
-    
-    age = ((Time.zone.now - self.birthdate.to_time) / 1.year.seconds).floor 
-    
-    client = Client.find(skinfold.client_id)
-    
-    if client.gender == "Masculino"
-      body_density = 1.112 - ( 0.00043499 * total ) + (0.00000055 * (total * total)) - (0.00028826 * age)
+    if self.skinfolds.any? 
+      skinfold = Skinfold.find(skinfold_id)
+      
+      total = skinfold.chest + 
+              skinfold.midaxilary +
+              skinfold.subscapular +
+              skinfold.tricep +
+              skinfold.abdominal +
+              skinfold.suprailiac +
+              skinfold.thigh 
+      
+      age = ((Time.zone.now - self.birthdate.to_time) / 1.year.seconds).floor 
+      
+      client = Client.find(skinfold.client_id)
+      
+      if client.gender == "Masculino"
+        body_density = 1.112 - ( 0.00043499 * total ) + (0.00000055 * (total * total)) - (0.00028826 * age)
+      else
+        body_density = 1.097 - ( 0.00046971 * total ) + (0.00000056 * (total * total)) - (0.00012828 * age)
+      end
+      
+      body_fat = (495 / body_density) - 450
+  
+      return body_fat.round(1)
     else
-      body_density = 1.097 - ( 0.00046971 * total ) + (0.00000056 * (total * total)) - (0.00012828 * age)
+      return 0
     end
-    
-    body_fat = (495 / body_density) - 450
-
-    return body_fat.round(1)
   end
   
 end
