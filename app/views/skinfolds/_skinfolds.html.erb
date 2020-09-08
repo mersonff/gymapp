@@ -120,7 +120,7 @@
                 </label>
               </p>
             </div>
-            <%  if @client.skinfolds != nil %>
+            <%  if !@client.skinfolds.empty? %>
               <div class="col s3">
                 <p> <%= @client.fat_percentage(skinfold.id) %> </p>
               </div>
