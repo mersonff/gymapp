@@ -112,7 +112,7 @@
                 <p> <%= skinfold.calf %> mm</p>
             </div>
           </div>
-          <% if Skinfold.exists? client_id: @client.id %>
+          <% if @client.skinfolds.exists? client_id: @client.id %>
             <div class="row">
               <div class="col s3 offset-s3">
                 <p>
