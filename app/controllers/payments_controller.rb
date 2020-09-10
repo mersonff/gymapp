@@ -10,6 +10,12 @@ class PaymentsController < ApplicationController
   
   def new
     @payment = @client.payments.build
+    client = Client.find(@client.id)
+    if client.payments.last.payment_date + 1.month <= Date.today
+      @start_date = Date.today
+    else
+      @start_date = client.payments.last.payment_date + 1.month
+    end
   end
   
   def edit

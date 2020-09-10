@@ -84,6 +84,8 @@
           </div>
           <div class="col s6">
               <p><%= @day_of_payment.strftime("%d/%m/%Y") %></p>
+              <%= link_to "Antecipar", new_client_payment_path(@client), :class => "waves-effect waves-light green darken-1 btn tooltipped", 
+                data: { position: "bottom", tooltip: "Antecipar pagamento" } %>
           </div>
         </div>
       </div>

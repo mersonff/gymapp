@@ -9,9 +9,11 @@ class IndebtsController < ApplicationController
   
   def index
     @clients_indebt = Array.new
+    @clients_indebt_next = Array.new
+
     @clients = current_user.clients
     @clients.each do |client|
-      if client.payments.last.payment_date + 1.month < Date.today
+      if client.payments.last.payment_date + 1.month <= Date.today
         @clients_indebt << client
       end
     end

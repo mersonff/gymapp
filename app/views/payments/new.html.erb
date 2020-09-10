@@ -5,13 +5,13 @@
   <div class="col s12">
     <%= form_with(model: [@client, @payment], local: true) do |form| %>
       <div class="row">
-        <div class="input-field col s4 offset-s4">
+        <div class="input-field col s6 offset-s3">
           <%= form.text_field :payment_date, class: "datepicker" %>          
           <label for="name">Data da Renovação: </label>
         </div>
       </div>
       <div class="row">
-        <div class="input-field col s4 offset-s4">
+        <div class="input-field col s6 offset-s3">
           <%= form.collection_select :value, current_user.plans, :value, :plan_string %>
           <label for="value">Plano: </label>
         </div>
@@ -51,7 +51,9 @@
       },
       format: 'dd/mm/yyyy',
       container: 'body',
-      yearRange: [1940, 2040]
+      yearRange: [1940, 2040],
+      defaultDate: new Date(<%= @start_date.strftime("%Y, %m-1, %d") %>),
+      setDefaultDate: true
     });
   });
 </script>
