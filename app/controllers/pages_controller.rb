@@ -8,7 +8,7 @@ class PagesController < ApplicationController
       @clients = current_user.clients
       @clients.each do |client|
         @day_of_payment = client.payments.last.payment_date + 1.month
-        if (client.payments.last.payment_date + 1.month) < Date.current
+        if (client.payments.last.payment_date + 1.month) <= Date.current
           @clients_indebt << client
         end
       end
