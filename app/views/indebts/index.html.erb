@@ -22,7 +22,7 @@
           <% @clients_indebt.each do |client| %>
           <tr>
             <td><%= client.id %></td>
-            <td><%= client.name %></td>
+            <td><%= client.name.upcase %></td>
             <td><%= client.cellphone %></td>
             <td class="red-text"><%= client.days_in_debt %> Dias</td>
             <td>

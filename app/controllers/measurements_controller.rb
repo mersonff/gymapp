@@ -18,7 +18,7 @@ class MeasurementsController < ApplicationController
   def create
     @measurement = @client.measurements.build(measurement_params)
     if @measurement.save
-      flash[:success] = "Measurement was created successfully"
+      flash[:success] = "Perimetria criada com sucesso"
       redirect_to client_path(@client)
     else
       render 'new'
@@ -27,7 +27,7 @@ class MeasurementsController < ApplicationController
   
   def update
     if @measurement.update(measurement_params)
-      flash[:success] = "Measurement was successfully updated"
+      flash[:success] = "Perimetria atualizada com sucesso"
       redirect_to client_path(@client)
     else
       render 'edit'
@@ -39,7 +39,7 @@ class MeasurementsController < ApplicationController
   
   def destroy
     @measurement.destroy
-    flash[:danger] = "Measurement was successfully deleted"
+    flash[:danger] = "Perimetria deletada com sucesso"
     redirect_to client_path(@client)
   end
   
@@ -60,8 +60,8 @@ class MeasurementsController < ApplicationController
 
   def require_same_user
     if current_user != @measurement.client.user && !current_user.admin?
-      flash[:danger] = "You can only edit or delete your own Measurement"
-      redirect_to root_path
+      flash[:danger] = "Você não possui acesso a esse dado"
+      redirect_to home_path
     end
   end
 end

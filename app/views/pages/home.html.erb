@@ -4,12 +4,13 @@
 
 <script>
     Chartkick.configure({language: "pt-BR"})
+    
 </script>
 
 <br/>
 <div class="row">
   <div class="col s6">
-    <%= line_chart @clients.group_by_month(:created_at).count, title: "Novos clientes x Mês" %>
+    <%= line_chart @clients.group_by_month(:created_at, format: "%b %y").count, title: "Novos clientes x Mês"%>
   </div>
   <div class="col s6">
    <%= pie_chart @clients.group(:gender).count, title: "Clientes x Gênero" %>

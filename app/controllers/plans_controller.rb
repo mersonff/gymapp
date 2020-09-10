@@ -18,7 +18,7 @@ class PlansController < ApplicationController
     @plan = Plan.new(plan_params)
     @plan.user = current_user
     if @plan.save
-      flash[:success] = "Plan was created successfully"
+      flash[:success] = "Plano criado com sucesso"
       redirect_to user_path(current_user)
     else
       render 'new'
@@ -27,7 +27,7 @@ class PlansController < ApplicationController
   
   def update
     if @plan.update(plan_params)
-      flash[:success] = "Plan was successfully updated"
+      flash[:success] = "Plano atualizado com sucesso"
       redirect_to user_path(current_user)
     else
       render 'edit'
@@ -39,7 +39,7 @@ class PlansController < ApplicationController
   
   def destroy
     @plan.destroy
-    flash[:danger] = "Plan was successfully deleted"
+    flash[:danger] = "Plano deletado com sucesso"
     redirect_to user_path(current_user)
   end
   
@@ -55,7 +55,7 @@ class PlansController < ApplicationController
 
   def require_same_user
     if current_user != @plan.user && !current_user.admin?
-      flash[:danger] = "You can only edit or delete your own Plan"
+      flash[:danger] = "Você não possui acesso a esse dado"
       redirect_to root_path
     end
   end

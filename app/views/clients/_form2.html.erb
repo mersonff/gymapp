@@ -29,29 +29,21 @@
       </div>
     </div>
     <div class="row">
-      <p class="col s2 offset-s2">
-        <b>Gênero: </b>
+      <div class="col s2 offset-s2">
+        <h5>Gênero: </h5>
         <p>
           <label>
             <%= f.radio_button :gender, 'Masculino', :checked => 'checked', class: "with-gap" %>
             <span>Masculino</span> 
           </label>
+        </p>
+        <p>
           <label>
             <%= f.radio_button :gender, 'Feminino', class: "with-gap" %>
             <span>Feminino</span> 
           </label>
         </p>
-        <p>
-          <label>
-            <%= f.radio_button :gender, 'Não revelado', class: "with-gap" %>
-            <span>Não revelado</span> 
-          </label>
-          <label>
-            <%= f.radio_button :gender, 'Outro', class: "with-gap" %>
-            <span>Outro</span> 
-          </label>
-        </p>
-      </p>
+      </div>
     </div>
     <div class="row">
       <div class="input-field col s6 offset-s2">

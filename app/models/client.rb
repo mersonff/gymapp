@@ -26,7 +26,7 @@ class Client < ApplicationRecord
             skinfold.suprailiac.to_i +
             skinfold.thigh.to_i
     
-    age = ((Time.zone.now - self.birthdate.to_time) / 1.year.seconds).floor 
+    age = ((Time.current - self.birthdate.to_time) / 1.year.seconds).floor 
     
     client = Client.find(skinfold.client_id)
     
@@ -43,7 +43,7 @@ class Client < ApplicationRecord
   
   def days_in_debt
     next_payment_date = self.payments.last.payment_date + 1.month
-    days_in_debt = Date.today - next_payment_date
+    days_in_debt = Date.current - next_payment_date
     return days_in_debt.to_i
   end
   

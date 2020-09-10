@@ -13,7 +13,7 @@ class IndebtsController < ApplicationController
 
     @clients = current_user.clients
     @clients.each do |client|
-      if client.payments.last.payment_date + 1.month <= Date.today
+      if client.payments.last.payment_date + 1.month <= Date.current
         @clients_indebt << client
       end
     end
@@ -27,8 +27,8 @@ class IndebtsController < ApplicationController
   
   def require_same_user
     if current_user != @client.user && !current_user.admin?
-      flash[:danger] = "You can only edit or delete your own Client"
-      redirect_to root_path
+      flash[:danger] = "Você não possui acesso a esse cliente"
+      redirect_to home_path
     end
   end
 end

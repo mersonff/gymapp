@@ -22,7 +22,7 @@ class ClientsController < ApplicationController
     @client = Client.new(client_params)
     @client.user = current_user
     if @client.save
-      flash[:success] = "Client was created successfully"
+      flash[:success] = "Cliente criado com sucesso"
       redirect_to client_path(@client)
     else
       render 'new'
@@ -31,7 +31,7 @@ class ClientsController < ApplicationController
 
   def update
     if @client.update(client_params)
-      flash[:success] = "Plan was successfully updated"
+      flash[:success] = "Cliente atualizado com sucesso"
       redirect_to client_path(@client)
     else
       render 'edit'
@@ -48,7 +48,7 @@ class ClientsController < ApplicationController
 
   def destroy
     @client.destroy
-    flash[:danger] = "Client was successfully deleted"
+    flash[:danger] = "Cliente deletado com sucesso"
     redirect_to clients_path
   end
 
@@ -67,8 +67,8 @@ class ClientsController < ApplicationController
 
   def require_same_user
     if current_user != @client.user && !current_user.admin?
-      flash[:danger] = "You can only edit or delete your own Client"
-      redirect_to root_path
+      flash[:danger] = "Você não possui acesso a esse dado"
+      redirect_to home_path
     end
   end
 end

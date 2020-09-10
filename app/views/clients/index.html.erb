@@ -21,7 +21,7 @@
           <% @clients.each do |client| %>
           <tr>
             <td><%= client.id %></td>
-            <td><%= client.name %></td>
+            <td><%= client.name.upcase %></td>
             <td><%= client.cellphone %></td>
             <td>
               <%= link_to client_path(client), :class => "waves-effect waves-light indigo btn tooltipped", 

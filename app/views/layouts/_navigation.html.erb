@@ -35,12 +35,12 @@
           <a href="#" class="brand-logo right"><span class="tamanho-logo">GYMAPP</a>
           <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
           <ul id="nav-mobile" class="left hide-on-med-and-down">
-            <li><%= link_to "Início", root_path %></li>
+            <li><%= link_to "Início", home_path %></li>
             <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Clientes<i class="material-icons right">arrow_drop_down</i></a></li>
             <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Seu Perfil <%= "(admin)" if current_user.admin? %><i class="material-icons right">arrow_drop_down</i></a></li>
           </ul>
           <ul class="sidenav" id="mobile-demo">
-            <li><%= link_to "Início", root_path %></li>
+            <li><%= link_to "Início", home_path %></li>
             <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Clientes<i class="material-icons right">arrow_drop_down</i></a></li>
             <li><a class="dropdown-trigger" href="#!" data-target="dropdown4">Seu Perfil <%= "(admin)" if current_user.admin? %><i class="material-icons right">arrow_drop_down</i></a></li>
           </ul>

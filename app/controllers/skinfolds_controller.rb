@@ -18,7 +18,7 @@ class SkinfoldsController < ApplicationController
   def create
     @skinfold = @client.skinfolds.build(skinfold_params)
     if @skinfold.save
-      flash[:success] = "Skinfold was created successfully"
+      flash[:success] = "Adipometria criada com sucesso"
       redirect_to client_path(@client)
     else
       render 'new'
@@ -27,7 +27,7 @@ class SkinfoldsController < ApplicationController
   
   def update
     if @skinfold.update(skinfold_params)
-      flash[:success] = "Skinfold was successfully updated"
+      flash[:success] = "Adipometria atualizada com sucesso"
       redirect_to client_path(@client)
     else
       render 'edit'
@@ -39,7 +39,7 @@ class SkinfoldsController < ApplicationController
   
   def destroy
     @skinfold.destroy
-    flash[:danger] = "Skinfold was successfully deleted"
+    flash[:danger] = "Adipometria deletada com sucesso"
     redirect_to client_path(@client)
   end
   
@@ -60,7 +60,7 @@ class SkinfoldsController < ApplicationController
 
   def require_same_user
     if current_user != @skinfold.client.user && !current_user.admin?
-      flash[:danger] = "You can only edit or delete your own Skinfold"
+      flash[:danger] = "Você não possui acesso a esse dado"
       redirect_to root_path
     end
   end

@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       session[:user_id] = @user.id
-      flash[:success] = "Welcome to the GymApp #{@user.username}"
+      flash[:success] = "Bem-vindo ao GymApp #{@user.username}"
       redirect_to user_path(@user)
     else
       render 'new'
@@ -29,7 +29,7 @@ class UsersController < ApplicationController
   
   def update
     if @user.update(user_params)
-      flash[:success] = "Your account was updated successfully"
+      flash[:success] = "Sua conta foi atualizada com sucesso"
       redirect_to user_path(@user)
     else
       render 'edit'
@@ -43,7 +43,7 @@ class UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     @user.destroy
-    flash[:danger] = "User and all Plans created by user have been deleted"
+    flash[:danger] = "Usuário e Planos criados por ele foram deletados"
     redirect_to users_path
   end
   
@@ -54,26 +54,26 @@ class UsersController < ApplicationController
   end
   
   def user_params
-    params.require(:user).permit(:username, :business_name, :email, :password)  
+    params.require(:user).permit(:username, :business_name, :email, :password, :email_confirmation, :password_confirmation)  
   end
   
   def require_same_user_and_admin
     if current_user != @user && !current_user.admin?
-      flash[:danger] = "You can only edit your own account"
+      flash[:danger] = "Você só pode editar sua própria conta"
       redirect_to root_path
     end
   end
   
   def require_same_user
     if current_user != @user
-      flash[:danger] = "You can only edit your own account"
+      flash[:danger] = "Você só pode editar sua própria conta"
       redirect_to root_path
     end
   end
   
   def require_admin
     if logged_in? && !current_user.admin?
-      flash[:danger] = "Only admin users can perform that action"
+      flash[:danger] = "Você não possui permissão para essa ação"
       redirect_to root_path
     end
   end

@@ -11,8 +11,8 @@ class PaymentsController < ApplicationController
   def new
     @payment = @client.payments.build
     client = Client.find(@client.id)
-    if client.payments.last.payment_date + 1.month <= Date.today
-      @start_date = Date.today
+    if client.payments.last.payment_date + 1.month <= Date.current
+      @start_date = Date.current
     else
       @start_date = client.payments.last.payment_date + 1.month
     end
@@ -24,7 +24,7 @@ class PaymentsController < ApplicationController
   def create
     @payment = @client.payments.build(payment_params)
     if @payment.save
-      flash[:success] = "Payment was created successfully"
+      flash[:success] = "Pagamento criado com sucesso"
       redirect_to client_path(@client)
     else
       render 'new'
@@ -33,7 +33,7 @@ class PaymentsController < ApplicationController
   
   def update
     if @payment.update(payment_params)
-      flash[:success] = "Payment was successfully updated"
+      flash[:success] = "Pagamento atualizado com sucesso"
       redirect_to client_path(@client)
     else
       render 'edit'
@@ -45,7 +45,7 @@ class PaymentsController < ApplicationController
   
   def destroy
     @payment.destroy
-    flash[:danger] = "Payment was successfully deleted"
+    flash[:danger] = "Pagamento deletado com sucesso"
     redirect_to client_path(@client)
   end
   
@@ -65,8 +65,8 @@ class PaymentsController < ApplicationController
 
   def require_same_user
     if current_user != @payment.client.user && !current_user.admin?
-      flash[:danger] = "You can only edit or delete your own Payment"
-      redirect_to root_path
+      flash[:danger] = "Você não possui acesso a esse dado"
+      redirect_to home_path
     end
   end
 end
