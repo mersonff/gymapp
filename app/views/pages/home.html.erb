@@ -6,12 +6,26 @@
     Chartkick.configure({language: "pt-BR"})
 </script>
 
+<br/>
 <div class="row">
-  <%= line_chart @clients.group_by_month(:created_at).count, title: "Novos clientes x Mês" %>
+  <div class="col s6">
+    <%= line_chart @clients.group_by_month(:created_at).count, title: "Novos clientes x Mês" %>
+  </div>
+  <div class="col s6">
+   <%= pie_chart @clients.group(:gender).count, title: "Clientes x Gênero" %>
+  </div>
 </div>
 
+<br/>
 <div class="row">
-  <%= column_chart @payments.group_by_day_of_week(:payment_date, format: "%a").sum(:value), 
-  prefix: "R$ ", title: "Recebimentos dos últimos 7 dias" %>
+  <div class="debt col s6 center-align">
+    <h5><b>Clientes em débido: </b></h5>
+    <br/>
+    <%= link_to @clients_indebt.count, indebts_path, class: "btn-floating btn-large red pulse text" %>
+  </div>
+  <div class="col s6">
+    <%= column_chart @payments.group_by_day_of_week(:payment_date, format: "%a").sum(:value), 
+    prefix: "R$ ", title: "Recebimentos dos últimos 7 dias" %>
+  </div>
 </div>
-
+<br/>

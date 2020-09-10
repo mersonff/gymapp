@@ -11,8 +11,7 @@ class IndebtsController < ApplicationController
     @clients_indebt = Array.new
     @clients = current_user.clients
     @clients.each do |client|
-      @day_of_payment = client.payments.last.payment_date + 1.month
-      if (client.payments.last.payment_date + 1.month) < Time.zone.now
+      if client.payments.last.payment_date + 1.month < Date.today
         @clients_indebt << client
       end
     end

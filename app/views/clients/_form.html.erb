@@ -14,9 +14,9 @@
               </div>
             </div>
             <div class="row">
-              <div class="input-field col s2 offset-s2">
+              <div class="input-field col s3 offset-s2">
                 <i class="material-icons prefix">cake</i>
-                <%= f.text_field :birthdate, class: "datepicker"%>          
+                <%= f.text_field :birthdate, class: "datepicker_birthdate"%>          
                 <label for="birhdate">Data de Nascimento</label>
               </div>
             </div>
@@ -28,20 +28,22 @@
               </div>
             </div>
             <div class="row">
-              <div class="input-field col s6 offset-s2">
+              <div class="input-field col s3 offset-s2">
                 <i class="material-icons prefix">phone_android</i>
                 <%= f.text_field :cellphone, class: "validate phone_with_ddd" %>
                 <label for="cellphone">Celular</label>
               </div>
             </div>
             <div class="row">
-              <p class="col s2 offset-s2">
-                <b>Gênero: </b>
+              <div class="col s2 offset-s2">
+                <h3>Gênero: </h3>
                 <p>
                   <label>
                     <%= f.radio_button :gender, 'Masculino', :checked => 'checked', class: "with-gap" %>
                     <span>Masculino</span> 
                   </label>
+                </p>
+                <p>
                   <label>
                     <%= f.radio_button :gender, 'Feminino', class: "with-gap" %>
                     <span>Feminino</span> 
@@ -52,13 +54,16 @@
                     <%= f.radio_button :gender, 'Não revelado', class: "with-gap" %>
                     <span>Não revelado</span> 
                   </label>
+                </p>
+                <p>
                   <label>
                     <%= f.radio_button :gender, 'Outro', class: "with-gap" %>
                     <span>Outro</span> 
                   </label>
                 </p>
-              </p>
+          
             </div>
+          </div>
           <div class="step-actions">
             <!-- Here goes your actions buttons -->
             <button class="waves-effect waves-dark btn next-step">PRÓXIMO</button>
@@ -199,7 +204,7 @@
           <%= f.fields_for :payments do |p_f| %>
             <div class="row">
               <div class="input-field col s3 offset-s2">
-                <%= p_f.text_field :payment_date, class: "datepicker" %>          
+                <%= p_f.text_field :payment_date, class: "datepicker_payment_date" %>          
                 <label for="payment_date">Data da Matrícula: </label>
               </div>
             </div>
@@ -210,11 +215,11 @@
               </div>
             </div>
           <% end %>
-        <div class="step-actions">
-          <!-- Here goes your actions buttons -->
-          <%= f.submit(@client.new_record? ? "Salvar" : "Atualizar", class: "waves-effect waves-light btn") %>
-          <button class="waves-effect waves-dark btn-flat previous-step">VOLTAR</button>
-        </div>
+          <div class="step-actions">
+            <!-- Here goes your actions buttons -->
+            <%= f.button(@client.new_record? ? "Salvar" : "Atualizar", class: "btn waves-effect waves-light") %>
+            <button class="waves-effect waves-dark btn-flat previous-step">VOLTAR</button>
+          </div>
       </div>
     </li>
   </ul>
@@ -223,7 +228,7 @@
   
 <script>
   $(document).ready(function(){
-    $('.datepicker').datepicker({
+    $('.datepicker_birthdate').datepicker({
       i18n: {
         months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
         monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
@@ -239,11 +244,37 @@
         labelMonthSelect: 'Selecione um mês',
         labelYearSelect: 'Selecione um ano',
         selectMonths: true,
-        selectYears: 15,
+        selectYears: 15
       },
       format: 'dd/mm/yyyy',
       container: 'body',
-      yearRange: [1940, 2040]
+      yearRange: [1940, 2040],
+      defaultDate: new Date(1990, 0, 1),
+    });
+    
+    $('.datepicker_payment_date').datepicker({
+      i18n: {
+        months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabádo'],
+        weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+        weekdaysAbbrev: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+        today: 'Hoje',
+        clear: 'Limpar',
+        cancel: 'Sair',
+        done: 'Confirmar',
+        labelMonthNext: 'Próximo mês',
+        labelMonthPrev: 'Mês anterior',
+        labelMonthSelect: 'Selecione um mês',
+        labelYearSelect: 'Selecione um ano',
+        selectMonths: true,
+        selectYears: 15
+      },
+      format: 'dd/mm/yyyy',
+      container: 'body',
+      yearRange: [1940, 2040],
+      defaultDate: new Date(),
+      setDefaultDate: true
     });
   });
  

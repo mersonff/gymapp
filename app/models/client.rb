@@ -11,7 +11,7 @@ class Client < ApplicationRecord
   accepts_nested_attributes_for :payments
   
   validates :name, presence: true, uniqueness: { case_sensitive: false }, 
-            length: { minimum: 3, maximum: 25 }
+            length: { minimum: 3, maximum: 50 }
   validates :birthdate, presence: true
   
   
@@ -20,11 +20,11 @@ class Client < ApplicationRecord
     
     total = skinfold.chest.to_i + 
             skinfold.midaxilary.to_i +
-            skinfold.subscapular.to_i + 0 +
+            skinfold.subscapular.to_i +
             skinfold.tricep.to_i +
             skinfold.abdominal.to_i +
             skinfold.suprailiac.to_i +
-            skinfold.thigh.to_i 
+            skinfold.thigh.to_i
     
     age = ((Time.zone.now - self.birthdate.to_time) / 1.year.seconds).floor 
     
@@ -39,6 +39,12 @@ class Client < ApplicationRecord
     body_fat = (495 / body_density) - 450
 
     return body_fat.round(1)
+  end
+  
+  def days_in_debt
+    next_payment_date = self.payments.last.payment_date + 1.month
+    days_in_debt = Date.today - next_payment_date
+    return days_in_debt.to_i
   end
   
 end

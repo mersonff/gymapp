@@ -51,7 +51,7 @@ end
 
 for i in 1..100
   for j in 0..23
-    date = Time.zone.now - 25.month
+    date = Date.today - 25.month
     Payment.create ([{
       payment_date: date + j.month,
       value: 50.0,

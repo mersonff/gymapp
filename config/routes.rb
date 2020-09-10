@@ -8,7 +8,9 @@ Rails.application.routes.draw do
   resources :users, except: [:new]
   resources :plans
   resources :clients do
-    resources :payments
+    resources :payments, except: [:edit, :update, :show, :destroy, :index]
+    resources :measurements, except: [:edit, :update, :show, :destroy, :index]
+    resources :skinfolds, except: [:edit, :update, :show, :destroy, :index]
   end
   
   get 'login', to: "sessions#new"

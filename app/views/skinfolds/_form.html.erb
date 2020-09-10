@@ -1,0 +1,56 @@
+<br>
+<%= form_with(model: [@client, @skinfold], local: true) do |sf_f|  %>
+  <div class="row">
+    <div class="input-field col s3 offset-s3">
+      <%= sf_f.number_field :chest, :onkeypress => "return isNumberKey(event)" %>
+      <label for="chest">PEITORAL: </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s3 offset-s3">
+      <%= sf_f.number_field :midaxilary, :onkeypress => "return isNumberKey(event)" %>
+      <label for="midaxilary">AXILAR MÉDIA: </label>
+    </div>
+    <div class="input-field col s3">
+      <%= sf_f.number_field :subscapular, :onkeypress => "return isNumberKey(event)" %>
+      <label for="subscapular">SUBESCAPULAR: </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s3 offset-s3">
+      <%= sf_f.number_field :bicep, :onkeypress => "return isNumberKey(event)" %>
+      <label for="bicep">BÍCEPS (D): </label>
+    </div>
+    <div class="input-field col s3">
+      <%= sf_f.number_field :tricep, :onkeypress => "return isNumberKey(event)" %>
+      <label for="tricep">TRÍCEPS: </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s3 offset-s3">
+      <%= sf_f.number_field :abdominal, :onkeypress => "return isNumberKey(event)" %>
+      <label for="abdominal">ABDOMINAL: </label>
+    </div>
+    <div class="input-field col s3">
+      <%= sf_f.number_field :suprailiac, :onkeypress => "return isNumberKey(event)" %>
+      <label for="suprailiac">SUPRA-ILÍACA: </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s3 offset-s3">
+      <%= sf_f.number_field :thigh, :onkeypress => "return isNumberKey(event)" %>
+      <label for="thigh">COXA: </label>
+    </div>
+    <div class="input-field col s3">
+      <%= sf_f.number_field :calf, :onkeypress => "return isNumberKey(event)" %>
+      <label for="calf">PANTURRILHA: </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6 offset-s3 center-align">
+      <%= sf_f.button "Salvar", class: "waves-effect waves-light btn" %>
+      <tab1></tab1>
+      <%= link_to "Retornar", :back, class: "waves-effect waves-light btn orange" %>
+    </div>
+  </div>
+<% end %>

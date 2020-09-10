@@ -1,0 +1,64 @@
+<br>
+<%= form_with(model: [@client, @measurement], local: true) do |m_f|  %>
+  <div class="row">
+    <div class="input-field col s3 offset-s3">
+      <%= m_f.number_field :height, :onkeypress => "return isNumberKey(event)" %>
+      <label for="height">ALTURA: </label>
+      <span class="helper-text">Centímentros (Ex: 1.77m = 177cm)</span>
+    </div>
+    <div class="input-field col s3">
+      <%= m_f.number_field :weight, step: 0.1, class: "weight_mask"  %>
+      <label for="weight">PESO: </label>
+      <span class="helper-text">Quilogramas</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s3 offset-s3">
+      <%= m_f.number_field :chest, :onkeypress => "return isNumberKey(event)" %>
+      <label for="chest">TÓRAX: </label>
+    </div>
+    <div class="input-field col s3">
+      <%= m_f.number_field :waist, :onkeypress => "return isNumberKey(event)" %>
+      <label for="waist">CINTURA: </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s3 offset-s3">
+      <%= m_f.number_field :left_arm, :onkeypress => "return isNumberKey(event)" %>
+      <label for="left_arm">BRAÇO (E): </label>
+    </div>
+    <div class="input-field col s3">
+      <%= m_f.number_field :right_arm, :onkeypress => "return isNumberKey(event)" %>
+      <label for="right_arm">BRAÇO (D): </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s3 offset-s3">
+      <%= m_f.number_field :abdomen, :onkeypress => "return isNumberKey(event)" %>
+      <label for="abdomen">ABDOMEN: </label>
+    </div>
+    <div class="input-field col s31">
+      <%= m_f.number_field :hips, :onkeypress => "return isNumberKey(event)" %>
+      <label for="hips">QUADRIL: </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s3 offset-s3">
+      <%= m_f.number_field :left_thigh, :onkeypress => "return isNumberKey(event)" %>
+      <label for="left_thigh">COXA (E): </label>
+    </div>
+    <div class="input-field col s3">
+      <%= m_f.number_field :righ_thigh, :onkeypress => "return isNumberKey(event)" %>
+      <label for="righ_thigh">COXA (D): </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6 offset-s3 center-align">
+      <%= m_f.button "Salvar", class: "waves-effect waves-light btn" %>
+      <tab1></tab1>
+      <%= link_to "Retornar", :back, class: "waves-effect waves-light btn orange" %>
+    </div>
+    <div class="input-field">
+    </div>
+  </div>
+<% end %>

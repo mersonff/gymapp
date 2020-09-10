@@ -224,3 +224,19 @@ textarea + label {
         pointer-events: all;
     }
 }
+
+.circle { 
+   width: 140px;
+   height: 140px;
+   background: red; 
+   -moz-border-radius: 70px; 
+   -webkit-border-radius: 70px; 
+   border-radius: 70px;
+}
+
+.debt > .btn-large {
+    width: 200px;
+    height: 200px;
+    font-size: 40px;
+    line-height: 200px;
+}

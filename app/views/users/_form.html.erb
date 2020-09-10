@@ -36,21 +36,21 @@
           </div>
           <div class="row">
             <div class="input-field col s12">
-              <%= f.submit(@user.new_record? ? "Registrar-se" : "Atualizar conta", class: "btn waves-effect waves-light col s12") %>
+              <%= f.button(@user.new_record? ? "Registrar-se" : "Atualizar conta", class: "btn waves-effect waves-light col s12") %>
             </div>
           </div>
           <% if @user.nil? %>
-          <div class="row">
-            <div class="input-field col s6 m6 l6">
-              <p class="margin medium-small">Já possui uma conta? <%= link_to "Log in", login_path %>.</p>
-            </div>     
-          </div>
+            <div class="row">
+              <div class="input-field col s6 m6 l6">
+                <p class="margin medium-small">Já possui uma conta? <%= link_to "Log in", login_path %>.</p>
+              </div>     
+            </div>
           <% else %>
-          <div class="row">
-            <div class="input-field col s6 m6 l6">
-              <p class="margin medium-small"><%= link_to "Cancelar", root_path %></p>
-            </div>     
-          </div>
+            <div class="row">
+              <div class="input-field center-align">
+                <%= link_to "Retornar", :back, class: "col s8 offset-s2" %>
+              </div>
+            </div>
           <%end%>
       <% end %>
       </div>

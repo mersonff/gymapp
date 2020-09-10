@@ -3,6 +3,11 @@
 <div align="center">
   <div class="row">
     <div class="col s12">
+      <div id="search-box" class="input-field col s8 offset-s2" class="center-align">
+        <i class="material-icons prefix">search</i>
+        <input id="myInputTextField" type="text">
+        <label for="myInputTextField">Procurar</label>
+      </div>
       <table id="clients_table" class="stripe centered">
         <thead>
           <tr>
@@ -27,6 +32,14 @@
                 data: { position: "bottom", tooltip: "Editar" } do %>
                 <i class="material-icons">edit</i>
               <% end %>
+              <%= link_to new_client_measurement_path(client), :class => "waves-effect waves-light pink darken-1 btn tooltipped", 
+                data: { position: "bottom", tooltip: "Nova perimetria" } do %>
+                <i class="material-icons">filter_1</i>
+              <% end %>
+              <%= link_to new_client_skinfold_path(client), :class => "waves-effect waves-light teal accent-3 btn tooltipped", 
+                data: { position: "bottom", tooltip: "Nova adipometria" } do %>
+                <i class="material-icons">filter_2</i>
+              <% end %>
               <%= link_to client_path(client), method: :delete, data: { confirm: "", position: "bottom", tooltip: "Excluir" }, 
                 :class => "waves-effect waves-light red btn tooltipped" do %>
                 <i class="material-icons">delete</i>
@@ -42,7 +55,8 @@
 
 <script>
   $(document).ready( function () {
-    $('#clients_table').DataTable({
+    oTable = $('#clients_table').DataTable({
+      "dom": 'lrtip',
       language: {
 				processing: 'Processando...',
 				search: 'Procurar',
@@ -75,5 +89,13 @@
     $('.tooltipped').tooltip();
   });
   
+  $('#myInputTextField').keyup(function(){
+      oTable.search($(this).val()).draw() ;
+  })
+  
+  $(document).ready(function(){
+    $('select').formSelect();
+  });
+       
 
 </script>

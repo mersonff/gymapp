@@ -58,7 +58,7 @@ class PaymentsController < ApplicationController
   end
 
   def require_same_user
-    if current_user != @payment.user && !current_user.admin?
+    if current_user != @payment.client.user && !current_user.admin?
       flash[:danger] = "You can only edit or delete your own Payment"
       redirect_to root_path
     end
