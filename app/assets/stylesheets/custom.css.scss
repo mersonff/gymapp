@@ -24,11 +24,6 @@ ul li a {
     font-weght: bold;
 }
 
-.logo-color {
-    color: red;
-
-}
-
 .tamanho-logo {
     font-size: 150%;
     font-weght: bold;
@@ -37,29 +32,6 @@ ul li a {
 #signup-page {
     width: 500px;
    
-}
-
-#login-page {
-   width: 500px;
-    left: 50%;
-    top: 50%;
-    position: absolute;
-     -moz-transform: translate(-50%, -50%);
-     -webkit-transform: translate(-50%, -50%);
-     -ms-transform: translate(-50%, -50%);
-     -o-transform: translate(-50%, -50%);
-     transform: translate(-50%, -50%);
-}
-
-.card {
-     position: absolute;
-     left: 50%;
-     top: 50%;
-     -moz-transform: translate(-50%, -50%);
-     -webkit-transform: translate(-50%, -50%);
-     -ms-transform: translate(-50%, -50%);
-     -o-transform: translate(-50%, -50%);
-     transform: translate(-50%, -50%);
 }
 
 .icon_style{

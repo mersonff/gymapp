@@ -1,11 +1,8 @@
 <%= render 'shared/errors', obj: @user %>
 
-<div id="login-body">
-  <div id="signup-page" class="row">
-      <div class="col s12 z-depth-6 card-panel">
-        <%= form_for(@user, :html => { class: "login-form", role: "form" }) do |f| %>
-          <div class="row">
-          </div>
+  <div class="row">
+      <div class="col s8 offset-s2">
+        <%= form_for(@user, :html => { role: "form" }) do |f| %>
           <div class="row">
             <div class="input-field col s12">
               <i class="material-icons prefix">account_box</i>
@@ -69,7 +66,6 @@
       <% end %>
       </div>
     </div>
-  </div>
-  
+
 
 

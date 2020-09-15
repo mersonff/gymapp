@@ -25,7 +25,7 @@
     <%= link_to @clients_indebt.count, indebts_path, class: "btn-floating btn-large red pulse text" %>
   </div>
   <div class="col s6">
-    <%= column_chart @payments.group_by_day_of_week(:payment_date, format: "%a").sum(:value), 
+    <%= column_chart Payment.group_by_day(:created_at, format: "%d %b", range: 1.weeks.ago.midnight..Date.current).sum(:value), 
     prefix: "R$ ", title: "Recebimentos dos últimos 7 dias" %>
   </div>
 </div>
