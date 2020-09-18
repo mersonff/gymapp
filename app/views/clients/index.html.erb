@@ -11,7 +11,6 @@
       <table id="clients_table" class="stripe centered">
         <thead>
           <tr>
-              <th>#ID</th>
               <th>Nome</th>
               <th>Celular</th>
               <th>Ações</th></th>
@@ -20,28 +19,27 @@
         <tbody>
           <% @clients.each do |client| %>
           <tr>
-            <td><%= client.id %></td>
             <td><%= client.name.upcase %></td>
             <td><%= client.cellphone %></td>
             <td>
-              <%= link_to client_path(client), :class => "waves-effect waves-light indigo btn tooltipped", 
+              <%= link_to client_path(client), :class => "waves-effect waves-light indigo btn-small tooltipped", 
                 data: { position: "bottom", tooltip: "Vizualizar Informações" } do %>
                 <i class="material-icons">account_box</i>
               <% end %>
-              <%= link_to edit_client_path(client), :class => "waves-effect waves-light amber btn tooltipped", 
+              <%= link_to edit_client_path(client), :class => "waves-effect waves-light amber btn-small tooltipped", 
                 data: { position: "bottom", tooltip: "Editar" } do %>
                 <i class="material-icons">edit</i>
               <% end %>
-              <%= link_to new_client_measurement_path(client), :class => "waves-effect waves-light pink darken-1 btn tooltipped", 
+              <%= link_to new_client_measurement_path(client), :class => "waves-effect waves-light pink darken-1 btn-small tooltipped", 
                 data: { position: "bottom", tooltip: "Nova perimetria" } do %>
                 <i class="material-icons">filter_1</i>
               <% end %>
-              <%= link_to new_client_skinfold_path(client), :class => "waves-effect waves-light teal accent-3 btn tooltipped", 
+              <%= link_to new_client_skinfold_path(client), :class => "waves-effect waves-light teal accent-3 btn-small tooltipped", 
                 data: { position: "bottom", tooltip: "Nova adipometria" } do %>
                 <i class="material-icons">filter_2</i>
               <% end %>
               <%= link_to client_path(client), method: :delete, data: { confirm: "", position: "bottom", tooltip: "Excluir" }, 
-                :class => "waves-effect waves-light red btn tooltipped" do %>
+                :class => "waves-effect waves-light red btn-small tooltipped" do %>
                 <i class="material-icons">delete</i>
               <% end %>
             </td>

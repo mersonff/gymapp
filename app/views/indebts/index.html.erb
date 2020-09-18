@@ -3,7 +3,7 @@
 <div align="center">
   <div class="row">
     <div class="col s12">
-      <div id="search-box" class="input-field col s8 offset-s2" class="center-align">
+      <div id="search-box" class="input-field col s12" class="center-align">
         <i class="material-icons prefix">search</i>
         <input id="myInputTextField" type="text">
         <label for="myInputTextField">Procurar</label>
@@ -11,7 +11,6 @@
       <table id="clients_table" class="stripe centered">
         <thead>
           <tr>
-              <th>#ID</th>
               <th>Nome</th>
               <th>Celular</th>
               <th>Vencido há</th>
@@ -21,12 +20,15 @@
         <tbody>
           <% @clients_indebt.each do |client| %>
           <tr>
-            <td><%= client.id %></td>
             <td><%= client.name.upcase %></td>
             <td><%= client.cellphone %></td>
-            <td class="red-text"><%= client.days_in_debt %> Dias</td>
+            <% if client.days_in_debt == 0 %>
+              <td class="red-text">Hoje</td>
+            <% else %>
+              <td class="red-text"><%= client.days_in_debt %> Dias</td>
+            <% end %>
             <td>
-              <%= link_to new_client_payment_path(client), :class => "waves-effect waves-light green darken-1 btn tooltipped", 
+              <%= link_to new_client_payment_path(client), :class => "waves-effect waves-light green darken-1 btn-small tooltipped", 
                 data: { position: "bottom", tooltip: "Renovar" } do %>
                 <i class="material-icons">monetization_on</i>
               <% end %>
@@ -68,6 +70,7 @@
 			"search": {
         "caseInsensitive": true
       },
+      responsive: true
     });
   });
   

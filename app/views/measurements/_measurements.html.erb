@@ -7,137 +7,129 @@
         data-positon="bottom" data-tooltip="Vizualizar Dados"><i class="material-icons">folder</i></button>
       <!-- Modal Structure -->
       <div id="measurement_modal_<%= measurement.id %>"  class="modal">
-        <div class="modal-content">
-          <div class="row">
-            <h2><b>PERIMETRIA</b></h2>
-          </div>
-          <div class="row">
-            <h3>
-              <label>
-                Data da Coleta:                         
-              </label>
-              <%= measurement.created_at.strftime("%d/%m/%Y") %>
-            </h3>
-          </div>
-          <h4>
-            <div class="row">
-              <div class="col s2 offset-s2">
-                <p>
-                  <label>
-                    Altura: 
-                  </label>
-                </p>
+        <div class="row">
+          <div class="col s12">
+            <div class="modal-content">
+              <div class="row">
+                <div class="col s12">
+                  <h2><b>PERIMETRIA</b></h2>
+                </div>
               </div>
-              <div class="col s2">
-                  <p> <%= measurement.height %> cm</p>
+              <div class="row">
+                <div class="col s12">
+                  <h3>
+                    <label>
+                      Data da Coleta:                         
+                    </label>
+                    <%= measurement.created_at.strftime("%d/%m/%Y") %>
+                  </h3>
+                </div>
               </div>
-              
-              <div class="col s2">
-                <p>
-                  <label>
-                    Altura: 
-                  </label>
-                </p>
+              <h4>
+                <div class="row">
+                  <div class="col s6 m4 offset-m2">
+                    <p>
+                      <label>
+                        Altura: 
+                      </label>
+                      <%= measurement.height %> cm
+                    </p>
+                  </div>
+                  
+                  <div class="col s6 m4">
+                    <p>
+                      <label>
+                        Peso: 
+                      </label>
+                      <%= measurement.weight %> kg
+                    </p>
+                  </div>
+                </div>
+              </h4>
+              <hr class="modal-hr">
+              <div class="row">
+                <div class="col s6 m4 offset-m2">
+                  <p>
+                    <label>
+                      Tórax: 
+                    </label>
+                    <%= measurement.chest %> cm
+                  </p>
+                </div>
+                
+                <div class="col s6 m4">
+                  <p>
+                    <label>
+                      Cintura: 
+                    </label>
+                    <%= measurement.waist %> cm
+                  </p>
+                </div>
+            
               </div>
-              <div class="col s2">
-                  <p> <%= measurement.weight %> cm</p>
+              <div class="row">
+                <div class="col s6 m4 offset-m2">
+                  <p>
+                    <label>
+                      Abdomen: 
+                    </label>
+                    <%= measurement.abdomen %> cm
+                  </p>
+                </div>
+                
+                <div class="col s6 m4">
+                  <p>
+                    <label>
+                      Quadril: 
+                    </label>
+                    <%= measurement.hips %> cm
+                  </p>
+                </div>
               </div>
-            </div>
-          </h4>
-          <hr class="modal-hr">
-          <div class="row">
-            <div class="col s2 offset-s2">
-              <p>
-                <label>
-                  Tórax: 
-                </label>
-              </p>
-            </div>
-            <div class="col s2">
-                <p> <%= measurement.chest %> cm</p>
-            </div>
-            
-            <div class="col s2">
-              <p>
-                <label>
-                  Cintura: 
-                </label>
-              </p>
-            </div>
-            <div class="col s2">
-                <p> <%= measurement.waist %> cm</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col s2 offset-s2">
-              <p>
-                <label>
-                  Abdomen: 
-                </label>
-              </p>
-            </div>
-            <div class="col s2">
-                <p> <%= measurement.abdomen %> cm</p>
-            </div>
-            
-            <div class="col s2">
-              <p>
-                <label>
-                  Quadril: 
-                </label>
-              </p>
-            </div>
-            <div class="col s2">
-                <p> <%= measurement.hips %> cm</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col s2 offset-s2">
-              <p>
-                <label>
-                  Braço (E): 
-                </label>
-              </p>
-            </div>
-            <div class="col s2">
-                <p> <%= measurement.left_arm %> cm</p>
-            </div>
-            
-            <div class="col s2">
-              <p>
-                <label>
-                  Braço (D): 
-                </label>
-              </p>
-            </div>
-            <div class="col s2">
-                <p> <%= measurement.right_arm %> cm</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col s2 offset-s2">
-              <p>
-                <label>
-                  Coxa (E): 
-                </label>
-              </p>
-            </div>
-            <div class="col s2">
-                <p> <%= measurement.left_thigh %> cm</p>
-            </div>
-            
-            <div class="col s2">
-              <p>
-                <label>
-                  Coxa (D): 
-                </label>
-              </p>
-            </div>
-            <div class="col s2">
-                <p> <%= measurement.righ_thigh %> cm</p>
+              <div class="row">
+                <div class="col s6 m4 offset-m2">
+                  <p>
+                    <label>
+                      Braço (E): 
+                    </label>
+                    <%= measurement.left_arm %> cm
+                  </p>
+                </div>
+                
+                <div class="col s6 m4">
+                  <p>
+                    <label>
+                      Braço (D): 
+                    </label>
+                    <%= measurement.right_arm %> cm
+                  </p>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col s6 m4 offset-m2">
+                  <p>
+                    <label>
+                      Coxa (E): 
+                    </label>
+                    <%= measurement.left_thigh %> cm
+                  </p>
+                </div>
+                
+                <div class="col s6 m4">
+                  <p>
+                    <label>
+                      Coxa (D): 
+                    </label>
+                    <%= measurement.righ_thigh %> cm
+                  </p>
+                </div>
+
+              </div>
             </div>
           </div>
         </div>
+        
         <div class="modal-footer">
           <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
         </div>

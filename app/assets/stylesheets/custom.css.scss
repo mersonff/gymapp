@@ -81,8 +81,47 @@ ul li a {
 }
 
 .user-show-page {
-    font-size: 150%;
+    font-size: 1.5em;
     margin-top: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+  .user-show-page {
+    font-size: 1em;
+    margin-top: 20px;
+  }
+  
+  .hr-client-page {
+    border: 0;
+    border: 5px solid red;
+    margin-bottom: 0px;
+    margin-left: 10px !important;
+    margin-right: 11px;
+  }
+  
+  .modal-content h2 {
+    font-size: 1.2em;
+  }
+  
+  .modal-content h3 {
+    font-size: 1em;
+  }
+  
+  .modal-content h4 {
+    font-size: 0.8em;
+  }
+  
+  .modal-content p, label {
+    font-size: 0.8em !important;
+  }
+  
+  .modal-content span {
+    font-size: 0.6em !important;
+  }
+}
+
+.modal-content span {
+  font-size: 0.6em !important;
 }
 
 .user-show-page label {
@@ -90,12 +129,18 @@ ul li a {
     font-size: 100%;
 }
 
-hr {
+.hr-client-page {
     border: 0;
     border: 5px solid red;
     margin-bottom: 0px;
     margin-left: 11px;
     margin-right: 11px;
+}
+
+hr {
+    border: 0;
+    border: 5px solid red;
+    margin-bottom: 0px;
 }
 
 .modal-hr {

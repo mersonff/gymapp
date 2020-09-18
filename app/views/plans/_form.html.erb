@@ -1,32 +1,33 @@
 <%= render 'shared/errors', obj: @plan %>
 
-<div class="col s12">
-  <%= form_for(@plan, :html => { role: "form" }) do |f| %>
-    <div class="row">
-      <div class="input-field col s6 offset-s3">
-        <i class="material-icons prefix">mode_edit</i>
-        <%= f.text_area :description, :id => "description_area", :cols => 30, :rows => 10, class: "validate materialize-textarea" %>
-        <label for="description">Descrição</label>
+<div class="row">
+  <div class="col s12 m10 offset-m1">
+    <%= form_for(@plan, :html => { role: "form" }) do |f| %>
+      <div class="row">
+        <div class="input-field col s10 m6 offset-m3">
+          <i class="material-icons prefix">mode_edit</i>
+          <%= f.text_area :description, :id => "description_area", :cols => 30, :rows => 10, class: "validate materialize-textarea" %>
+          <label for="description">Descrição</label>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="input-field col s2 offset-s3">
-        <i class="material-icons prefix">attach_money</i>
-        <%= f.number_field :value, value: @plan.value ? '%.2f' % @plan.value : nil, min: 0, step: 0.01 %>
-        <label for="value">Valor</label>
+      <div class="row">
+        <div class="input-field col s10 m6 offset-m3">
+          <i class="material-icons prefix">attach_money</i>
+          <%= f.number_field :value, value: @plan.value ? '%.2f' % @plan.value : nil, min: 0, step: 0.01 %>
+          <label for="value">Valor</label>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="input-field center-align">
-        <%= f.button(@plan.new_record? ? "Salvar" : "Atualizar", class: "col s4 offset-s4 waves-effect waves-light btn") %>
-      </div> 
-    </div>
-    <div class="row">
-      <div class="input-field center-align">
-        <%= link_to "Retornar", user_path(current_user), class: "col s8 offset-s2" %>
+      <div class="row">
+        <div class="input-field col s6 offset-s3">
+          <%= f.button(@plan.new_record? ? "Salvar" : "Atualizar", class: "btn waves-effect waves-light col s12") %>
+        </div>
       </div>
-    </div>
-  <% end %>
+      <div class="row">
+        <div class="input-field center-align">
+          <%= link_to "Retornar", :back, class: "col s8 offset-s2" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
-
 

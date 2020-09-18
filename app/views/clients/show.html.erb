@@ -1,14 +1,14 @@
 
 <h1 align="center"><%= @client.name %></h1>
-<hr>
+<hr class="hr-client-page">
 
 <div class="row">
   <div class="col s12">
     <ul class="tabs">
-      <li class="tab col s3"><a href="#test1">Informações Pessoais</a></li>
-      <li class="tab col s3"><a href="#test2">Histórico de Pagamentos</a></li>
-      <li class="tab col s3"><a href="#test3">Perimetrias</a></li>
-      <li class="tab col s3"><a href="#test4">Dobras Cutâneas</a></li>
+      <li class="tab col s8 m3"><a href="#test1" class="tab-link">Informações Pessoais</a></li>
+      <li class="tab col s8 m3"><a href="#test2">Pagamentos</a></li>
+      <li class="tab col s8 m3"><a href="#test3">Perimetrias</a></li>
+      <li class="tab col s8 m3"><a href="#test4">Dobras Cutâneas</a></li>
     </ul>
   </div>
   <div id="test1" class="col s12">
@@ -152,7 +152,8 @@
 <script>
   
   $(document).ready(function(){
-    $('.tabs').tabs();
+    $('.tabs').tabs({
+    });
     
     $("#payments_table").DataTable({
       language: {
@@ -247,6 +248,10 @@
   
   $(document).ready(function(){
     $('.tooltipped').tooltip();
+  });
+  
+  $(document).ready(function(){
+    $('select').formSelect();
   });
   
   

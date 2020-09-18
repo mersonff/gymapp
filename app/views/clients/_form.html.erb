@@ -1,216 +1,218 @@
 <%= render 'shared/errors', obj: @client %>
-
-  <div class="col s12">
-    <%= form_for(@client, :html => { role: "form" }) do |f| %>
-      <ul class="stepper linear">
-        <li class="step active">
-          <div class="step-title waves-effect">Informações Gerais</div>
+  
+  <div class="row">
+    <div class="col s12 m10 offset-m3">
+      <%= form_for(@client, :html => { role: "form" }) do |f| %>
+        <ul class="stepper linear">
+          <li class="step active">
+            <div class="step-title waves-effect">Informações Gerais</div>
+            <div class="step-content">
+              <div class="row">
+                <div class="input-field col s10 col m6">
+                  <i class="material-icons prefix">account_box</i>
+                  <%= f.text_field :name %>
+                  <label for="name">Nome Completo</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s10 col m6">
+                  <i class="material-icons prefix">cake</i>
+                  <%= f.text_field :birthdate, class: "datepicker_birthdate"%>          
+                  <label for="birhdate">Data de Nascimento</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s10 col m6">
+                  <i class="material-icons prefix">add_location</i>
+                  <%= f.text_area :address, :id => "address_area", :cols => 30, :rows => 10, class: "materialize-textarea validate" %>
+                  <label for="address">Endereço</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s10 col m6">
+                  <i class="material-icons prefix">phone_android</i>
+                  <%= f.text_field :cellphone, class: "validate phone_with_ddd" %>
+                  <label for="cellphone">Celular</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s8 col m6">
+                  <h5>Gênero: </h5>
+                  <p>
+                    <label>
+                      <%= f.radio_button :gender, 'Masculino', :checked => 'checked', class: "with-gap" %>
+                      <span>Masculino</span> 
+                    </label>
+                  </p>
+                  <p>
+                    <label>
+                      <%= f.radio_button :gender, 'Feminino', class: "with-gap" %>
+                      <span>Feminino</span> 
+                    </label>
+                  </p>
+                </div>
+              </div>
+            <div class="step-actions">
+              <!-- Here goes your actions buttons -->
+              <button class="waves-effect waves-dark btn next-step">PRÓXIMO</button>
+            </div>
+          </div>
+        </li>
+        <li class="step">
+          <div class="step-title waves-effect">Perímetros</div>
           <div class="step-content">
+            <%= f.fields_for :measurements do |m_f| %>
             <div class="row">
-              <div class="input-field col s6 offset-s2">
-                <i class="material-icons prefix">account_box</i>
-                <%= f.text_field :name %>
-                <label for="name">Nome Completo</label>
+              <div class="input-field col s8 col m6">
+                <%= m_f.number_field :height, :onkeypress => "return isNumberKey(event)" %>
+                <label for="height">ALTURA: </label>
+                <span class="helper-text">Centímentros (Ex: 1.77m = 177cm)</span>
               </div>
             </div>
             <div class="row">
-              <div class="input-field col s4 offset-s2">
-                <i class="material-icons prefix">cake</i>
-                <%= f.text_field :birthdate, class: "datepicker_birthdate"%>          
-                <label for="birhdate">Data de Nascimento</label>
+              <div class="input-field col s8 col m6">
+                <%= m_f.number_field :weight, step: 0.1, class: "weight_mask"  %>
+                <label for="weight">PESO: </label>
+                <span class="helper-text">Quilogramas</span>
               </div>
             </div>
             <div class="row">
-              <div class="input-field col s6 offset-s2">
-                <i class="material-icons prefix">add_location</i>
-                <%= f.text_area :address, :id => "address_area", :cols => 30, :rows => 10, class: "materialize-textarea validate" %>
-                <label for="address">Endereço</label>
+              <div class="input-field col s8 col m2">
+                <%= m_f.number_field :chest, :onkeypress => "return isNumberKey(event)" %>
+                <label for="chest">TÓRAX: </label>
               </div>
             </div>
             <div class="row">
-              <div class="input-field col s3 offset-s2">
-                <i class="material-icons prefix">phone_android</i>
-                <%= f.text_field :cellphone, class: "validate phone_with_ddd" %>
-                <label for="cellphone">Celular</label>
+              <div class="input-field col s8 col m2">
+                <%= m_f.number_field :left_arm, :onkeypress => "return isNumberKey(event)" %>
+                <label for="left_arm">BRAÇO (E): </label>
+              </div>
+              <div class="input-field col s8 col m2">
+                <%= m_f.number_field :right_arm, :onkeypress => "return isNumberKey(event)" %>
+                <label for="right_arm">BRAÇO (D): </label>
               </div>
             </div>
             <div class="row">
-              <div class="col s2 offset-s2">
-                <h5>Gênero: </h5>
-                <p>
-                  <label>
-                    <%= f.radio_button :gender, 'Masculino', :checked => 'checked', class: "with-gap" %>
-                    <span>Masculino</span> 
-                  </label>
-                </p>
-                <p>
-                  <label>
-                    <%= f.radio_button :gender, 'Feminino', class: "with-gap" %>
-                    <span>Feminino</span> 
-                  </label>
-                </p>
-            </div>
-          </div>
-          <div class="step-actions">
-            <!-- Here goes your actions buttons -->
-            <button class="waves-effect waves-dark btn next-step">PRÓXIMO</button>
-          </div>
-        </div>
-      </li>
-      <li class="step">
-        <div class="step-title waves-effect">Perímetros</div>
-        <div class="step-content">
-          <%= f.fields_for :measurements do |m_f| %>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= m_f.number_field :height, :onkeypress => "return isNumberKey(event)" %>
-              <label for="height">ALTURA: </label>
-              <span class="helper-text">Centímentros (Ex: 1.77m = 177cm)</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= m_f.number_field :weight, step: 0.1, class: "weight_mask"  %>
-              <label for="weight">PESO: </label>
-              <span class="helper-text">Quilogramas</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= m_f.number_field :chest, :onkeypress => "return isNumberKey(event)" %>
-              <label for="chest">TÓRAX: </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= m_f.number_field :left_arm, :onkeypress => "return isNumberKey(event)" %>
-              <label for="left_arm">BRAÇO (E): </label>
-            </div>
-            <div class="input-field col s3">
-              <%= m_f.number_field :right_arm, :onkeypress => "return isNumberKey(event)" %>
-              <label for="right_arm">BRAÇO (D): </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= m_f.number_field :waist, :onkeypress => "return isNumberKey(event)" %>
-              <label for="waist">CINTURA: </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= m_f.number_field :abdomen, :onkeypress => "return isNumberKey(event)" %>
-              <label for="abdomen">ABDOMEN: </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= m_f.number_field :hips, :onkeypress => "return isNumberKey(event)" %>
-              <label for="hips">QUADRIL: </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= m_f.number_field :left_thigh, :onkeypress => "return isNumberKey(event)" %>
-              <label for="left_thigh">COXA (E): </label>
-            </div>
-            <div class="input-field col s3">
-              <%= m_f.number_field :righ_thigh, :onkeypress => "return isNumberKey(event)" %>
-              <label for="righ_thigh">COXA (D): </label>
-            </div>
-          </div>
-        <% end %>
-        <div class="step-actions">
-          <!-- Here goes your actions buttons -->
-          <button class="waves-effect waves-dark btn next-step">PRÓXIMO</button>
-          <button class="waves-effect waves-dark btn-flat previous-step">VOLTAR</button>
-        </div>
-      </div>
-      </li>
-      <li class="step">
-        <div class="step-title waves-effect">Dobras Cutâneas</div>
-        <div class="step-content">
-          <%= f.fields_for :skinfolds do |sf_f| %>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= sf_f.number_field :chest, :onkeypress => "return isNumberKey(event)" %>
-              <label for="chest">PEITORAL: </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= sf_f.number_field :midaxilary, :onkeypress => "return isNumberKey(event)" %>
-              <label for="midaxilary">AXILAR MÉDIA: </label>
-            </div>
-            <div class="input-field col s3">
-              <%= sf_f.number_field :subscapular, :onkeypress => "return isNumberKey(event)" %>
-              <label for="subscapular">SUBESCAPULAR: </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= sf_f.number_field :bicep, :onkeypress => "return isNumberKey(event)" %>
-              <label for="bicep">BÍCEPS (D): </label>
-            </div>
-            <div class="input-field col s3">
-              <%= sf_f.number_field :tricep, :onkeypress => "return isNumberKey(event)" %>
-              <label for="tricep">TRÍCEPS: </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= sf_f.number_field :abdominal, :onkeypress => "return isNumberKey(event)" %>
-              <label for="abdominal">ABDOMINAL: </label>
-            </div>
-            <div class="input-field col s3">
-              <%= sf_f.number_field :suprailiac, :onkeypress => "return isNumberKey(event)" %>
-              <label for="suprailiac">SUPRA-ILÍACA: </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s3 offset-s2">
-              <%= sf_f.number_field :thigh, :onkeypress => "return isNumberKey(event)" %>
-              <label for="thigh">COXA: </label>
-            </div>
-            <div class="input-field col s3">
-              <%= sf_f.number_field :calf, :onkeypress => "return isNumberKey(event)" %>
-              <label for="calf">PANTURRILHA: </label>
-            </div>
-          </div>
-        <% end %>
-        <div class="step-actions">
-          <!-- Here goes your actions buttons -->
-          <button class="waves-effect waves-dark btn next-step">PRÓXIMO</button>
-          <button class="waves-effect waves-dark btn-flat previous-step">VOLTAR</button>
-        </div>
-      </div>
-    </li>
-    <li class="step">
-        <div class="step-title waves-effect">Plano</div>
-        <div class="step-content">
-          <%= f.fields_for :payments do |p_f| %>
-            <div class="row">
-              <div class="input-field col s3 offset-s2">
-                <%= p_f.text_field :payment_date, class: "datepicker_payment_date" %>          
-                <label for="payment_date">Data da Matrícula: </label>
+              <div class="input-field col s8 col m2">
+                <%= m_f.number_field :waist, :onkeypress => "return isNumberKey(event)" %>
+                <label for="waist">CINTURA: </label>
               </div>
             </div>
             <div class="row">
-              <div class="input-field col s3 offset-s2">
-                <%= p_f.collection_select :value, current_user.plans, :value, :plan_string %>
-                <label for="value">Valor: </label>
+              <div class="input-field col s8 col m2">
+                <%= m_f.number_field :abdomen, :onkeypress => "return isNumberKey(event)" %>
+                <label for="abdomen">ABDOMEN: </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s8 col m2">
+                <%= m_f.number_field :hips, :onkeypress => "return isNumberKey(event)" %>
+                <label for="hips">QUADRIL: </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s8 col m2">
+                <%= m_f.number_field :left_thigh, :onkeypress => "return isNumberKey(event)" %>
+                <label for="left_thigh">COXA (E): </label>
+              </div>
+              <div class="input-field col s8 col m2">
+                <%= m_f.number_field :righ_thigh, :onkeypress => "return isNumberKey(event)" %>
+                <label for="righ_thigh">COXA (D): </label>
               </div>
             </div>
           <% end %>
           <div class="step-actions">
             <!-- Here goes your actions buttons -->
-            <%= f.button(@client.new_record? ? "Salvar" : "Atualizar", class: "btn waves-effect waves-light") %>
+            <button class="waves-effect waves-dark btn next-step">PRÓXIMO</button>
             <button class="waves-effect waves-dark btn-flat previous-step">VOLTAR</button>
           </div>
-      </div>
-    </li>
-  </ul>
-  <% end %>
+        </div>
+        </li>
+        <li class="step">
+          <div class="step-title waves-effect">Dobras Cutâneas</div>
+          <div class="step-content">
+            <%= f.fields_for :skinfolds do |sf_f| %>
+            <div class="row">
+              <div class="input-field col s8 col m2">
+                <%= sf_f.number_field :chest, :onkeypress => "return isNumberKey(event)" %>
+                <label for="chest">PEITORAL: </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s8 col m2">
+                <%= sf_f.number_field :midaxilary, :onkeypress => "return isNumberKey(event)" %>
+                <label for="midaxilary">AXILAR MÉDIA: </label>
+              </div>
+              <div class="input-field col s8 col m2">
+                <%= sf_f.number_field :subscapular, :onkeypress => "return isNumberKey(event)" %>
+                <label for="subscapular">SUBESCAPULAR: </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s8 col m2">
+                <%= sf_f.number_field :bicep, :onkeypress => "return isNumberKey(event)" %>
+                <label for="bicep">BÍCEPS (D): </label>
+              </div>
+              <div class="input-field col s8 col m2">
+                <%= sf_f.number_field :tricep, :onkeypress => "return isNumberKey(event)" %>
+                <label for="tricep">TRÍCEPS: </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s8 col m2">
+                <%= sf_f.number_field :abdominal, :onkeypress => "return isNumberKey(event)" %>
+                <label for="abdominal">ABDOMINAL: </label>
+              </div>
+              <div class="input-field col s8 col m2">
+                <%= sf_f.number_field :suprailiac, :onkeypress => "return isNumberKey(event)" %>
+                <label for="suprailiac">SUPRA-ILÍACA: </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s8 col m2">
+                <%= sf_f.number_field :thigh, :onkeypress => "return isNumberKey(event)" %>
+                <label for="thigh">COXA: </label>
+              </div>
+              <div class="input-field col s8 col m2">
+                <%= sf_f.number_field :calf, :onkeypress => "return isNumberKey(event)" %>
+                <label for="calf">PANTURRILHA: </label>
+              </div>
+            </div>
+          <% end %>
+          <div class="step-actions">
+            <!-- Here goes your actions buttons -->
+            <button class="waves-effect waves-dark btn next-step">PRÓXIMO</button>
+            <button class="waves-effect waves-dark btn-flat previous-step">VOLTAR</button>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+          <div class="step-title waves-effect">Plano</div>
+          <div class="step-content">
+            <%= f.fields_for :payments do |p_f| %>
+              <div class="row">
+                <div class="input-field col s8 col m6">
+                  <%= p_f.text_field :payment_date, class: "datepicker_payment_date" %>          
+                  <label for="payment_date">Data da Matrícula: </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s8 col m8">
+                  <%= p_f.collection_select :value, current_user.plans, :value, :plan_string %>
+                  <label for="value">Valor: </label>
+                </div>
+              </div>
+            <% end %>
+            <div class="step-actions">
+              <!-- Here goes your actions buttons -->
+              <%= f.button(@client.new_record? ? "Salvar" : "Atualizar", class: "btn waves-effect waves-light") %>
+              <button class="waves-effect waves-dark btn-flat previous-step">VOLTAR</button>
+            </div>
+        </div>
+      </li>
+    </ul>
+    <% end %>
+  </div>
 </div>
   
 <script>

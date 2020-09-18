@@ -1,56 +1,64 @@
-<div class="col s12">
-  <%= form_for(@client, :html => { role: "form" }) do |f| %>
-    <div class="row">
-      <div class="input-field col s6 offset-s2">
-        <i class="material-icons prefix">account_box</i>
-        <%= f.text_field :name, class: "validate" %>
-        <label for="name">Nome Completo</label>
+<div class="row">
+  <div class="col s12 m10 offset-m1">
+    <%= form_for(@client, :html => { role: "form" }) do |f| %>
+      <div class="row">
+        <div class="input-field col s10 m6 offset-m3">
+          <i class="material-icons prefix">account_box</i>
+          <%= f.text_field :name, class: "validate" %>
+          <label for="name">Nome Completo</label>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="input-field col s2 offset-s2">
-        <i class="material-icons prefix">cake</i>
-        <%= f.text_field :birthdate, class: "datepicker"%>          
-        <label for="birhdate">Data de Nascimento</label>
+      <div class="row">
+        <div class="input-field col s10 m6 offset-m3">
+          <i class="material-icons prefix">cake</i>
+          <%= f.text_field :birthdate, class: "datepicker", :value => "#{f.object.birthdate.strftime("%d/%m/%Y") unless f.object.new_record?}"%>          
+          <label for="birhdate">Data de Nascimento</label>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="input-field col s6 offset-s2">
-        <i class="material-icons prefix">add_location</i>
-        <%= f.text_area :address, :id => "address_area", :cols => 30, :rows => 10, class: "materialize-textarea validate" %>
-        <label for="address">Endereço</label>
+      <div class="row">
+        <div class="input-field col s10 m6 offset-m3">
+          <i class="material-icons prefix">add_location</i>
+          <%= f.text_area :address, :id => "address_area", :cols => 30, :rows => 10, class: "materialize-textarea validate" %>
+          <label for="address">Endereço</label>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="input-field col s6 offset-s2">
-        <i class="material-icons prefix">phone_android</i>
-        <%= f.text_field :cellphone, class: "validate phone_with_ddd", :data => {:mask=> '(99) 9 9999-9999'} %>
-        <label for="cellphone">Celular</label>
+      <div class="row">
+        <div class="input-field col s10 m6 offset-m3">
+          <i class="material-icons prefix">phone_android</i>
+          <%= f.text_field :cellphone, class: "validate phone_with_ddd", :data => {:mask=> '(99) 9 9999-9999'} %>
+          <label for="cellphone">Celular</label>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col s2 offset-s2">
-        <h5>Gênero: </h5>
-        <p>
-          <label>
-            <%= f.radio_button :gender, 'Masculino', :checked => 'checked', class: "with-gap" %>
-            <span>Masculino</span> 
-          </label>
-        </p>
-        <p>
-          <label>
-            <%= f.radio_button :gender, 'Feminino', class: "with-gap" %>
-            <span>Feminino</span> 
-          </label>
-        </p>
+      <div class="row">
+        <div class="col s8 m6 offset-m3">
+          <h5>Gênero: </h5>
+          <p>
+            <label>
+              <%= f.radio_button :gender, 'Masculino', :checked => 'checked', class: "with-gap" %>
+              <span>Masculino</span> 
+            </label>
+          </p>
+          <p>
+            <label>
+              <%= f.radio_button :gender, 'Feminino', class: "with-gap" %>
+              <span>Feminino</span> 
+            </label>
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="input-field col s6 offset-s2">
-        <%= f.button(@client.new_record? ? "Registrar-se" : "Atualizar conta", class: "btn waves-effect waves-light col s12") %>
+      <div class="row">
+        <div class="input-field col s6 offset-s3">
+          <%= f.button(@client.new_record? ? "Salvar" : "Atualizar", class: "btn waves-effect waves-light col s12") %>
+        </div>
       </div>
+      <div class="row">
+        <div class="input-field center-align">
+          <%= link_to "Retornar", clients_path, class: "col s8 offset-s2" %>
+        </div>
+      </div>
+      <% end %>
     </div>
-    <% end %>
+  </div>
     
     <script>
       $(document).ready(function(){
@@ -76,5 +84,10 @@
           container: 'body',
           yearRange: [1940, 2040]
           });
+      });
+      
+      $(document).ready(function($){
+        $('.phone_with_ddd').mask('(00) 0 0000-0000');
+        $('.weight_mask').mask("#0.0", {reverse: true})
       });
     </script>

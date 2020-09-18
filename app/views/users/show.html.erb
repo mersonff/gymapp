@@ -2,57 +2,58 @@
 <h1 align="center">Academia <%= @user.business_name %></h1>
 
 <div class="user-show-page">
-  <div class="col s12">
-    <div class="row">
-      <div class="col s6 right-align">
-        <p>
-          <label>
-            Nome de Usuário: 
-          </label>
-        </p>
+  <div class="row">
+    <div class="col s12 m8 offset-m2">
+      <div class="row">
+        <div class="col s4 right-align">
+          <p>
+            <label>
+              Nome de Usuário: 
+            </label>
+          </p>
+        </div>
+        <div class="col s4">
+            <p><%= @user.username %></p>
+        </div>
       </div>
-      <div class="col s6">
-          <p><%= @user.username %></p>
+      <div class="row">
+        <div class="col s4 right-align">
+          <p>
+            <label>
+              Nome Fantasia: 
+            </label>
+          </p>
+        </div>
+        <div class="col s4">
+            <p><%= @user.business_name %></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s4 right-align">
+          <p>
+            <label>
+              Email:
+            </label>
+          </p>
+        </div>
+        <div class="col s4">
+            <p><%= @user.email %></p>
+        </div>
       </div>
     </div>
     <div class="row">
-      <div class="col s6 right-align">
+      <div class="col s12 m8 offset-m2 center-align">
         <p>
-          <label>
-            Nome Fantasia: 
-          </label>
-        </p>
-      </div>
-      <div class="col s6">
-          <p><%= @user.business_name %></p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col s6 right-align">
-        <p>
-          <label>
-            Email:
-          </label>
-        </p>
-      </div>
-      <div class="col s6">
-          <p><%= @user.email %></p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col s8 offset-s2 center-align plan-line">
-        <p>
-          <label>
-            Planos 
-          </label>
+          <h2>
+            PLANOS 
+          </h2>
         </p>
         <p><hr></p>
       </div>
-      <div class="col s8 offset-s2 center-align">
-        <table class="striped centered">
+      <div class="col s12 m8 offset-m2">
+        <table class="striped centered" id="plans_table">
           <thead>
               <tr>
-                  <th>#ID</th>
                   <th>Descrição</th>
                   <th>Valor</th>
                   <th>Atualizado em</th>
@@ -62,15 +63,14 @@
           <tbody>
             <% @user_plans.each do |plan| %>
               <tr>
-                <td><%= plan.id %></td>
                 <td><%= plan.description %></td>
                 <td><%= number_to_currency(plan.value, unit: "R$ ", separator: ",", delimiter: "")%></td>
                 <td><%= plan.updated_at.to_s(:br_data) %></td>
                 <td>
-                  <%= link_to edit_plan_path(plan), :class => "waves-effect waves-light amber btn" do %>
+                  <%= link_to edit_plan_path(plan), :class => "waves-effect waves-light amber btn tooltipped", data: { position: "bottom", tooltip: "Editar plano" } do %>
                     <i class="material-icons">edit</i>
                   <% end %>
-                  <%= link_to plan_path(plan), method: :delete, data: {confirm: ""}, :class => "waves-effect waves-light red btn" do %>
+                  <%= link_to plan_path(plan), method: :delete, data: {confirm: ""}, :class => "waves-effect waves-light red btn tooltipped", data: { position: "bottom", tooltip: "Excluir plano" } do %>
                     <i class="material-icons">delete</i>
                   <% end %>
                 </td>
@@ -79,10 +79,52 @@
           </tbody>
         </table>
         <p>
-          <%= link_to 'Adicionar Plano', new_plan_path, :class  =>"waves-effect waves-light btn" %>
+          <%= link_to 'Adicionar Plano', new_plan_path, :class  =>"waves-effect waves-light btn col s8 m4 offset-s2 offset-m4" %>
         </p>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  $(document).ready( function () {
+    oTable = $('#plans_table').DataTable({
+      "dom": 'lrtip',
+      language: {
+				processing: 'Processando...',
+				search: 'Procurar',
+				lengthMenu: 'Mostrando _MENU_ registros',
+				info: 'Mostrando página _PAGE_ 	de _PAGES_',
+				infoEmpty: 'Nenhum registro para mostrar',
+				infoFiltered: '(filtrado do total de _MAX_ registro(s))',
+				infoPostFix: "",
+				loadingRecords: 'Por favor espere - carregando...',
+				zeroRecords: 'Nenhum registro com esse dado encontrado',
+				emptyTable: 'Nenhum dado disponível na tabela',
+				paginate: {
+					first: 'Primeira página',
+					last: 'Última página',
+					next: 'Próx',
+					previous: 'Ant'
+				},
+				aria: {
+					sortAscending: 'Ative para ordernar a tabela de forma ascendente',
+					sortDescending: 'Ative para ordernar a tabela de forma descendente'
+				}
+			},
+			"search": {
+        "caseInsensitive": true
+      },
+      responsive: true
+    });
+  });
+  
+  $(document).ready(function(){
+    $('select').formSelect();
+  });
+  
+  $(document).ready(function(){
+    $('.tooltipped').tooltip();
+  });
+</script>
 

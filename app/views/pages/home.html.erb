@@ -9,24 +9,27 @@
 
 <br/>
 <div class="row">
-  <div class="col s6">
+  </br>
+  <div class="col s12 m6">
     <%= line_chart @clients.group_by_month(:created_at, format: "%b %y").count, title: "Novos clientes x Mês"%>
   </div>
-  <div class="col s6">
+  </br>
+  <div class="col s12 m6">
    <%= pie_chart @clients.group(:gender).count, title: "Clientes x Gênero" %>
   </div>
+  </br>
 </div>
 
-<br/>
 <div class="row">
-  <div class="debt col s6 center-align">
+  </br>
+  <div class="debt col s12 m6 center-align">
     <h5><b>Clientes em débido: </b></h5>
-    <br/>
     <%= link_to @clients_indebt.count, indebts_path, class: "btn-floating btn-large red pulse text" %>
   </div>
-  <div class="col s6">
+  </br>
+  <div class="col s12 m6">
     <%= column_chart Payment.group_by_day(:created_at, format: "%d %b", range: 1.weeks.ago.midnight..Date.current).sum(:value), 
     prefix: "R$ ", title: "Recebimentos dos últimos 7 dias" %>
   </div>
+  </br>
 </div>
-<br/>
