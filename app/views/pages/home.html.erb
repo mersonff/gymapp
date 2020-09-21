@@ -29,7 +29,7 @@
   </div>
   </br>
   <div class="col s12 m6">
-    <%= column_chart Payment.group_by_day(:created_at, format: "%d %b", range: 1.weeks.ago.midnight..Date.current).sum(:value), 
+    <%= column_chart Payment.group_by_day(:payment_date, format: "%d %b", range: 1.weeks.ago.midnight..Date.current).sum(:value), 
     prefix: "R$ ", title: "Recebimentos dos últimos 7 dias" %>
   </div>
   </br>
