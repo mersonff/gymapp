@@ -10,27 +10,38 @@
 <br/>
 <div class="row">
   </br>
-  <div class="col s12 m6">
-    <%= line_chart @clients.group_by_month(:created_at, format: "%b %y").count, title: "Novos clientes x Mês"%>
+  <div class="debt col s12 m6 center-align">
+    <h5><b>Clientes em débido: </b></h5>
+    <br/>
+    <%= link_to @clients_indebt.count, indebts_path, class: "btn-floating btn-large red pulse text" %>
   </div>
-  </br>
   <div class="col s12 m6">
    <%= pie_chart @clients.group(:gender).count, title: "Clientes x Gênero" %>
+  </div>
+</div>
+
+<div class="row">
+  </br>
+    
+    <div class="col s12 m6">
+      <%= line_chart @clients.group_by_month(:created_at, format: "%b %y", range: 1.year.ago..Date.current).count, title: "Novos clientes x Mês"%>
+    </div>
+  <div class="col s12 m6">
+    <%= column_chart Payment.group_by_day(:payment_date, format: "%d %b", range: 1.weeks.ago.midnight..Date.current).sum(:value), 
+    prefix: "R$ ", title: "Recebimentos dos últimos 7 dias" %>
   </div>
   </br>
 </div>
 
 <div class="row">
   </br>
-  <div class="debt col s12 m6 center-align">
-    <h5><b>Clientes em débido: </b></h5>
-    <br/>
-    <%= link_to @clients_indebt.count, indebts_path, class: "btn-floating btn-large red pulse text" %>
-  </div>
-  </br>
   <div class="col s12 m6">
-    <%= column_chart Payment.group_by_day(:payment_date, format: "%d %b", range: 1.weeks.ago.midnight..Date.current).sum(:value), 
-    prefix: "R$ ", title: "Recebimentos dos últimos 7 dias" %>
+    <%= column_chart Payment.group_by_month(:payment_date, format: "%b %Y", range: 1.year.ago..Date.current).sum(:value), 
+    prefix: "R$ ", title: "Recebimentos dos últimos 12 meses" %>
+  </div>
+  <div class="col s12 m6">
+    <%= column_chart Payment.group_by_year(:payment_date, format: "%Y").sum(:value), 
+    prefix: "R$ ", title: "Recebimentos dos últimos anos" %>
   </div>
   </br>
 </div>
