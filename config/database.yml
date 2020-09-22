@@ -22,5 +22,6 @@ test:
 
 production:
    <<: *default
+   url: <%= ENV["HEROKU_POSTGRESQL_IVORY_URL"] %>
    adapter: postgresql
    database: db/production.sqlite3
