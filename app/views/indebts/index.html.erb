@@ -14,6 +14,7 @@
               <th>Nome</th>
               <th>Celular</th>
               <th>Data de Vencimento</th>
+              <th>Plano</th>
               <th>Vencido há</th>
               <th>Ações</th></th>
           </tr>
@@ -24,6 +25,7 @@
             <td><%= client.name.upcase %></td>
             <td><%= client.cellphone %></td>
             <td><%= (client.payments.last.payment_date. + 1.month).strftime("%d/%m/%Y") %></td>
+            <td><%= number_to_currency(client.payments.last.value, unit: "R$ ", separator: ",", delimiter: "") %></td>
             <% if client.days_in_debt == 0 %>
               <td class="red-text">Hoje</td>
             <% else %>

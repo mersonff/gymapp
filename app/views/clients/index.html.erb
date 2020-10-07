@@ -13,6 +13,8 @@
           <tr>
               <th>Nome</th>
               <th>Celular</th>
+              <th>Data de Vencimento</th>
+              <th>Plano</th>
               <th>Ações</th></th>
           </tr>
         </thead>
@@ -21,6 +23,8 @@
           <tr>
             <td><%= client.name.upcase %></td>
             <td><%= client.cellphone %></td>
+            <td><%= (client.payments.last.payment_date. + 1.month).strftime("%d/%m/%Y") %></td>
+            <td><%= number_to_currency(client.payments.last.value, unit: "R$ ", separator: ",", delimiter: "") %></td>
             <td>
               <%= link_to client_path(client), :class => "waves-effect waves-light indigo btn-small tooltipped", 
                 data: { position: "bottom", tooltip: "Vizualizar Informações" } do %>
