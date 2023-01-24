@@ -9,7 +9,7 @@ Bundler.require(*Rails.groups)
 module GymApp
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 5.2
+    config.load_defaults 7.0
     config.time_zone = 'Brasilia'
     I18n.config.enforce_available_locales = false
     config.i18n.available_locales = ["pt-BR"]

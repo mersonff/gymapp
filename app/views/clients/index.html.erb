@@ -1,103 +1,40 @@
-<h1 align="center">Clientes Cadastrados</h1>
-
-<div align="center">
-  <div class="row">
-    <div class="col s12">
-      <div id="search-box" class="input-field col s8 offset-s2" class="center-align">
-        <i class="material-icons prefix">search</i>
-        <input id="myInputTextField" type="text">
-        <label for="myInputTextField">Procurar</label>
-      </div>
-      <table id="clients_table" class="stripe centered">
-        <thead>
-          <tr>
-              <th>Nome</th>
-              <th>Celular</th>
-              <th>Data de Vencimento</th>
-              <th>Plano</th>
-              <th>Ações</th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @clients.each do |client| %>
-          <tr>
-            <td><%= client.name.upcase %></td>
-            <td><%= client.cellphone %></td>
-            <td><%= (client.payments.last.payment_date. + 1.month).strftime("%d/%m/%Y") %></td>
-            <td><%= number_to_currency(client.payments.last.value, unit: "R$ ", separator: ",", delimiter: "") %></td>
-            <td>
-              <%= link_to client_path(client), :class => "waves-effect waves-light indigo btn-small tooltipped", 
-                data: { position: "bottom", tooltip: "Vizualizar Informações" } do %>
-                <i class="material-icons">account_box</i>
-              <% end %>
-              <%= link_to edit_client_path(client), :class => "waves-effect waves-light amber btn-small tooltipped", 
-                data: { position: "bottom", tooltip: "Editar" } do %>
-                <i class="material-icons">edit</i>
-              <% end %>
-              <%= link_to new_client_measurement_path(client), :class => "waves-effect waves-light pink darken-1 btn-small tooltipped", 
-                data: { position: "bottom", tooltip: "Nova perimetria" } do %>
-                <i class="material-icons">filter_1</i>
-              <% end %>
-              <%= link_to new_client_skinfold_path(client), :class => "waves-effect waves-light teal accent-3 btn-small tooltipped", 
-                data: { position: "bottom", tooltip: "Nova adipometria" } do %>
-                <i class="material-icons">filter_2</i>
-              <% end %>
-              <%= link_to client_path(client), method: :delete, data: { confirm: "", position: "bottom", tooltip: "Excluir" }, 
-                :class => "waves-effect waves-light red btn-small tooltipped" do %>
-                <i class="material-icons">delete</i>
-              <% end %>
-            </td>
-          </tr>
+<div class="clients-cards">
+  <% @clients.each do |client| %>
+    <div class="client-card p-4 items-center bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 mb-5">
+      <div class='flex flex-col md:flex-row'>
+        <%= image_tag 'login_page_img.jpg', class: "object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg mr-4" %>
+        <div class="flex flex-col justify-between leading-normal w-full">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><%= client.name %></h5>
+          <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-base">
+            <%= client.address %>
+          </p>
+        </div>
+        <div class="flex flex-col justify-center">
+          <%= link_to edit_client_path(client), 'data-bs-toggle': "tooltip", title: "Editar informações do cliente" do %>
+            <svg class='w-10 h-10 mb-2 hover:text-yellow-600' fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
+            </svg>
           <% end %>
-        </tbody>
-      </table>
+          <%= link_to client, data: { turbo_method: :delete, turbo_confirm: 'Tem certeza?' }, 'data-bs-toggle': "tooltip", title: "Excluir cliente" do %>
+            <svg class='w-10 h-10 mb-2 hover:text-red-600' fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"></path>
+            </svg>
+          <% end %>
+        </div>
+      </div>
     </div>
+  <% end %>
+
+  <div class="mx-auto text-center my-4 text-base">
+    <%= will_paginate @clients, previous_label: 'Ant', next_label: 'Próx' %>
   </div>
 </div>
 
-<script>
-  $(document).ready( function () {
-    oTable = $('#clients_table').DataTable({
-      "dom": 'lrtip',
-      language: {
-				processing: 'Processando...',
-				search: 'Procurar',
-				lengthMenu: 'Mostrando _MENU_ registros',
-				info: 'Mostrando página _PAGE_ 	de _PAGES_',
-				infoEmpty: 'Nenhum registro para mostrar',
-				infoFiltered: '(filtrado do total de _MAX_ registro(s))',
-				infoPostFix: "",
-				loadingRecords: 'Por favor espere - carregando...',
-				zeroRecords: 'Nenhum registro com esse dado encontrado',
-				emptyTable: 'Nenhum dado disponível na tabela',
-				paginate: {
-					first: 'Primeira página',
-					last: 'Última página',
-					next: 'Próx',
-					previous: 'Ant'
-				},
-				aria: {
-					sortAscending: 'Ative para ordernar a tabela de forma ascendente',
-					sortDescending: 'Ative para ordernar a tabela de forma descendente'
-				}
-			},
-			"search": {
-        "caseInsensitive": true
-      },
-    });
+<script type="text/javascript">
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new Tooltip(tooltipTriggerEl);
   });
-  
-  $(document).ready(function(){
-    $('.tooltipped').tooltip();
-  });
-  
-  $('#myInputTextField').keyup(function(){
-      oTable.search($(this).val()).draw() ;
-  })
-  
-  $(document).ready(function(){
-    $('select').formSelect();
-  });
-       
-
 </script>

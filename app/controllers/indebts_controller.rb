@@ -1,12 +1,12 @@
 class IndebtsController < ApplicationController
-  before_action :set_client, only: [:new, :edit, :update, :show, :destroy]
+  before_action :set_client, only: [:old, :edit, :update, :show, :destroy]
   before_action :require_user, except: [:index, :show]
   before_action :require_same_user, only: [:edit, :update, :destroy]
-  
+
   def new
-    
+
   end
-  
+
   def index
     @clients_indebt = Array.new
     @clients_indebt_next = Array.new
@@ -18,13 +18,13 @@ class IndebtsController < ApplicationController
       end
     end
   end
-  
+
   private
-  
+
   def set_client
     @client = Client.find(params[:id])
   end
-  
+
   def require_same_user
     if current_user != @client.user && !current_user.admin?
       flash[:danger] = "Você não possui acesso a esse cliente"

@@ -3,28 +3,38 @@
   <head>
     <title>GymAPP</title>
     <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
-    
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <%= javascript_importmap_tags %>
   </head>
   <body>
-    <% if logged_in? %>
-      <%= render 'layouts/navigation' %>
-    <% end %>
-    <%= render 'layouts/messages' %>
-    <main>
-      <div id="content" class="container">
+    <div class="flex min-h-screen flex-row bg-gray-100 text-gray-800">
+      <% if logged_in? %>
+        <%= render 'layouts/navigation' %>
+      <% end %>
+      <%= render 'layouts/messages' %>
+      <main class="main -ml-48 flex flex-grow flex-col transition-all duration-150 ease-in md:ml-0">
+        <div class="flex h-full bg-white text-center text-5xl font-bold shadow-md">
           <%= yield %>
-      </div>
-    </main>
-    <% if logged_in? %>
-      <%= render 'layouts/footer' %>
-    <% end %>
+          <dialog id='turbo-confirm'>
+            <form method='dialog'>
+              <p>Tem certeza?</p>
+              <menu>
+                <button value='ok' class="inline-block px-6 py-2 border-2 border-green-500 text-green-500 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">OK</button>
+                <button value='cancel' class="inline-block px-6 py-2 border-2 border-red-600 text-red-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">Cancelar</button>
+              </menu>
+            </form>
+          </dialog>
+        </div>
+      </main>
+    </div>
   </body>
-  
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
   </style>

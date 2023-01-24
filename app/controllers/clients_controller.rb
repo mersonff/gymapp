@@ -4,7 +4,7 @@ class ClientsController < ApplicationController
   before_action :require_same_user, only: [:edit, :update, :destroy]
 
   def index
-      @clients = current_user.clients
+      @clients = current_user.clients.paginate(page: params[:page], per_page: 10)
   end
 
   def new

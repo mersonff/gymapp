@@ -1,50 +1,10 @@
-<header>
-  <ul id="dropdown1" class="dropdown-content black">
-    <li><%= link_to "Adicionar", new_client_path %></li>
-    <li><%= link_to "Renovar", indebts_path %></li>
-    <li><%= link_to "Listar", clients_path %></li>
-  </ul>
-  <ul id="dropdown2" class="dropdown-content black">
-    <% if logged_in? %>
-        <li><%= link_to "Editar perfil", edit_user_path(current_user) %></li>
-        <li><%= link_to "Ver Perfil", user_path(current_user) %></li>
-        <li><%= link_to "Log out", logout_path, method: :delete %></li>
-      <% else %>
-        <li><%= link_to "Log in", login_path %></li>
-        <li><%= link_to "Sign up", signup_path %></li>
-      <% end %>
-  </ul>
-  <ul id="dropdown3" class="dropdown-content black">
-    <li><%= link_to "Adicionar", new_client_path %></li>
-    <li><%= link_to "Renovar", indebts_path %></li>
-    <li><%= link_to "Listar", clients_path %></li>
-  </ul>
-  <ul id="dropdown4" class="dropdown-content black">
-    <% if logged_in? %>
-      <li><%= link_to "Editar perfil", edit_user_path(current_user) %></li>
-      <li><%= link_to "Ver Perfil", user_path(current_user) %></li>
-      <li><%= link_to "Log out", logout_path, method: :delete %></li>
-    <% else %>
-      <li><%= link_to "Log in", login_path %></li>
-      <li><%= link_to "Sign up", signup_path %></li>
+<aside class="sidebar w-48 -translate-x-full transform bg-white p-4 transition-transform duration-150 ease-in md:translate-x-0 md:shadow-md">
+  <div class="my-4 w-full border-b-4 border-indigo-100 text-center">
+    <%= link_to root_path do %>
+      <span class="font-mono text-xl font-bold tracking-widest"> <span class="text-indigo-600">Gym</span>APP </span>
     <% end %>
-  </ul>
-  <nav class="nav black">
-    <div class="container">
-      <div class="nav-wrapper">
-          <a href="#" class="brand-logo right"><span class="tamanho-logo">GYMAPP</a>
-          <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-          <ul id="nav-mobile" class="left hide-on-med-and-down">
-            <li><%= link_to "Início", home_path %></li>
-            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Clientes<i class="material-icons right">arrow_drop_down</i></a></li>
-            <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Seu Perfil <%= "(admin)" if current_user.admin? %><i class="material-icons right">arrow_drop_down</i></a></li>
-          </ul>
-          <ul class="sidenav" id="mobile-demo">
-            <li><%= link_to "Início", home_path %></li>
-            <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Clientes<i class="material-icons right">arrow_drop_down</i></a></li>
-            <li><a class="dropdown-trigger" href="#!" data-target="dropdown4">Seu Perfil <%= "(admin)" if current_user.admin? %><i class="material-icons right">arrow_drop_down</i></a></li>
-          </ul>
-      </div>
-    </div>
-  </nav>
-</header>
+  </div>
+  <div class="my-4 w-full text-center">
+    <%= link_to 'Clientes', clients_path, class: 'font-medium text-primary-600 hover:text-indigo-600 dark:text-primary-500' %>
+  </div>
+</aside>
