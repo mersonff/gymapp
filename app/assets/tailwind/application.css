@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
