@@ -3,20 +3,19 @@ Rails.application.routes.draw do
   root 'pages#home'
 
   get 'home', to: "pages#home"
+  get 'revenue_data', to: "pages#revenue_data"
 
   get 'signup', to: "users#new"
-  get 'indebts', to: "indebts#index"
   get 'payments/:id/new', to: "payments#new"
   resources :users, except: [:new]
-  resources :plans
+  resources :plans, except: [:show]
   resources :clients do
-    resources :payments, except: [:edit, :update, :show, :destroy, :index]
-    resources :measurements, except: [:edit, :update, :show, :destroy, :index]
-    resources :skinfolds, except: [:edit, :update, :show, :destroy, :index]
+    resources :payments, except: [:edit, :update, :show, :destroy]
+    resources :measurements, except: [:edit, :update, :show, :destroy]
+    resources :skinfolds, except: [:edit, :update, :show, :destroy]
   end
 
   get 'login', to: "sessions#new"
   post 'login', to: "sessions#create"
   delete 'logout', to: "sessions#destroy"
-
 end

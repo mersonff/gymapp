@@ -1,7 +1,6 @@
 class SessionsController < ApplicationController
-  before_action :check_logged_in, only: [:old]
-
-
+  layout 'auth', only: [:new]
+  
   def new
 
   end
@@ -13,8 +12,8 @@ class SessionsController < ApplicationController
       flash[:success] = "Logado com sucesso"
       redirect_to home_path
     else
-      flash.now[:danger] = "Há algo de errado com as informações fornecidas"
-      render :new
+      flash[:danger] = "Há algo de errado com as informações fornecidas"
+      redirect_to login_path
     end
   end
 
@@ -22,12 +21,5 @@ class SessionsController < ApplicationController
     session[:user_id] = nil
     flash[:success] = "Você deslogou com sucesso"
     redirect_to login_path
-  end
-
-  def check_logged_in
-    if logged_in?
-      flash[:danger] = "Você já está logado!"
-      redirect_to home_path
-    end
   end
 end

@@ -1,27 +1,88 @@
-<h1 align="center">Renovar Matrícula de:</h1>
-<h2 align="center"><%= @client.name %></h2>
+<% content_for :page_title, "Renovar Matrícula" %>
 
-<div class="row">
-  <div class="col s12">
-    <%= form_with(model: [@client, @payment], local: true) do |form| %>
-      <div class="row">
-        <div class="input-field col s6 offset-s3">
-          <%= form.text_field :payment_date, class: "datepicker" %>          
-          <label for="name">Data da Renovação: </label>
+<div class="py-8">
+  <!-- Breadcrumb -->
+  <nav class="mb-6">
+    <ol class="flex items-center space-x-2 text-sm text-gray-500">
+      <li><%= link_to "Dashboard", root_path, class: "hover:text-gray-700" %></li>
+      <li><span class="mx-2">/</span></li>
+      <li><%= link_to "Clientes", clients_path, class: "hover:text-gray-700" %></li>
+      <li><span class="mx-2">/</span></li>
+      <li><%= link_to @client.name, client_path(@client), class: "hover:text-gray-700" %></li>
+      <li><span class="mx-2">/</span></li>
+      <li class="text-gray-900 font-medium">Renovar Matrícula</li>
+    </ol>
+  </nav>
+
+  <div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+      <!-- Header -->
+      <div class="p-6 border-b border-gray-200">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-xl font-semibold text-gray-900">Renovar Matrícula</h2>
+            <p class="text-sm text-gray-600">Cliente: <span class="font-medium text-gray-900"><%= @client.name %></span></p>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="input-field col s6 offset-s3">
-          <%= form.collection_select :value, current_user.plans, :value, :plan_string %>
-          <label for="value">Plano: </label>
-        </div>
+
+      <!-- Form -->
+      <div class="p-6">
+        <%= form_with(model: [@client, @payment], local: true, html: { class: "space-y-6" }) do |form| %>
+          <!-- Data da Renovação -->
+          <div>
+            <%= form.label :payment_date, "Data da Renovação", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.date_field :payment_date, 
+                  value: Date.current,
+                  class: "w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+          </div>
+
+          <!-- Plano -->
+          <div>
+            <%= form.label :value, "Plano Selecionado", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.collection_select :value, 
+                  current_user.plans, 
+                  :value, 
+                  :plan_string,
+                  { prompt: "Selecione um plano" },
+                  { class: "w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" } %>
+          </div>
+
+          <!-- Info Box -->
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-start">
+              <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <div>
+                <h4 class="text-sm font-medium text-blue-800 mb-1">Informações sobre a renovação</h4>
+                <p class="text-sm text-blue-700">A matrícula será renovada a partir da data selecionada. O valor será cobrado conforme o plano escolhido.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex items-center justify-end gap-3 pt-6 border-t border-gray-200">
+            <%= link_to "Cancelar", client_path(@client), 
+                  class: "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" %>
+            
+            <%= form.button "Confirmar Renovação", 
+                  type: "submit",
+                  class: "px-6 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors shadow-sm inline-flex items-center" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Confirmar Renovação
+            <% end %>
+          </div>
+        <% end %>
       </div>
-      <div class="row">
-        <div class="input-field col s4 offset-s4 center-align">
-          <%= form.button "Salvar", class: "waves-effect waves-light btn" %>
-        </div>
-      </div>
-    <% end %>
+    </div>
   </div>
 </div>
 

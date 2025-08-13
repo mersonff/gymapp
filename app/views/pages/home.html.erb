@@ -1,1 +1,413 @@
-<h1>Dashboard</h1>
+<% content_for :page_title, "Dashboard" %>
+
+<div class="space-y-6">
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Total de Clientes -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Total de Clientes</p>
+          <p class="text-3xl font-bold text-gray-900"><%= @total_clients %></p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+      </div>
+      <div class="mt-4">
+        <%= link_to clients_path, class: "text-sm text-blue-600 hover:text-blue-800 font-medium" do %>
+          Ver todos →
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Clientes Inadimplentes -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Inadimplentes</p>
+          <p class="text-3xl font-bold text-red-600"><%= @overdue_clients %></p>
+        </div>
+        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+      <div class="mt-4">
+        <%= link_to clients_path(filter: 'overdue'), class: "text-sm text-red-600 hover:text-red-800 font-medium" do %>
+          Ver inadimplentes →
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Clientes em Dia -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Em Dia</p>
+          <p class="text-3xl font-bold text-green-600"><%= @current_clients %></p>
+        </div>
+        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+      <div class="mt-4">
+        <%= link_to clients_path, class: "text-sm text-green-600 hover:text-green-800 font-medium" do %>
+          Ver clientes →
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Arrecadação Mensal -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Arrecadação do Mês</p>
+          <p class="text-3xl font-bold text-blue-600">R$ <%= number_with_precision(@monthly_revenue, precision: 2, delimiter: '.', separator: ',') %></p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Financial Dashboard -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Monthly Revenue -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+          <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+          </svg>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-blue-600">R$ <%= number_with_precision(@monthly_revenue, precision: 2, delimiter: '.', separator: ',') %></p>
+          <p class="text-sm text-gray-600">Arrecadação do Mês</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Yearly Revenue -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+          <svg class="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-purple-600">R$ <%= number_with_precision(@yearly_revenue, precision: 2, delimiter: '.', separator: ',') %></p>
+          <p class="text-sm text-gray-600">Arrecadação do Ano</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Average Monthly -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+          <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+          </svg>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-green-600">R$ <%= number_with_precision(@yearly_revenue > 0 ? (@yearly_revenue / 12) : 0, precision: 2, delimiter: '.', separator: ',') %></p>
+          <p class="text-sm text-gray-600">Média Mensal</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue Chart -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-semibold text-gray-900">Arrecadação</h2>
+          <p class="text-sm text-gray-600">Acompanhe sua receita ao longo do tempo</p>
+        </div>
+        <div class="flex gap-2">
+          <select id="yearSelect" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <% (Date.current.year - 2..Date.current.year).each do |year| %>
+              <option value="<%= year %>" <%= 'selected' if year == Date.current.year %>><%= year %></option>
+            <% end %>
+          </select>
+          <select id="monthSelect" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <option value="">Ano todo</option>
+            <% Date::MONTHNAMES.compact.each_with_index do |month, index| %>
+              <option value="<%= index + 1 %>"><%= month %></option>
+            <% end %>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="p-6">
+      <div class="h-80">
+        <canvas id="revenueChart" width="400" height="200"></canvas>
+      </div>
+      <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+        <div class="text-center">
+          <p class="text-sm text-gray-600">Total do Período</p>
+          <p id="periodTotal" class="text-2xl font-bold text-blue-600">R$ <%= number_with_precision(@chart_data.present? ? @chart_data.sum { |_, value| value } : 0, precision: 2, delimiter: '.', separator: ',') %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Overdue Clients -->
+  <% if @clients_indebt.any? %>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+      <div class="p-6 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-semibold text-gray-900">Clientes Inadimplentes</h2>
+            <p class="text-sm text-gray-600">Clientes que precisam de atenção</p>
+          </div>
+          <%= link_to clients_path(filter: 'overdue'), class: "text-sm text-blue-600 hover:text-blue-800 font-medium" do %>
+            Ver todos →
+          <% end %>
+        </div>
+      </div>
+      <div class="p-6">
+        <div class="space-y-4">
+          <% @clients_indebt.limit(5).each do |client| %>
+            <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <span class="text-red-600 font-semibold text-sm">
+                    <%= client.name.first.upcase %>
+                  </span>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-900"><%= client.name %></p>
+                  <p class="text-sm text-gray-600">
+                    Vencimento: <%= (client.payments.last.payment_date + 1.month).strftime('%d/%m/%Y') %>
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-sm text-red-600 font-medium">
+                  <%= pluralize((Date.current - (client.payments.last.payment_date + 1.month)).to_i, 'dia') %> em atraso
+                </span>
+                <%= link_to client_path(client), class: "text-blue-600 hover:text-blue-800" do %>
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Quick Actions -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Ações Rápidas</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <%= link_to new_client_path, class: "flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors group" do %>
+        <div class="w-10 h-10 bg-blue-100 group-hover:bg-blue-200 rounded-lg flex items-center justify-center mr-4">
+          <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+          </svg>
+        </div>
+        <div>
+          <h4 class="font-medium text-gray-900">Novo Cliente</h4>
+          <p class="text-sm text-gray-600">Cadastrar um novo cliente</p>
+        </div>
+      <% end %>
+
+      <%= link_to new_plan_path, class: "flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors group" do %>
+        <div class="w-10 h-10 bg-green-100 group-hover:bg-green-200 rounded-lg flex items-center justify-center mr-4">
+          <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        </div>
+        <div>
+          <h4 class="font-medium text-gray-900">Novo Plano</h4>
+          <p class="text-sm text-gray-600">Criar um novo plano</p>
+        </div>
+      <% end %>
+
+      <%= link_to clients_path, class: "flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors group" do %>
+        <div class="w-10 h-10 bg-purple-100 group-hover:bg-purple-200 rounded-lg flex items-center justify-center mr-4">
+          <svg class="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+        </div>
+        <div>
+          <h4 class="font-medium text-gray-900">Relatórios</h4>
+          <p class="text-sm text-gray-600">Ver relatórios detalhados</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Função para inicializar o gráfico - compatível com Turbo
+function initializeChart() {
+  const ctx = document.getElementById('revenueChart');
+  if (!ctx) return; // Se o canvas não existir, sair
+
+  // Destruir gráfico existente se houver
+  if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
+    window.revenueChart.destroy();
+  }
+
+  // Declarar variáveis sempre dentro da função para evitar conflitos Turbo
+  let yearSelect = document.getElementById('yearSelect');
+  let monthSelect = document.getElementById('monthSelect');
+  let periodTotal = document.getElementById('periodTotal');
+
+  if (!yearSelect || !monthSelect || !periodTotal) return;
+
+  // Dados iniciais do servidor
+  const initialData = <%= raw (@chart_data.present? ? @chart_data.to_json : [].to_json) %>;
+
+  window.revenueChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: initialData.length > 0 ? initialData.map(item => item[0]) : ['Sem dados'],
+      datasets: [{
+        label: 'Arrecadação (R$)',
+        data: initialData.length > 0 ? initialData.map(item => item[1]) : [0],
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: 'rgb(59, 130, 246)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return 'R$ ' + value.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              });
+            }
+          },
+          grid: {
+            color: 'rgba(0, 0, 0, 0.1)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      },
+      elements: {
+        point: {
+          hoverBackgroundColor: 'rgb(59, 130, 246)'
+        }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      }
+    }
+  });
+  
+  function updateChart() {
+    const year = document.getElementById('yearSelect').value;
+    const month = document.getElementById('monthSelect').value;
+    console.log('[updateChart] year:', year, '| month:', month);
+    // Mostrar loading
+    window.revenueChart.data.labels = ['Carregando...'];
+    window.revenueChart.data.datasets[0].data = [0];
+    window.revenueChart.update();
+    fetch(`/revenue_data?year=${year}&month=${month}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      window.revenueChart.data.labels = data.chart_data.map(item => item[0]);
+      window.revenueChart.data.datasets[0].data = data.chart_data.map(item => item[1]);
+      // Atualizar total do período
+      periodTotal.textContent = 'R$ ' + data.total_revenue.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      window.revenueChart.update();
+    })
+    .catch(error => {
+      console.error('Erro ao carregar dados:', error);
+      // Restaurar dados iniciais em caso de erro
+      window.revenueChart.data.labels = initialData.length > 0 ? initialData.map(item => item[0]) : ['Sem dados'];
+      window.revenueChart.data.datasets[0].data = initialData.length > 0 ? initialData.map(item => item[1]) : [0];
+      window.revenueChart.update();
+    });
+  }
+  
+  // Sempre remover e adicionar listeners para garantir funcionamento com Turbo
+  if (yearSelect) {
+    yearSelect.removeEventListener('change', updateChart);
+    yearSelect.addEventListener('change', updateChart);
+  }
+  if (monthSelect) {
+    monthSelect.removeEventListener('change', updateChart);
+    monthSelect.addEventListener('change', updateChart);
+  }
+}
+
+// Aguardar um pouco antes de inicializar para garantir que o DOM está pronto
+function delayedInit() {
+  setTimeout(() => {
+    initializeChart();
+  }, 100);
+}
+
+// Limpar gráfico anterior antes de navegar
+document.addEventListener('turbo:before-visit', function() {
+  if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
+    window.revenueChart.destroy();
+    window.revenueChart = null;
+  }
+});
+
+// Múltiplos event listeners para máxima compatibilidade
+document.addEventListener('DOMContentLoaded', delayedInit);
+document.addEventListener('turbo:load', delayedInit);
+document.addEventListener('turbo:frame-load', delayedInit);
+document.addEventListener('turbo:render', delayedInit);
+
+// Fallback caso os eventos Turbo não funcionem
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', delayedInit);
+} else {
+  delayedInit();
+}
+</script>

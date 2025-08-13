@@ -26,6 +26,7 @@ gem "image_processing", "~> 1.2"
 group :development, :test do
   gem 'sqlite3', '~> 1.7'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'debug', '>= 1.0.0'
 end
 
 group :production do
@@ -36,6 +37,8 @@ group :development do
   gem 'listen', '~> 3.8'
   gem 'faker'
   gem 'foreman'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

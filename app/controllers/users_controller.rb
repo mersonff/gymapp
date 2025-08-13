@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
+  layout 'auth', only: [:new]
   before_action :set_user, only: [:edit, :update, :show]
   before_action :require_same_user_and_admin, only: [:edit, :update, :destroy]
   before_action :require_same_user, only: [:show]
   before_action :require_admin, only: [:create, :destroy]
-  before_action :check_logged_in, only: [:old]
 
   def index
     @users = User.paginate(page: params[:page], per_page: 5)
@@ -20,7 +20,8 @@ class UsersController < ApplicationController
       flash[:success] = "Bem-vindo ao GymApp #{@user.username}"
       redirect_to user_path(@user)
     else
-      render 'new'
+      flash[:danger] = "Erro ao criar usuário: #{@user.errors.full_messages.join(', ')}"
+      redirect_to signup_path
     end
   end
 
@@ -32,7 +33,8 @@ class UsersController < ApplicationController
       flash[:success] = "Sua conta foi atualizada com sucesso"
       redirect_to user_path(@user)
     else
-      render 'edit'
+      flash[:danger] = "Erro ao atualizar usuário: #{@user.errors.full_messages.join(', ')}"
+      redirect_to edit_user_path(@user)
     end
   end
 
