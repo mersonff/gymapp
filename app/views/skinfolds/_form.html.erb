@@ -1,62 +1,290 @@
-<div class="row">
-  <div class="col s12 m10 offset-m3">
-    <%= form_with(model: [@client, @skinfold], local: true) do |sf_f|  %>
-      <div class="row">
-        <div class="input-field col s6 m3">
-          <%= sf_f.number_field :chest, :onkeypress => "return isNumberKey(event)" %>
-          <label for="chest">PEITORAL: </label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s6 m3">
-          <%= sf_f.number_field :midaxilary, :onkeypress => "return isNumberKey(event)" %>
-          <label for="midaxilary">AXILAR MÉDIA: </label>
-        </div>
-        <div class="input-field col s6 m3">
-          <%= sf_f.number_field :subscapular, :onkeypress => "return isNumberKey(event)" %>
-          <label for="subscapular">SUBESCAPULAR: </label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s6 m3">
-          <%= sf_f.number_field :bicep, :onkeypress => "return isNumberKey(event)" %>
-          <label for="bicep">BÍCEPS (D): </label>
-        </div>
-        <div class="input-field col s6 m3">
-          <%= sf_f.number_field :tricep, :onkeypress => "return isNumberKey(event)" %>
-          <label for="tricep">TRÍCEPS: </label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s6 m3">
-          <%= sf_f.number_field :abdominal, :onkeypress => "return isNumberKey(event)" %>
-          <label for="abdominal">ABDOMINAL: </label>
-        </div>
-        <div class="input-field col s6 m3">
-          <%= sf_f.number_field :suprailiac, :onkeypress => "return isNumberKey(event)" %>
-          <label for="suprailiac">SUPRA-ILÍACA: </label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s6 m3">
-          <%= sf_f.number_field :thigh, :onkeypress => "return isNumberKey(event)" %>
-          <label for="thigh">COXA: </label>
-        </div>
-        <div class="input-field col s6 m3">
-          <%= sf_f.number_field :calf, :onkeypress => "return isNumberKey(event)" %>
-          <label for="calf">PANTURRILHA: </label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12 m6">
-          <%= sf_f.button "Salvar", class: "waves-effect waves-light btn col s12" %>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field center-align">
-          <%= link_to "Retornar", :back, class: "col s12 m6" %>
+<div class="bg-white shadow-lg rounded-lg p-8">
+  <%= form_with(model: [@client, @skinfold], local: true, class: "space-y-8") do |f| %>
+    
+    <% if @skinfold.errors.any? %>
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div class="flex">
+          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">Erro ao salvar</h3>
+            <div class="mt-2 text-sm text-red-700">
+              <ul class="list-disc list-inside">
+                <% @skinfold.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     <% end %>
-  </div>
+
+    <!-- Seção: Dobras do Tronco -->
+    <div class="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-6">
+      <h3 class="text-lg font-semibold text-purple-800 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+        Dobras do Tronco
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="space-y-2">
+          <%= f.label :chest, "Peitoral (mm)", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.number_field :chest, 
+              class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-200", 
+              placeholder: "Ex: 8.5",
+              step: 0.1,
+              min: 1,
+              max: 50,
+              onkeypress: "return isNumberKey(event)" %>
+          <p class="text-xs text-gray-500">Dobra diagonal, meio da distância entre linha axilar anterior e mamilo</p>
+        </div>
+        
+        <div class="space-y-2">
+          <%= f.label :midaxilary, "Axilar Média (mm)", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.number_field :midaxilary, 
+              class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-200", 
+              placeholder: "Ex: 12.0",
+              step: 0.1,
+              min: 1,
+              max: 50,
+              onkeypress: "return isNumberKey(event)" %>
+          <p class="text-xs text-gray-500">Dobra vertical, linha axilar média ao nível do processo xifoide</p>
+        </div>
+        
+        <div class="space-y-2">
+          <%= f.label :subscapular, "Subescapular (mm)", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.number_field :subscapular, 
+              class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200", 
+              placeholder: "Ex: 15.2",
+              step: 0.1,
+              min: 1,
+              max: 50,
+              onkeypress: "return isNumberKey(event)" %>
+          <p class="text-xs text-gray-500">⭐ Dobra principal - oblíqua, 2cm abaixo do ângulo inferior da escápula</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção: Dobras dos Braços -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6">
+      <h3 class="text-lg font-semibold text-blue-800 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        Dobras dos Braços
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <%= f.label :bicep, "Bíceps (mm)", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.number_field :bicep, 
+              class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200", 
+              placeholder: "Ex: 6.8",
+              step: 0.1,
+              min: 1,
+              max: 50,
+              onkeypress: "return isNumberKey(event)" %>
+          <p class="text-xs text-gray-500">Dobra vertical, face anterior do braço, ponto mais alto do bíceps</p>
+        </div>
+        
+        <div class="space-y-2">
+          <%= f.label :tricep, "Tríceps (mm)", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.number_field :tricep, 
+              class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-200", 
+              placeholder: "Ex: 18.5",
+              step: 0.1,
+              min: 1,
+              max: 50,
+              onkeypress: "return isNumberKey(event)" %>
+          <p class="text-xs text-gray-500">⭐ Dobra principal - vertical, face posterior do braço, meio do úmero</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção: Dobras do Abdome -->
+    <div class="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-lg p-6">
+      <h3 class="text-lg font-semibold text-red-800 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+        </svg>
+        Dobras do Abdome e Quadril
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <%= f.label :abdominal, "Abdominal (mm)", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.number_field :abdominal, 
+              class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200", 
+              placeholder: "Ex: 22.3",
+              step: 0.1,
+              min: 1,
+              max: 60,
+              onkeypress: "return isNumberKey(event)" %>
+          <p class="text-xs text-gray-500">Dobra vertical, 2cm à direita da cicatriz umbilical</p>
+        </div>
+        
+        <div class="space-y-2">
+          <%= f.label :suprailiac, "Supra-ilíaca (mm)", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.number_field :suprailiac, 
+              class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition duration-200", 
+              placeholder: "Ex: 16.7",
+              step: 0.1,
+              min: 1,
+              max: 60,
+              onkeypress: "return isNumberKey(event)" %>
+          <p class="text-xs text-gray-500">⭐ Dobra principal - oblíqua, acima da crista ilíaca na linha axilar anterior</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção: Dobras das Pernas -->
+    <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-6">
+      <h3 class="text-lg font-semibold text-green-800 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+        </svg>
+        Dobras das Pernas
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <%= f.label :thigh, "Coxa (mm)", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.number_field :thigh, 
+              class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200", 
+              placeholder: "Ex: 25.8",
+              step: 0.1,
+              min: 1,
+              max: 60,
+              onkeypress: "return isNumberKey(event)" %>
+          <p class="text-xs text-gray-500">Dobra vertical, face anterior da coxa, meio da distância entre joelho e quadril</p>
+        </div>
+        
+        <div class="space-y-2">
+          <%= f.label :calf, "Panturrilha (mm)", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.number_field :calf, 
+              class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200", 
+              placeholder: "Ex: 14.2",
+              step: 0.1,
+              min: 1,
+              max: 40,
+              onkeypress: "return isNumberKey(event)" %>
+          <p class="text-xs text-gray-500">Dobra vertical, face medial da panturrilha no maior perímetro</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calculadora Automática -->
+    <div id="calculator" class="bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-lg p-6 hidden">
+      <h3 class="text-lg font-semibold text-yellow-800 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        Cálculos Automáticos
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+        <div class="bg-white rounded p-3">
+          <span class="font-medium text-gray-600">Soma 3 dobras principais:</span>
+          <p id="sum-3-folds" class="text-lg font-bold text-yellow-700">- mm</p>
+        </div>
+        <div class="bg-white rounded p-3">
+          <span class="font-medium text-gray-600">Soma total:</span>
+          <p id="total-sum" class="text-lg font-bold text-yellow-700">- mm</p>
+        </div>
+        <div class="bg-white rounded p-3">
+          <span class="font-medium text-gray-600">Média:</span>
+          <p id="average" class="text-lg font-bold text-yellow-700">- mm</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+      <div class="flex-1">
+        <%= f.submit "Salvar Dobras Cutâneas", 
+            class: "w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" %>
+      </div>
+      <div class="sm:w-auto">
+        <%= link_to "Cancelar", :back, 
+            class: "w-full sm:w-auto inline-flex justify-center items-center bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" %>
+      </div>
+    </div>
+  <% end %>
 </div>
+
+<script>
+  // Função para permitir apenas números e ponto decimal
+  function isNumberKey(evt) {
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }
+
+  // Calculadora automática
+  document.addEventListener('DOMContentLoaded', function() {
+    const fields = {
+      tricep: document.getElementById('skinfold_tricep'),
+      subscapular: document.getElementById('skinfold_subscapular'),
+      suprailiac: document.getElementById('skinfold_suprailiac'),
+      chest: document.getElementById('skinfold_chest'),
+      midaxilary: document.getElementById('skinfold_midaxilary'),
+      bicep: document.getElementById('skinfold_bicep'),
+      abdominal: document.getElementById('skinfold_abdominal'),
+      thigh: document.getElementById('skinfold_thigh'),
+      calf: document.getElementById('skinfold_calf')
+    };
+    
+    const calculator = document.getElementById('calculator');
+    const sum3Element = document.getElementById('sum-3-folds');
+    const totalSumElement = document.getElementById('total-sum');
+    const averageElement = document.getElementById('average');
+    
+    function updateCalculations() {
+      const values = {};
+      let hasValues = false;
+      
+      // Obter todos os valores
+      Object.keys(fields).forEach(key => {
+        const field = fields[key];
+        if (field && field.value && parseFloat(field.value) > 0) {
+          values[key] = parseFloat(field.value);
+          hasValues = true;
+        }
+      });
+      
+      if (hasValues) {
+        calculator.classList.remove('hidden');
+        
+        // Calcular soma das 3 dobras principais
+        const mainFolds = [values.tricep, values.subscapular, values.suprailiac].filter(v => v);
+        if (mainFolds.length > 0) {
+          const sum3 = mainFolds.reduce((a, b) => a + b, 0);
+          sum3Element.textContent = sum3.toFixed(1) + ' mm';
+        } else {
+          sum3Element.textContent = '- mm';
+        }
+        
+        // Calcular soma total
+        const allValues = Object.values(values);
+        const totalSum = allValues.reduce((a, b) => a + b, 0);
+        totalSumElement.textContent = totalSum.toFixed(1) + ' mm';
+        
+        // Calcular média
+        const average = totalSum / allValues.length;
+        averageElement.textContent = average.toFixed(1) + ' mm';
+      } else {
+        calculator.classList.add('hidden');
+      }
+    }
+    
+    // Adicionar listeners aos campos
+    Object.values(fields).forEach(field => {
+      if (field) {
+        field.addEventListener('input', updateCalculations);
+      }
+    });
+    
+    // Calcular na inicialização
+    updateCalculations();
+  });
+</script>

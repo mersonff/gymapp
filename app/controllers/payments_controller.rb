@@ -5,7 +5,7 @@ class PaymentsController < ApplicationController
   before_action :require_same_user, only: [:edit, :update, :destroy]
   
   def index
-    @payments = @client.payments.paginate(page: params[:page], per_page: 5)
+    @payments = @client.payments.order('payment_date DESC').paginate(page: params[:page], per_page: 5)
   end
   
   def new

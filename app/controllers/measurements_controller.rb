@@ -5,7 +5,7 @@ class MeasurementsController < ApplicationController
   before_action :require_same_user, only: [:edit, :update, :destroy]
   
   def index
-    @measurements = @client.measurements.paginate(page: params[:page], per_page: 5)
+    @measurements = @client.measurements.order('created_at DESC').paginate(page: params[:page], per_page: 5)
   end
   
   def new

@@ -1,12 +1,93 @@
-<div class="row messages">
-  <div class="col s12">
-    <% flash.each do |name, msg| %>
-      <br/>
-      <br/>
-      <div class='alert alert-<%="#{name}" %>'>
-        <button type="button" class="close-alert">×</button>
-        <%= msg %>
+<% flash.each do |name, msg| %>
+  <div class="fixed top-4 right-4 z-50 max-w-sm w-full animate-slide-in toast-pulse">
+    <div class="<% if name == "notice" || name == "success" %>bg-green-600<% elsif name == "alert" || name == "error" %>bg-red-600<% else %>bg-blue-600<% end %> backdrop-blur-lg rounded-xl shadow-2xl border-2 border-white/30 p-4 transform transition-all duration-300 hover:scale-105">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <% if name == "notice" || name == "success" %>
+            <svg class="h-6 w-6 text-white" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+          <% elsif name == "alert" || name == "error" %>
+            <svg class="h-6 w-6 text-white" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+          <% else %>
+            <svg class="h-6 w-6 text-white" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+            </svg>
+          <% end %>
+        </div>
+        <div class="ml-3 flex-1">
+          <p class="text-sm text-white font-semibold">
+            <%= msg %>
+          </p>
+        </div>
+        <div class="ml-4 flex-shrink-0">
+          <button class="inline-flex text-white/80 hover:text-white transition-colors duration-200 close-alert">
+            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
       </div>
-    <% end %>  
+    </div>
   </div>
-</div>
+
+  <style>
+    @keyframes slide-in {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    .animate-slide-in {
+      animation: slide-in 0.4s ease-out;
+    }
+    
+    /* Pulse animation for better visibility */
+    .toast-pulse {
+      animation: pulse 1s ease-in-out 2;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+  </style>
+
+  <script>
+    // Auto-dismiss after 7 seconds (increased from 5)
+    setTimeout(function() {
+      const alert = document.querySelector('.close-alert');
+      if (alert) {
+        const toastContainer = alert.closest('[class*="fixed"]');
+        if (toastContainer) {
+          toastContainer.style.transform = 'translateX(100%)';
+          toastContainer.style.opacity = '0';
+          setTimeout(() => toastContainer.remove(), 300);
+        }
+      }
+    }, 7000);
+
+    // Manual dismiss
+    document.querySelectorAll('.close-alert').forEach(button => {
+      button.addEventListener('click', function() {
+        const alert = this.closest('[class*="fixed"]');
+        if (alert) {
+          alert.style.transform = 'translateX(100%)';
+          alert.style.opacity = '0';
+          setTimeout(() => alert.remove(), 300);
+        }
+      });
+    });
+  </script>
+<% end %>

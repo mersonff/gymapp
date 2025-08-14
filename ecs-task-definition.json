@@ -1,0 +1,50 @@
+{
+  "family": "gymapp-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "containerDefinitions": [
+    {
+      "name": "gymapp",
+      "image": "mersonff/gymapp:latest",
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        { "name": "RAILS_ENV", "value": "production" }
+      ],
+      "secrets": [
+        {
+          "name": "DB_HOST",
+          "valueFrom": "/gymapp/staging/DB_HOST"
+        },
+        {
+          "name": "DB_USERNAME",
+          "valueFrom": "/gymapp/staging/DB_USERNAME"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "/gymapp/staging/DB_PASSWORD"
+        },
+        {
+          "name": "SECRET_KEY_BASE",
+          "valueFrom": "/gymapp/staging/SECRET_KEY_BASE"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/gymapp",
+          "awslogs-region": "<REGION>",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
