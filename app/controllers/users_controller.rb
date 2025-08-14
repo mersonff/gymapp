@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     if @user.save
       session[:user_id] = @user.id
       flash[:success] = "Bem-vindo ao GymApp #{@user.username}"
-      redirect_to user_path(@user)
+      redirect_to root_path
     else
       flash[:danger] = "Erro ao criar usuário: #{@user.errors.full_messages.join(', ')}"
       redirect_to signup_path
