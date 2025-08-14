@@ -1,0 +1,456 @@
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Cabeçalho -->
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">
+        Histórico de Dobras Cutâneas - <%= @client.name %>
+      </h1>
+      <p class="mt-2 text-sm text-gray-600">
+        Todas as medidas de dobras cutâneas registradas para este cliente
+      </p>
+    </div>
+    <div class="flex space-x-3">
+      <%= link_to client_path(@client), 
+          class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Voltar
+      <% end %>
+      <%= link_to new_client_skinfold_path(@client), 
+          class: "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Nova Medição
+      <% end %>
+    </div>
+  </div>
+
+  <% if @skinfolds && @skinfolds.any? %>
+    <!-- Visualização do Boneco (primeira medida) -->
+    <% latest_skinfold = @skinfolds.first %>
+    <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+        Visualização das Dobras Cutâneas - <%= latest_skinfold.created_at.strftime("%d/%m/%Y") %>
+      </h2>
+      
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Boneco SVG -->
+        <div class="flex-1 flex justify-center">
+          <div class="relative">
+            <svg width="300" height="500" viewBox="0 0 300 500" class="border border-gray-200 rounded-lg bg-gray-50">
+              <!-- Cabeça -->
+              <circle cx="150" cy="60" r="30" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+              
+              <!-- Pescoço -->
+              <rect x="140" y="85" width="20" height="15" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+              
+              <!-- Tronco -->
+              <ellipse cx="150" cy="180" rx="50" ry="80" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+              
+              <!-- Braço Esquerdo -->
+              <ellipse cx="120" cy="140" rx="15" ry="40" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+              <ellipse cx="110" cy="190" rx="12" ry="35" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+              
+              <!-- Braço Direito -->
+              <ellipse cx="180" cy="140" rx="15" ry="40" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+              <ellipse cx="190" cy="190" rx="12" ry="35" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+              
+              <!-- Quadril -->
+              <ellipse cx="150" cy="280" rx="40" ry="20" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+              
+              <!-- Perna Esquerda -->
+              <ellipse cx="130" cy="350" rx="20" ry="50" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+              <ellipse cx="125" cy="420" rx="15" ry="30" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+              
+              <!-- Perna Direita -->
+              <ellipse cx="170" cy="350" rx="20" ry="50" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+              <ellipse cx="175" cy="420" rx="15" ry="30" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+              
+              <!-- Pontos das dobras cutâneas -->
+              
+              <!-- Tríceps -->
+              <% if latest_skinfold.tricep %>
+                <% tricep_size = [latest_skinfold.tricep.to_f / 2, 15].min + 5 %>
+                <circle cx="180" cy="140" r="<%= tricep_size %>" fill="rgba(147, 51, 234, 0.7)" stroke="#7c3aed" stroke-width="2" class="skinfold-point">
+                  <title>Tríceps: <%= latest_skinfold.tricep %> mm</title>
+                </circle>
+                <text x="200" y="145" class="text-xs fill-purple-700 font-semibold">T: <%= latest_skinfold.tricep %>mm</text>
+              <% end %>
+              
+              <!-- Bíceps -->
+              <% if latest_skinfold.bicep %>
+                <% bicep_size = [latest_skinfold.bicep.to_f / 2, 15].min + 5 %>
+                <circle cx="120" cy="140" r="<%= bicep_size %>" fill="rgba(59, 130, 246, 0.7)" stroke="#3b82f6" stroke-width="2" class="skinfold-point">
+                  <title>Bíceps: <%= latest_skinfold.bicep %> mm</title>
+                </circle>
+                <text x="80" y="145" class="text-xs fill-blue-700 font-semibold">B: <%= latest_skinfold.bicep %>mm</text>
+              <% end %>
+              
+              <!-- Subescapular -->
+              <% if latest_skinfold.subscapular %>
+                <% subscapular_size = [latest_skinfold.subscapular.to_f / 2, 15].min + 5 %>
+                <circle cx="130" cy="160" r="<%= subscapular_size %>" fill="rgba(34, 197, 94, 0.7)" stroke="#22c55e" stroke-width="2" class="skinfold-point">
+                  <title>Subescapular: <%= latest_skinfold.subscapular %> mm</title>
+                </circle>
+                <text x="80" y="165" class="text-xs fill-green-700 font-semibold">SE: <%= latest_skinfold.subscapular %>mm</text>
+              <% end %>
+              
+              <!-- Supra-ilíaca -->
+              <% if latest_skinfold.suprailiac %>
+                <% suprailiac_size = [latest_skinfold.suprailiac.to_f / 2, 15].min + 5 %>
+                <circle cx="170" cy="230" r="<%= suprailiac_size %>" fill="rgba(249, 115, 22, 0.7)" stroke="#f97316" stroke-width="2" class="skinfold-point">
+                  <title>Supra-ilíaca: <%= latest_skinfold.suprailiac %> mm</title>
+                </circle>
+                <text x="185" y="235" class="text-xs fill-orange-700 font-semibold">SI: <%= latest_skinfold.suprailiac %>mm</text>
+              <% end %>
+              
+              <!-- Abdominal -->
+              <% if latest_skinfold.abdominal %>
+                <% abdominal_size = [latest_skinfold.abdominal.to_f / 2, 15].min + 5 %>
+                <circle cx="150" cy="200" r="<%= abdominal_size %>" fill="rgba(239, 68, 68, 0.7)" stroke="#ef4444" stroke-width="2" class="skinfold-point">
+                  <title>Abdominal: <%= latest_skinfold.abdominal %> mm</title>
+                </circle>
+                <text x="160" y="205" class="text-xs fill-red-700 font-semibold">A: <%= latest_skinfold.abdominal %>mm</text>
+              <% end %>
+              
+              <!-- Coxa -->
+              <% if latest_skinfold.thigh %>
+                <% thigh_size = [latest_skinfold.thigh.to_f / 2, 15].min + 5 %>
+                <circle cx="170" cy="350" r="<%= thigh_size %>" fill="rgba(168, 85, 247, 0.7)" stroke="#a855f7" stroke-width="2" class="skinfold-point">
+                  <title>Coxa: <%= latest_skinfold.thigh %> mm</title>
+                </circle>
+                <text x="185" y="355" class="text-xs fill-purple-700 font-semibold">C: <%= latest_skinfold.thigh %>mm</text>
+              <% end %>
+              
+              <!-- Panturrilha -->
+              <% if latest_skinfold.calf %>
+                <% calf_size = [latest_skinfold.calf.to_f / 2, 15].min + 5 %>
+                <circle cx="175" cy="420" r="<%= calf_size %>" fill="rgba(99, 102, 241, 0.7)" stroke="#6366f1" stroke-width="2" class="skinfold-point">
+                  <title>Panturrilha: <%= latest_skinfold.calf %> mm</title>
+                </circle>
+                <text x="190" y="425" class="text-xs fill-indigo-700 font-semibold">P: <%= latest_skinfold.calf %>mm</text>
+              <% end %>
+              
+              <!-- Midaxilar -->
+              <% if latest_skinfold.midaxilary %>
+                <% midaxilary_size = [latest_skinfold.midaxilary.to_f / 2, 15].min + 5 %>
+                <circle cx="110" cy="180" r="<%= midaxilary_size %>" fill="rgba(16, 185, 129, 0.7)" stroke="#10b981" stroke-width="2" class="skinfold-point">
+                  <title>Midaxilar: <%= latest_skinfold.midaxilary %> mm</title>
+                </circle>
+                <text x="70" y="185" class="text-xs fill-emerald-700 font-semibold">M: <%= latest_skinfold.midaxilary %>mm</text>
+              <% end %>
+            </svg>
+          </div>
+        </div>
+        
+        <!-- Legenda e Estatísticas -->
+        <div class="flex-1 space-y-6">
+          <!-- Legenda -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">Legenda das Dobras</h3>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+              <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-purple-500 mr-2"></div>
+                <span>T = Tríceps</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-blue-500 mr-2"></div>
+                <span>B = Bíceps</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+                <span>SE = Subescapular</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-orange-500 mr-2"></div>
+                <span>SI = Supra-ilíaca</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+                <span>A = Abdominal</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-purple-400 mr-2"></div>
+                <span>C = Coxa</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-indigo-500 mr-2"></div>
+                <span>P = Panturrilha</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-emerald-500 mr-2"></div>
+                <span>M = Midaxilar</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Estatísticas -->
+          <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+            <h3 class="text-lg font-semibold text-blue-800 mb-3">Estatísticas</h3>
+            <div class="space-y-3">
+              <% if latest_skinfold.tricep && latest_skinfold.subscapular && latest_skinfold.suprailiac %>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-blue-700">Soma das 3 dobras principais:</span>
+                  <span class="text-lg font-bold text-blue-900">
+                    <%= (latest_skinfold.tricep + latest_skinfold.subscapular + latest_skinfold.suprailiac).round(1) %> mm
+                  </span>
+                </div>
+              <% end %>
+              
+              <% all_values = [latest_skinfold.tricep, latest_skinfold.bicep, latest_skinfold.subscapular, 
+                              latest_skinfold.suprailiac, latest_skinfold.abdominal, latest_skinfold.thigh, 
+                              latest_skinfold.calf, latest_skinfold.midaxilary].compact %>
+              <% if all_values.any? %>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-blue-700">Soma total:</span>
+                  <span class="text-lg font-bold text-blue-900"><%= all_values.sum.round(1) %> mm</span>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-blue-700">Média das dobras:</span>
+                  <span class="text-lg font-bold text-blue-900"><%= (all_values.sum.to_f / all_values.length).round(1) %> mm</span>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-blue-700">Maior dobra:</span>
+                  <span class="text-lg font-bold text-blue-900"><%= all_values.max.round(1) %> mm</span>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-blue-700">Menor dobra:</span>
+                  <span class="text-lg font-bold text-blue-900"><%= all_values.min.round(1) %> mm</span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- Interpretação -->
+          <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+            <h3 class="text-lg font-semibold text-green-800 mb-2">Interpretação</h3>
+            <p class="text-sm text-green-700">
+              • <strong>Círculos maiores</strong> = Dobras com maior espessura<br>
+              • <strong>Cores diferentes</strong> = Diferentes regiões corporais<br>
+              • <strong>Hover</strong> sobre os círculos para ver valores exatos
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Dobras Cutâneas -->
+    <div class="space-y-6">
+      <% @skinfolds.each_with_index do |skinfold, index| %>
+        <div class="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition duration-150">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-semibold text-gray-900">
+              <%= skinfold.created_at.strftime("%d/%m/%Y") %>
+            </h3>
+            <% if skinfold.tricep && skinfold.subscapular && skinfold.suprailiac %>
+              <div class="text-sm">
+                <span class="font-medium text-gray-500">Soma 3 dobras:</span>
+                <span class="font-semibold text-red-600">
+                  <%= (skinfold.tricep + skinfold.subscapular + skinfold.suprailiac).round(1) %> mm
+                </span>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm">
+            <div class="bg-gray-50 rounded-lg p-3">
+              <span class="font-medium text-gray-500 block mb-1">Tríceps</span>
+              <p class="text-lg font-semibold <%= skinfold.tricep ? 'text-purple-600' : 'text-gray-400' %>">
+                <%= skinfold.tricep || "-" %> mm
+              </p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <span class="font-medium text-gray-500 block mb-1">Bíceps</span>
+              <p class="text-lg font-semibold text-gray-900"><%= skinfold.bicep || "-" %> mm</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <span class="font-medium text-gray-500 block mb-1">Subescapular</span>
+              <p class="text-lg font-semibold <%= skinfold.subscapular ? 'text-green-600' : 'text-gray-400' %>">
+                <%= skinfold.subscapular || "-" %> mm
+              </p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <span class="font-medium text-gray-500 block mb-1">Supra-ilíaca</span>
+              <p class="text-lg font-semibold <%= skinfold.suprailiac ? 'text-orange-600' : 'text-gray-400' %>">
+                <%= skinfold.suprailiac || "-" %> mm
+              </p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <span class="font-medium text-gray-500 block mb-1">Abdominal</span>
+              <p class="text-lg font-semibold text-gray-900"><%= skinfold.abdominal || "-" %> mm</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <span class="font-medium text-gray-500 block mb-1">Coxa</span>
+              <p class="text-lg font-semibold text-gray-900"><%= skinfold.thigh || "-" %> mm</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <span class="font-medium text-gray-500 block mb-1">Panturrilha</span>
+              <p class="text-lg font-semibold text-gray-900"><%= skinfold.calf || "-" %> mm</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <span class="font-medium text-gray-500 block mb-1">Midaxilar</span>
+              <p class="text-lg font-semibold text-gray-900"><%= skinfold.midaxilary || "-" %> mm</p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Paginação -->
+    <div class="mt-8 flex items-center justify-between">
+      <div class="flex items-center">
+        <p class="text-sm text-gray-700">
+          Mostrando <span class="font-medium"><%= @skinfolds.offset + 1 %></span> até 
+          <span class="font-medium"><%= [@skinfolds.offset + @skinfolds.per_page, @skinfolds.total_entries].min %></span> de 
+          <span class="font-medium"><%= @skinfolds.total_entries %></span> dobras cutâneas
+        </p>
+      </div>
+      <div class="pagination-wrapper">
+        <%= will_paginate @skinfolds, 
+            class: "pagination",
+            inner_window: 1,
+            outer_window: 0,
+            previous_label: "← Anterior",
+            next_label: "Próximo →" %>
+      </div>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">Nenhuma dobra cutânea registrada</h3>
+      <p class="mt-1 text-sm text-gray-500">Registre a primeira medição para acompanhar a evolução da composição corporal.</p>
+      <div class="mt-6">
+        <%= link_to new_client_skinfold_path(@client), 
+            class: "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 flex items-center mx-auto w-fit" do %>
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Nova Medição
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .pagination a, .pagination em, .pagination span {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    color: #374151;
+    text-decoration: none;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .pagination a:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+  }
+  
+  .pagination .current {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: #ffffff;
+  }
+  
+  .pagination .disabled {
+    background-color: #f9fafb;
+    border-color: #e5e7eb;
+    color: #9ca3af;
+  }
+  
+  /* Estilos para o boneco interativo */
+  .skinfold-point {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .skinfold-point:hover {
+    stroke-width: 3;
+    filter: brightness(1.2);
+  }
+  
+  .tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  
+  .tooltip.show {
+    opacity: 1;
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Adicionar interatividade aos pontos das dobras cutâneas
+  const skinfoldPoints = document.querySelectorAll('.skinfold-point');
+  const tooltip = document.createElement('div');
+  tooltip.className = 'tooltip';
+  document.body.appendChild(tooltip);
+  
+  skinfoldPoints.forEach(point => {
+    point.addEventListener('mouseenter', function(e) {
+      const title = this.querySelector('title');
+      if (title) {
+        tooltip.textContent = title.textContent;
+        tooltip.classList.add('show');
+      }
+    });
+    
+    point.addEventListener('mouseleave', function() {
+      tooltip.classList.remove('show');
+    });
+    
+    point.addEventListener('mousemove', function(e) {
+      tooltip.style.left = (e.clientX + 10) + 'px';
+      tooltip.style.top = (e.clientY - 10) + 'px';
+    });
+    
+    // Adicionar efeito de pulse ao clicar
+    point.addEventListener('click', function() {
+      this.style.animation = 'pulse 0.6s ease-in-out';
+      setTimeout(() => {
+        this.style.animation = '';
+      }, 600);
+    });
+  });
+  
+  // Adicionar animação de pulse
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+  `;
+  document.head.appendChild(style);
+});
+</script>

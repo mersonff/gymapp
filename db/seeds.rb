@@ -33,7 +33,7 @@ Plan.create ([{
       birthdate: Faker::Date.birthday(min_age: 18, max_age: 65),
       address: Faker::Address.full_address,
       gender: "Feminino",
-      cellphone: Faker::PhoneNumber.subscriber_number(length: 11),
+      cellphone: "11987654321",
       user_id: 1
     }])
 end
@@ -43,7 +43,7 @@ end
       name: Faker::Name.unique.name,
       birthdate: Faker::Date.birthday(min_age: 18, max_age: 65),
       address: Faker::Address.full_address,
-      cellphone: Faker::PhoneNumber.subscriber_number(length: 11),
+      cellphone: "11987654321",
       gender: "Masculino",
       user_id: 1
     }])

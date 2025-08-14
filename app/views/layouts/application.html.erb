@@ -1,41 +1,59 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>GymAPP</title>
+    <title>GymAPP - Sistema de Gerenciamento</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-
-     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <%= javascript_importmap_tags %>
   </head>
-  <body>
-    <div class="flex min-h-screen flex-row bg-gray-100 text-gray-800">
+  <body class="bg-gray-50">
+    <div class="min-h-screen flex">
       <% if logged_in? %>
         <%= render 'layouts/navigation' %>
       <% end %>
-      <%= render 'layouts/messages' %>
-      <main class="main -ml-48 flex flex-grow flex-col transition-all duration-150 ease-in md:ml-0">
-        <div class="flex h-full bg-white text-center text-5xl font-bold shadow-md">
+      
+      <div class="flex-1 flex flex-col">
+        <!-- Messages -->
+        <%= render 'layouts/messages' %>
+        
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
           <%= yield %>
-          <dialog id='turbo-confirm'>
-            <form method='dialog'>
-              <p>Tem certeza?</p>
-              <menu>
-                <button value='ok' class="inline-block px-6 py-2 border-2 border-green-500 text-green-500 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">OK</button>
-                <button value='cancel' class="inline-block px-6 py-2 border-2 border-red-600 text-red-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">Cancelar</button>
-              </menu>
-            </form>
-          </dialog>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
+    
+    <!-- Modal de confirmação posicionado fora dos containers -->
+    <dialog id='turbo-confirm' class="backdrop:bg-gray-900/50 bg-white rounded-2xl shadow-2xl border border-gray-200 p-6 max-w-md fixed inset-0 m-auto z-50">
+      <form method='dialog'>
+        <div class="text-center mb-6">
+          <div class="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          <p class="text-lg font-medium text-gray-900">Confirmar ação</p>
+          <p class="confirmation-message text-sm text-gray-600 mt-2">Tem certeza que deseja continuar?</p>
+        </div>
+        <div class="flex space-x-3">
+          <button type="button" value='cancel' class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors" onclick="this.closest('dialog').close('cancel')">
+            Cancelar
+          </button>
+          <button type="button" value='ok' class="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors" onclick="this.closest('dialog').close('ok')">
+            Confirmar
+          </button>
+        </div>
+      </form>
+    </dialog>
   </body>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
   </style>
 </html>

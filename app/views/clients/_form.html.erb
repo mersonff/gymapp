@@ -1,295 +1,230 @@
-<%= render 'shared/errors', obj: @client %>
-  
-  <div class="row">
-    <div class="col s12 m10 offset-m3">
-      <%= form_for(@client, :html => { role: "form" }) do |f| %>
-        <ul class="stepper linear">
-          <li class="step active">
-            <div class="step-title waves-effect">Informações Gerais</div>
-            <div class="step-content">
-              <div class="row">
-                <div class="input-field col s10 col m6">
-                  <i class="material-icons prefix">account_box</i>
-                  <%= f.text_field :name %>
-                  <label for="name">Nome Completo</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="input-field col s10 col m6">
-                  <i class="material-icons prefix">cake</i>
-                  <%= f.text_field :birthdate, class: "datepicker_birthdate"%>          
-                  <label for="birhdate">Data de Nascimento</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="input-field col s10 col m6">
-                  <i class="material-icons prefix">add_location</i>
-                  <%= f.text_area :address, :id => "address_area", :cols => 30, :rows => 10, class: "materialize-textarea validate" %>
-                  <label for="address">Endereço</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="input-field col s10 col m6">
-                  <i class="material-icons prefix">phone_android</i>
-                  <%= f.text_field :cellphone, class: "validate phone_with_ddd" %>
-                  <label for="cellphone">Celular</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col s8 col m6">
-                  <h5>Gênero: </h5>
-                  <p>
-                    <label>
-                      <%= f.radio_button :gender, 'Masculino', :checked => 'checked', class: "with-gap" %>
-                      <span>Masculino</span> 
-                    </label>
-                  </p>
-                  <p>
-                    <label>
-                      <%= f.radio_button :gender, 'Feminino', class: "with-gap" %>
-                      <span>Feminino</span> 
-                    </label>
-                  </p>
-                </div>
-              </div>
-            <div class="step-actions">
-              <!-- Here goes your actions buttons -->
-              <button class="waves-effect waves-dark btn next-step">PRÓXIMO</button>
-            </div>
-          </div>
-        </li>
-        <li class="step">
-          <div class="step-title waves-effect">Perímetros</div>
-          <div class="step-content">
-            <%= f.fields_for :measurements do |m_f| %>
-            <div class="row">
-              <div class="input-field col s8 col m6">
-                <%= m_f.number_field :height, :onkeypress => "return isNumberKey(event)" %>
-                <label for="height">ALTURA: </label>
-                <span class="helper-text">Centímentros (Ex: 1.77m = 177cm)</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s8 col m6">
-                <%= m_f.number_field :weight, step: 0.1, class: "weight_mask"  %>
-                <label for="weight">PESO: </label>
-                <span class="helper-text">Quilogramas</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s8 col m2">
-                <%= m_f.number_field :chest, :onkeypress => "return isNumberKey(event)" %>
-                <label for="chest">TÓRAX: </label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s8 col m2">
-                <%= m_f.number_field :left_arm, :onkeypress => "return isNumberKey(event)" %>
-                <label for="left_arm">BRAÇO (E): </label>
-              </div>
-              <div class="input-field col s8 col m2">
-                <%= m_f.number_field :right_arm, :onkeypress => "return isNumberKey(event)" %>
-                <label for="right_arm">BRAÇO (D): </label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s8 col m2">
-                <%= m_f.number_field :waist, :onkeypress => "return isNumberKey(event)" %>
-                <label for="waist">CINTURA: </label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s8 col m2">
-                <%= m_f.number_field :abdomen, :onkeypress => "return isNumberKey(event)" %>
-                <label for="abdomen">ABDOMEN: </label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s8 col m2">
-                <%= m_f.number_field :hips, :onkeypress => "return isNumberKey(event)" %>
-                <label for="hips">QUADRIL: </label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s8 col m2">
-                <%= m_f.number_field :left_thigh, :onkeypress => "return isNumberKey(event)" %>
-                <label for="left_thigh">COXA (E): </label>
-              </div>
-              <div class="input-field col s8 col m2">
-                <%= m_f.number_field :righ_thigh, :onkeypress => "return isNumberKey(event)" %>
-                <label for="righ_thigh">COXA (D): </label>
-              </div>
-            </div>
-          <% end %>
-          <div class="step-actions">
-            <!-- Here goes your actions buttons -->
-            <button class="waves-effect waves-dark btn next-step">PRÓXIMO</button>
-            <button class="waves-effect waves-dark btn-flat previous-step">VOLTAR</button>
-          </div>
+<%= form_with(model: client, local: true, class: "bg-white shadow-xl rounded-lg p-8 space-y-8") do |form| %>
+  <% if client.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+      <h2 class="text-red-800 font-semibold text-lg mb-2">
+        <%= pluralize(client.errors.count, "erro") %> impediram que este cliente fosse salvo:
+      </h2>
+      <ul class="text-red-700 text-sm space-y-1">
+        <% client.errors.full_messages.each do |message| %>
+          <li class="flex items-start">
+            <svg class="w-4 h-4 text-red-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+            </svg>
+            <%= message %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Informações Pessoais -->
+  <div class="form-section">
+    <h3 class="form-section-title">
+      <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+      </svg>
+      Informações Pessoais
+    </h3>
+    
+    <div class="form-grid">
+      <div class="form-field">
+        <%= form.label :name, "Nome Completo", class: "form-label required" %>
+        <%= form.text_field :name, 
+            class: "form-input #{'form-input-error' if client.errors[:name].any?}",
+            placeholder: "Digite o nome completo",
+            required: true %>
+        <% if client.errors[:name].any? %>
+          <p class="form-error"><%= client.errors[:name].first %></p>
+        <% end %>
+      </div>
+
+      <div class="form-field">
+        <%= form.label :birthdate, "Data de Nascimento", class: "form-label required" %>
+        <%= form.date_field :birthdate, 
+            class: "form-input #{'form-input-error' if client.errors[:birthdate].any?}",
+            required: true %>
+        <% if client.errors[:birthdate].any? %>
+          <p class="form-error"><%= client.errors[:birthdate].first %></p>
+        <% end %>
+      </div>
+
+      <div class="form-field">
+        <%= form.label :phone, "Telefone", class: "form-label required" %>
+        <%= form.telephone_field :phone, 
+            class: "form-input #{'form-input-error' if client.errors[:phone].any?}",
+            placeholder: "(00) 00000-0000",
+            required: true %>
+        <% if client.errors[:phone].any? %>
+          <p class="form-error"><%= client.errors[:phone].first %></p>
+        <% end %>
+      </div>
+
+      <div class="form-field">
+        <%= form.label :gender, "Gênero", class: "form-label" %>
+        <%= form.select :gender, 
+            [['Masculino', 'M'], ['Feminino', 'F'], ['Outro', 'O']], 
+            { prompt: 'Selecione o gênero' },
+            { class: "form-input #{'form-input-error' if client.errors[:gender].any?}" } %>
+        <% if client.errors[:gender].any? %>
+          <p class="form-error"><%= client.errors[:gender].first %></p>
+        <% end %>
+      </div>
+
+      <div class="form-field col-span-2">
+        <%= form.label :address, "Endereço", class: "form-label" %>
+        <%= form.text_area :address, 
+            class: "form-input #{'form-input-error' if client.errors[:address].any?}",
+            rows: 3,
+            placeholder: "Digite o endereço completo" %>
+        <% if client.errors[:address].any? %>
+          <p class="form-error"><%= client.errors[:address].first %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plano -->
+  <div class="form-section">
+    <h3 class="form-section-title">
+      <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      Plano de Treino
+    </h3>
+    
+    <div class="form-field">
+      <%= form.label :plan_id, "Selecionar Plano", class: "form-label required" %>
+      <%= form.collection_select :plan_id, Plan.all, :id, :description,
+          { prompt: 'Escolha um plano' },
+          { class: "form-input #{'form-input-error' if client.errors[:plan_id].any?}",
+            required: true } %>
+      <% if client.errors[:plan_id].any? %>
+        <p class="form-error"><%= client.errors[:plan_id].first %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Medidas Corporais -->
+  <div class="form-section">
+    <h3 class="form-section-title">
+      <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+      </svg>
+      Medidas Iniciais
+    </h3>
+
+    <%= form.fields_for :measurements do |measurement_form| %>
+      <div class="form-grid">
+        <div class="form-field">
+          <%= measurement_form.label :height, "Altura (cm)", class: "form-label" %>
+          <%= measurement_form.number_field :height, 
+              class: "form-input",
+              step: 1,
+              min: 0,
+              placeholder: "175" %>
         </div>
-        </li>
-        <li class="step">
-          <div class="step-title waves-effect">Dobras Cutâneas</div>
-          <div class="step-content">
-            <%= f.fields_for :skinfolds do |sf_f| %>
-            <div class="row">
-              <div class="input-field col s8 col m2">
-                <%= sf_f.number_field :chest, :onkeypress => "return isNumberKey(event)" %>
-                <label for="chest">PEITORAL: </label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s8 col m2">
-                <%= sf_f.number_field :midaxilary, :onkeypress => "return isNumberKey(event)" %>
-                <label for="midaxilary">AXILAR MÉDIA: </label>
-              </div>
-              <div class="input-field col s8 col m2">
-                <%= sf_f.number_field :subscapular, :onkeypress => "return isNumberKey(event)" %>
-                <label for="subscapular">SUBESCAPULAR: </label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s8 col m2">
-                <%= sf_f.number_field :bicep, :onkeypress => "return isNumberKey(event)" %>
-                <label for="bicep">BÍCEPS (D): </label>
-              </div>
-              <div class="input-field col s8 col m2">
-                <%= sf_f.number_field :tricep, :onkeypress => "return isNumberKey(event)" %>
-                <label for="tricep">TRÍCEPS: </label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s8 col m2">
-                <%= sf_f.number_field :abdominal, :onkeypress => "return isNumberKey(event)" %>
-                <label for="abdominal">ABDOMINAL: </label>
-              </div>
-              <div class="input-field col s8 col m2">
-                <%= sf_f.number_field :suprailiac, :onkeypress => "return isNumberKey(event)" %>
-                <label for="suprailiac">SUPRA-ILÍACA: </label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s8 col m2">
-                <%= sf_f.number_field :thigh, :onkeypress => "return isNumberKey(event)" %>
-                <label for="thigh">COXA: </label>
-              </div>
-              <div class="input-field col s8 col m2">
-                <%= sf_f.number_field :calf, :onkeypress => "return isNumberKey(event)" %>
-                <label for="calf">PANTURRILHA: </label>
-              </div>
-            </div>
-          <% end %>
-          <div class="step-actions">
-            <!-- Here goes your actions buttons -->
-            <button class="waves-effect waves-dark btn next-step">PRÓXIMO</button>
-            <button class="waves-effect waves-dark btn-flat previous-step">VOLTAR</button>
-          </div>
+
+        <div class="form-field">
+          <%= measurement_form.label :weight, "Peso (kg)", class: "form-label" %>
+          <%= measurement_form.number_field :weight, 
+              class: "form-input",
+              step: 1,
+              min: 0,
+              placeholder: "70" %>
         </div>
-      </li>
-      <li class="step">
-          <div class="step-title waves-effect">Plano</div>
-          <div class="step-content">
-            <%= f.fields_for :payments do |p_f| %>
-              <div class="row">
-                <div class="input-field col s8 col m6">
-                  <%= p_f.text_field :payment_date, class: "datepicker_payment_date" %>          
-                  <label for="payment_date">Data da Matrícula: </label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="input-field col s8 col m8">
-                  <%= p_f.collection_select :value, current_user.plans, :value, :plan_string %>
-                  <label for="value">Valor: </label>
-                </div>
-              </div>
-            <% end %>
-            <div class="step-actions">
-              <!-- Here goes your actions buttons -->
-              <%= f.button(@client.new_record? ? "Salvar" : "Atualizar", class: "btn waves-effect waves-light") %>
-              <button class="waves-effect waves-dark btn-flat previous-step">VOLTAR</button>
-            </div>
+
+        <div class="form-field">
+          <%= measurement_form.label :chest, "Peito (cm)", class: "form-label" %>
+          <%= measurement_form.number_field :chest, 
+              class: "form-input",
+              step: 1,
+              min: 0,
+              placeholder: "95" %>
         </div>
-      </li>
-    </ul>
+
+        <div class="form-field">
+          <%= measurement_form.label :left_arm, "Braço Esquerdo (cm)", class: "form-label" %>
+          <%= measurement_form.number_field :left_arm, 
+              class: "form-input",
+              step: 1,
+              min: 0,
+              placeholder: "35" %>
+        </div>
+
+        <div class="form-field">
+          <%= measurement_form.label :right_arm, "Braço Direito (cm)", class: "form-label" %>
+          <%= measurement_form.number_field :right_arm, 
+              class: "form-input",
+              step: 1,
+              min: 0,
+              placeholder: "35" %>
+        </div>
+
+        <div class="form-field">
+          <%= measurement_form.label :waist, "Cintura (cm)", class: "form-label" %>
+          <%= measurement_form.number_field :waist, 
+              class: "form-input",
+              step: 1,
+              min: 0,
+              placeholder: "80" %>
+        </div>
+
+        <div class="form-field">
+          <%= measurement_form.label :abdomen, "Abdômen (cm)", class: "form-label" %>
+          <%= measurement_form.number_field :abdomen, 
+              class: "form-input",
+              step: 1,
+              min: 0,
+              placeholder: "85" %>
+        </div>
+
+        <div class="form-field">
+          <%= measurement_form.label :hips, "Quadris (cm)", class: "form-label" %>
+          <%= measurement_form.number_field :hips, 
+              class: "form-input",
+              step: 1,
+              min: 0,
+              placeholder: "95" %>
+        </div>
+
+        <div class="form-field">
+          <%= measurement_form.label :left_thigh, "Coxa Esquerda (cm)", class: "form-label" %>
+          <%= measurement_form.number_field :left_thigh, 
+              class: "form-input",
+              step: 1,
+              min: 0,
+              placeholder: "55" %>
+        </div>
+
+        <div class="form-field">
+          <%= measurement_form.label :righ_thigh, "Coxa Direita (cm)", class: "form-label" %>
+          <%= measurement_form.number_field :righ_thigh, 
+              class: "form-input",
+              step: 1,
+              min: 0,
+              placeholder: "55" %>
+        </div>
+      </div>
     <% end %>
   </div>
-</div>
-  
-<script>
-  $(document).ready(function(){
-    $('.datepicker_birthdate').datepicker({
-      i18n: {
-        months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-        monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabádo'],
-        weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-        weekdaysAbbrev: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
-        today: 'Hoje',
-        clear: 'Limpar',
-        cancel: 'Sair',
-        done: 'Confirmar',
-        labelMonthNext: 'Próximo mês',
-        labelMonthPrev: 'Mês anterior',
-        labelMonthSelect: 'Selecione um mês',
-        labelYearSelect: 'Selecione um ano',
-        selectMonths: true,
-        selectYears: 15
-      },
-      format: 'dd/mm/yyyy',
-      container: 'body',
-      yearRange: [1940, 2040],
-      defaultDate: new Date(1990, 0, 1),
-    });
+
+  <!-- Botões de Ação -->
+  <div class="flex flex-col sm:flex-row gap-4 pt-8 border-t border-gray-200">
+    <button type="submit" 
+            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      <%= client.persisted? ? 'Atualizar Cliente' : 'Cadastrar Cliente' %>
+    </button>
     
-    $('.datepicker_payment_date').datepicker({
-      i18n: {
-        months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-        monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabádo'],
-        weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-        weekdaysAbbrev: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
-        today: 'Hoje',
-        clear: 'Limpar',
-        cancel: 'Sair',
-        done: 'Confirmar',
-        labelMonthNext: 'Próximo mês',
-        labelMonthPrev: 'Mês anterior',
-        labelMonthSelect: 'Selecione um mês',
-        labelYearSelect: 'Selecione um ano',
-        selectMonths: true,
-        selectYears: 15
-      },
-      format: 'dd/mm/yyyy',
-      container: 'body',
-      yearRange: [1940, 2040],
-      defaultDate: new Date(),
-      setDefaultDate: true
-    });
-  });
- 
-  var stepper = document.querySelector('.stepper');
-  var stepperInstace = new MStepper(stepper, {
-  // options
-    firstActive: 0 // this is the default
-  });
- 
-  $(document).ready(function($){
-    $('.phone_with_ddd').mask('(00) 0 0000-0000');
-    $('.weight_mask').mask("#0.0", {reverse: true})
-  });
-
-  $(document).ready(function(){
-    $('select').formSelect();
-  });
-  
-  function isNumberKey(evt) {
-    var charCode = (evt.which) ? evt.which : event.keyCode
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-       return false;
-    }
-    return true;
-  }
-
-</script>
-
-
+    <a href="<%= clients_path %>" 
+       class="flex-1 font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center"
+       style="background-color: #6b7280 !important; color: white !important; text-decoration: none !important; border: 2px solid #6b7280;">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: white !important;">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      <span style="color: white !important;">Cancelar</span>
+    </a>
+  </div>
+<% end %>

@@ -65,12 +65,19 @@
               <tr>
                 <td><%= plan.description %></td>
                 <td><%= number_to_currency(plan.value, unit: "R$ ", separator: ",", delimiter: "")%></td>
-                <td><%= plan.updated_at.to_s(:br_data) %></td>
+                <td><%= plan.created_at.to_s(:br_data) %></td>
                 <td>
                   <%= link_to edit_plan_path(plan), :class => "waves-effect waves-light amber btn tooltipped", data: { position: "bottom", tooltip: "Editar plano" } do %>
                     <i class="material-icons">edit</i>
                   <% end %>
-                  <%= link_to plan_path(plan), method: :delete, data: {confirm: ""}, :class => "waves-effect waves-light red btn tooltipped", data: { position: "bottom", tooltip: "Excluir plano" } do %>
+                  <%= link_to plan_path(plan), 
+                      data: { 
+                        turbo_method: :delete, 
+                        turbo_confirm: "Tem certeza que deseja excluir este plano?",
+                        position: "bottom", 
+                        tooltip: "Excluir plano" 
+                      }, 
+                      :class => "waves-effect waves-light red btn tooltipped" do %>
                     <i class="material-icons">delete</i>
                   <% end %>
                 </td>
