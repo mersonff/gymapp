@@ -58,5 +58,5 @@ jobs:
             --cluster gymapp-staging \
             --launch-type FARGATE \
             --task-definition gymapp-task \
-            --network-configuration "awsvpcConfiguration={subnets=[subnet-30d14d7b,subnet-22cb0a09,subnet-f1aedd88,subnet-3be9a661],securityGroups=[sg-a80fecd8],assignPublicIp=ENABLED}" \
+            --network-configuration "awsvpcConfiguration={subnets=[subnet-07dffe1bc73b9987,subnet-029e184535015303a,subnet-0059446f121f1ce9a,subnet-00e20fd0c9065a546,subnet-0e3ea32c2eb3f89a6,subnet-0f76bf7ca625050c8],securityGroups=[sg-031fe14d9ecfa95b5],assignPublicIp=ENABLED}" \
             --overrides '{"containerOverrides":[{"name":"gymapp","command":["bundle","exec","rails","db:migrate"]}]}'
