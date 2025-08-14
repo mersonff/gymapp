@@ -42,7 +42,7 @@
         "logDriver": "awslogs",
         "options": {
           "awslogs-group": "/ecs/gymapp",
-          "awslogs-region": "<REGION>",
+          "awslogs-region": "us-east-1",
           "awslogs-stream-prefix": "ecs"
         }
       }
