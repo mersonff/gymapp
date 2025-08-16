@@ -64,7 +64,7 @@ jobs:
           --image us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/$SERVICE_NAME:latest \
           --region $REGION \
           --service-account $SERVICE_ACCOUNT \
-          --add-cloudsql-instances $CLOUDSQL_INSTANCE \
+          --set-cloudsql-instances $CLOUDSQL_INSTANCE \
           --set-env-vars RAILS_ENV=staging \
           --set-secrets DB_HOST=DB_HOST:latest \
           --set-secrets DB_USERNAME=DB_USERNAME:latest \
