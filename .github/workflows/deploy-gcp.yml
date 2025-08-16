@@ -6,9 +6,11 @@ on:
     branches: [ main ]
 
 env:
-  PROJECT_ID: gymapp-staging-1755293302
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   SERVICE_NAME: gymapp
   REGION: us-central1
+  SERVICE_ACCOUNT: github-actions@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com
+  CLOUDSQL_INSTANCE: ${{ secrets.GCP_PROJECT_ID }}:us-central1:gymapp-db
 
 jobs:
   deploy:
@@ -41,8 +43,8 @@ jobs:
           --platform managed \
           --region $REGION \
           --allow-unauthenticated \
-          --service-account github-actions@gymapp-staging-1755293302.iam.gserviceaccount.com \
-          --add-cloudsql-instances gymapp-staging-1755293302:us-central1:gymapp-db \
+          --service-account $SERVICE_ACCOUNT \
+          --add-cloudsql-instances $CLOUDSQL_INSTANCE \
           --set-env-vars RAILS_ENV=staging \
           --set-secrets DB_HOST=DB_HOST:latest \
           --set-secrets DB_USERNAME=DB_USERNAME:latest \
@@ -61,8 +63,8 @@ jobs:
         gcloud run jobs create gymapp-migrate \
           --image us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/$SERVICE_NAME:latest \
           --region $REGION \
-          --service-account github-actions@gymapp-staging-1755293302.iam.gserviceaccount.com \
-          --add-cloudsql-instances gymapp-staging-1755293302:us-central1:gymapp-db \
+          --service-account $SERVICE_ACCOUNT \
+          --set-cloudsql-instances $CLOUDSQL_INSTANCE \
           --set-env-vars RAILS_ENV=staging \
           --set-secrets DB_HOST=DB_HOST:latest \
           --set-secrets DB_USERNAME=DB_USERNAME:latest \
