@@ -8,10 +8,12 @@ RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs cu
   && echo "deb [signed-by=/etc/apt/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
   && apt-get update -qq && apt-get install -y yarn
 
-# Defina variáveis obrigatórias para o build dos assets
-ARG SECRET_KEY_BASE=dummy
+# Defina variáveis obrigatórias para o build dos assets (valor dummy)
+ARG SECRET_KEY_BASE=dummy_key_for_build_only
 ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
-ENV RAILS_ENV=production
+
+# Set environment variable for Rails
+ENV RAILS_ENV=staging
 
 COPY Gemfile* ./
 RUN bundle install --without development test
@@ -25,4 +27,4 @@ RUN bundle exec rake assets:precompile
 
 EXPOSE 3000
 
-CMD ["bash", "-c", "rm -f tmp/pids/server.pid && bundle exec rails server -e production -b 0.0.0.0"]
+CMD ["bash", "-c", "rm -f tmp/pids/server.pid && bundle exec rails server -e staging -b 0.0.0.0"]
