@@ -53,16 +53,21 @@ jobs:
 
     - name: Run DB Migrations
       run: |
+        # Deletar job existente se houver
+        gcloud run jobs delete gymapp-migrate --region $REGION --quiet || true
+        
+        # Criar novo job de migração
         gcloud run jobs create gymapp-migrate \
           --image us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/$SERVICE_NAME:latest \
           --region $REGION \
+          --service-account github-actions@gymapp-staging-1755293302.iam.gserviceaccount.com \
           --set-env-vars RAILS_ENV=staging \
           --set-secrets DB_HOST=DB_HOST:latest \
           --set-secrets DB_USERNAME=DB_USERNAME:latest \
           --set-secrets DB_PASSWORD=DB_PASSWORD:latest \
           --set-secrets SECRET_KEY_BASE=SECRET_KEY_BASE:latest \
           --command bundle \
-          --args exec,rails,db:migrate \
-          --replace || true
+          --args exec,rails,db:migrate
         
+        # Executar job de migração
         gcloud run jobs execute gymapp-migrate --region $REGION --wait
