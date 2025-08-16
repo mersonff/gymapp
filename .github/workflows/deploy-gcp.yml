@@ -1,9 +1,30 @@
 name: Deploy to Google Cloud Run
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
+  workflow_dispat    - name: Run DB Migrations
+      run: |
+        # Usar timestamp para nome único do job
+        JOB_NAME="gymapp-migrate-$(date +%s)"
+        
+        # Criar job de migração com nome único
+        gcloud run jobs create $JOB_NAME \
+          --image us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/$SERVICE_NAME:latest \
+          --region $REGION \
+          --service-account $SERVICE_ACCOUNT \
+          --set-cloudsql-instances $CLOUDSQL_INSTANCE \
+          --set-env-vars RAILS_ENV=staging \
+          --set-secrets DB_HOST=DB_HOST:latest \
+          --set-secrets DB_USERNAME=DB_USERNAME:latest \
+          --set-secrets DB_PASSWORD=DB_PASSWORD:latest \
+          --set-secrets SECRET_KEY_BASE=SECRET_KEY_BASE:latest \
+          --command bundle \
+          --args exec,rails,db:migrate
+        
+        # Executar job de migração
+        gcloud run jobs execute $JOB_NAME --region $REGION --wait
+        
+        # Deletar job após execução
+        gcloud run jobs delete $JOB_NAME --region $REGION --quiet || trueranches: [ main ]
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
