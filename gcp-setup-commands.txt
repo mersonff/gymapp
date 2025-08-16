@@ -1,0 +1,212 @@
+# Comandos para Configurar Deploy no Google Cloud Platform (GCP)
+
+## 1. Verificação e Configuração Inicial
+
+```bash
+# Verificar se o Google Cloud SDK está instalado
+gcloud --version
+
+# Verificar autenticação
+gcloud auth list
+
+# Criar projeto (substitua o timestamp por um único)
+gcloud projects create gymapp-staging-1755293302 --name="GymApp Staging"
+
+# Definir projeto como ativo
+export PROJECT_ID=gymapp-staging-1755293302
+gcloud config set project $PROJECT_ID
+```
+
+## 2. Habilitar APIs Necessárias
+
+```bash
+# Habilitar APIs essenciais
+gcloud services enable run.googleapis.com
+gcloud services enable containerregistry.googleapis.com
+gcloud services enable sqladmin.googleapis.com
+gcloud services enable secretmanager.googleapis.com
+gcloud services enable artifactregistry.googleapis.com
+```
+
+## 3. Criar Banco PostgreSQL no Cloud SQL
+
+```bash
+# Criar instância Cloud SQL PostgreSQL
+gcloud sql instances create gymapp-db \
+    --database-version=POSTGRES_15 \
+    --tier=db-f1-micro \
+    --region=us-central1 \
+    --root-password=gymapp123
+
+# Criar banco de dados
+gcloud sql databases create gymapp_staging --instance=gymapp-db
+
+# Criar usuário do banco
+gcloud sql users create gymapp-user --instance=gymapp-db --password=GymApp123!
+```
+
+## 4. Criar Secrets no Secret Manager
+
+```bash
+# Criar secret para host do banco (IP obtido do Cloud SQL)
+echo "34.41.34.135" | gcloud secrets create DB_HOST --data-file=-
+
+# Criar secret para usuário
+echo "gymapp-user" | gcloud secrets create DB_USERNAME --data-file=-
+
+# Criar secret para senha (usando arquivo temporário se necessário)
+echo "GymApp123!" > /tmp/db_password.txt
+gcloud secrets create DB_PASSWORD --data-file=/tmp/db_password.txt
+rm /tmp/db_password.txt
+
+# Criar secret para chave secreta do Rails
+rails secret | gcloud secrets create SECRET_KEY_BASE --data-file=-
+
+# Verificar secrets criados
+gcloud secrets list
+```
+
+## 5. Criar Artifact Registry Repository
+
+```bash
+# Criar repositório Docker no Artifact Registry
+gcloud artifacts repositories create gymapp-repo \
+    --repository-format=docker \
+    --location=us-central1 \
+    --description="GymApp Docker repository"
+```
+
+## 6. Criar e Configurar Service Account
+
+```bash
+# Criar service account para GitHub Actions
+gcloud iam service-accounts create github-actions --display-name="GitHub Actions"
+
+# Adicionar permissões necessárias
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:github-actions@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/run.admin"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:github-actions@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/storage.admin"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:github-actions@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/secretmanager.secretAccessor"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:github-actions@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/artifactregistry.writer"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:github-actions@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/storage.objectAdmin"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:github-actions@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/iam.serviceAccountUser"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:github-actions@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/run.developer"
+
+# Gerar chave JSON da service account
+gcloud iam service-accounts keys create key.json \
+    --iam-account=github-actions@$PROJECT_ID.iam.gserviceaccount.com
+
+# Exibir conteúdo da chave (copiar para GitHub Secret)
+cat key.json
+
+# Remover arquivo da chave por segurança
+rm key.json
+```
+
+## 7. Configurar Secrets no GitHub
+
+Vá para seu repositório GitHub → Settings → Secrets and variables → Actions e adicione:
+
+- **GCP_SA_KEY**: Cole o conteúdo JSON completo da service account
+- **GCP_PROJECT_ID**: gymapp-staging-1755293302
+
+## 8. Verificar Configuração Final
+
+```bash
+# Listar services disponíveis
+gcloud services list --enabled
+
+# Verificar instância do banco
+gcloud sql instances list
+
+# Verificar secrets
+gcloud secrets list
+
+# Verificar repositório Artifact Registry
+gcloud artifacts repositories list
+
+# Verificar service accounts
+gcloud iam service-accounts list
+```
+
+## 9. Deploy Manual (Opcional - para testes)
+
+```bash
+# Configurar Docker para Artifact Registry
+gcloud auth configure-docker us-central1-docker.pkg.dev
+
+# Build e push da imagem
+docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/gymapp:latest .
+docker push us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/gymapp:latest
+
+# Deploy no Cloud Run
+gcloud run deploy gymapp \
+  --image us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/gymapp:latest \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --service-account github-actions@$PROJECT_ID.iam.gserviceaccount.com \
+  --set-env-vars RAILS_ENV=staging \
+  --set-secrets DB_HOST=DB_HOST:latest \
+  --set-secrets DB_USERNAME=DB_USERNAME:latest \
+  --set-secrets DB_PASSWORD=DB_PASSWORD:latest \
+  --set-secrets SECRET_KEY_BASE=SECRET_KEY_BASE:latest \
+  --memory 1Gi \
+  --cpu 1 \
+  --port 3000
+```
+
+## 10. Informações Importantes
+
+- **Project ID**: gymapp-staging-1755293302
+- **Região**: us-central1
+- **Banco**: gymapp-db (IP: 34.41.34.135)
+- **Repositório**: gymapp-repo
+- **Service Account**: github-actions@gymapp-staging-1755293302.iam.gserviceaccount.com
+
+## 11. Limpeza (se necessário)
+
+```bash
+# Deletar serviço Cloud Run
+gcloud run services delete gymapp --region=us-central1
+
+# Deletar jobs
+gcloud run jobs delete gymapp-migrate --region=us-central1
+
+# Deletar repositório Artifact Registry
+gcloud artifacts repositories delete gymapp-repo --location=us-central1
+
+# Deletar instância Cloud SQL
+gcloud sql instances delete gymapp-db
+
+# Deletar secrets
+gcloud secrets delete DB_HOST
+gcloud secrets delete DB_USERNAME
+gcloud secrets delete DB_PASSWORD
+gcloud secrets delete SECRET_KEY_BASE
+
+# Deletar service account
+gcloud iam service-accounts delete github-actions@$PROJECT_ID.iam.gserviceaccount.com
+
+# Deletar projeto (cuidado!)
+gcloud projects delete $PROJECT_ID
+```
