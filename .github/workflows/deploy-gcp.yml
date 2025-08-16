@@ -26,18 +26,18 @@ jobs:
     - name: Set up Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
 
-    - name: Configure Docker for GCR
-      run: gcloud auth configure-docker gcr.io
+    - name: Configure Docker for Artifact Registry
+      run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
     - name: Build Docker image
       run: |
-        docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest .
-        docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+        docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/$SERVICE_NAME:latest .
+        docker push us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/$SERVICE_NAME:latest
 
     - name: Deploy to Cloud Run
       run: |
         gcloud run deploy $SERVICE_NAME \
-          --image gcr.io/$PROJECT_ID/$SERVICE_NAME:latest \
+          --image us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/$SERVICE_NAME:latest \
           --platform managed \
           --region $REGION \
           --allow-unauthenticated \
@@ -53,7 +53,7 @@ jobs:
     - name: Run DB Migrations
       run: |
         gcloud run jobs create gymapp-migrate \
-          --image gcr.io/$PROJECT_ID/$SERVICE_NAME:latest \
+          --image us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/$SERVICE_NAME:latest \
           --region $REGION \
           --set-env-vars RAILS_ENV=staging \
           --set-secrets DB_HOST=DB_HOST:latest \
