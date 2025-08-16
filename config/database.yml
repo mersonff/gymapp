@@ -6,11 +6,17 @@ default: &default
 
 staging:
   <<: *default
-  database: postgres
+  database: gymapp_staging
   host: <%= ENV['DB_HOST'] %>
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
-  port: 5432
+
+gcp:
+  <<: *default
+  database: gymapp_staging
+  host: <%= ENV['DB_HOST'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
 
 development:
   <<: *default

@@ -65,7 +65,7 @@ jobs:
           --region $REGION \
           --service-account $SERVICE_ACCOUNT \
           --set-cloudsql-instances $CLOUDSQL_INSTANCE \
-          --set-env-vars RAILS_ENV=staging \
+          --set-env-vars RAILS_ENV=gcp \
           --set-secrets DB_HOST=DB_HOST:latest \
           --set-secrets DB_USERNAME=DB_USERNAME:latest \
           --set-secrets DB_PASSWORD=DB_PASSWORD:latest \
