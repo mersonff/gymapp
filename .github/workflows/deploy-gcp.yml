@@ -42,6 +42,7 @@ jobs:
           --region $REGION \
           --allow-unauthenticated \
           --service-account github-actions@gymapp-staging-1755293302.iam.gserviceaccount.com \
+          --add-cloudsql-instances gymapp-staging-1755293302:us-central1:gymapp-db \
           --set-env-vars RAILS_ENV=staging \
           --set-secrets DB_HOST=DB_HOST:latest \
           --set-secrets DB_USERNAME=DB_USERNAME:latest \
@@ -61,6 +62,7 @@ jobs:
           --image us-central1-docker.pkg.dev/$PROJECT_ID/gymapp-repo/$SERVICE_NAME:latest \
           --region $REGION \
           --service-account github-actions@gymapp-staging-1755293302.iam.gserviceaccount.com \
+          --add-cloudsql-instances gymapp-staging-1755293302:us-central1:gymapp-db \
           --set-env-vars RAILS_ENV=staging \
           --set-secrets DB_HOST=DB_HOST:latest \
           --set-secrets DB_USERNAME=DB_USERNAME:latest \
