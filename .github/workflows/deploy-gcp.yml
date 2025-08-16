@@ -41,6 +41,7 @@ jobs:
           --platform managed \
           --region $REGION \
           --allow-unauthenticated \
+          --service-account github-actions@gymapp-staging-1755293302.iam.gserviceaccount.com \
           --set-env-vars RAILS_ENV=staging \
           --set-secrets DB_HOST=DB_HOST:latest \
           --set-secrets DB_USERNAME=DB_USERNAME:latest \
