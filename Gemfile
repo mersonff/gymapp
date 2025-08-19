@@ -6,9 +6,7 @@ ruby '3.3.0'
 gem 'rails', '~> 8.0.2'
 gem "sprockets-rails"
 gem 'puma', '~> 6.0'
-gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.11'
-gem 'jquery-rails'
 gem "chartkick"
 gem 'groupdate'
 gem 'pg'

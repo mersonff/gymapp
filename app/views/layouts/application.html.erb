@@ -9,45 +9,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <%= javascript_importmap_tags %>
   </head>
-  <body class="bg-gray-50">
+  <body class="bg-gray-50" data-turbo-permanent>
+    <!-- Loading indicator -->
+    <div id="turbo-progress-bar" class="fixed top-0 left-0 z-50 h-1 bg-blue-600 transition-all duration-300 ease-out" style="width: 0%"></div>
+    
+    <!-- Hotwire Status Indicator (apenas em desenvolvimento) -->
+    <% if Rails.env.development? %>
+      <div id="hotwire-indicator" class="fixed bottom-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg z-50 flex items-center gap-2">
+        <span class="animate-pulse">⚡</span>
+        <span>Hotwire Ativo</span>
+      </div>
+    <% end %>
+    
     <div class="min-h-screen flex">
       <% if logged_in? %>
         <%= render 'layouts/navigation' %>
       <% end %>
       
       <div class="flex-1 flex flex-col">
-        <!-- Messages -->
-        <%= render 'layouts/messages' %>
+        <!-- Flash Messages -->
+        <div id="flash_messages" data-turbo-permanent>
+          <%= render 'layouts/flash', flash: flash %>
+        </div>
         
         <!-- Main Content -->
-        <main class="flex-1 p-6">
+        <main class="flex-1 p-6" id="main">
           <%= yield %>
         </main>
       </div>
     </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2" data-turbo-permanent></div>
     
-    <!-- Modal de confirmação posicionado fora dos containers -->
-    <dialog id='turbo-confirm' class="backdrop:bg-gray-900/50 bg-white rounded-2xl shadow-2xl border border-gray-200 p-6 max-w-md fixed inset-0 m-auto z-50">
-      <form method='dialog'>
-        <div class="text-center mb-6">
-          <div class="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
-          </div>
-          <p class="text-lg font-medium text-gray-900">Confirmar ação</p>
-          <p class="confirmation-message text-sm text-gray-600 mt-2">Tem certeza que deseja continuar?</p>
-        </div>
-        <div class="flex space-x-3">
-          <button type="button" value='cancel' class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors" onclick="this.closest('dialog').close('cancel')">
-            Cancelar
-          </button>
-          <button type="button" value='ok' class="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors" onclick="this.closest('dialog').close('ok')">
-            Confirmar
-          </button>
-        </div>
-      </form>
-    </dialog>
+    <!-- Modal Container -->
+    <div id="modal-container" data-turbo-permanent></div>
   </body>
 
   <style>

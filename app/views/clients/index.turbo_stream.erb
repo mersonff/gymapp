@@ -1,0 +1,97 @@
+<%= turbo_stream.update "flash_messages" do %>
+  <%= render 'layouts/flash', flash: flash %>
+<% end %>
+
+<%= turbo_stream.update "main" do %>
+  <div class="space-y-6" data-controller="auto-refresh" data-auto-refresh-url-value="<%= clients_path %>" data-auto-refresh-interval-value="60000">
+    <!-- Header with Actions -->
+    <turbo-frame id="clients_header">
+      <div class="flex flex-col gap-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">
+              <% if params[:filter] == 'overdue' %>
+                Clientes Inadimplentes
+              <% else %>
+                Clientes
+              <% end %>
+            </h1>
+            <p class="text-gray-600">
+              <% if params[:filter] == 'overdue' %>
+                Clientes com pagamentos em atraso
+              <% else %>
+                Gerencie todos os clientes da sua academia
+              <% end %>
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <!-- Filtros -->
+            <div class="flex items-center gap-2">
+              <%= link_to clients_path, 
+                  class: "px-3 py-2 text-sm font-medium rounded-lg transition-colors #{params[:filter].blank? ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}",
+                  data: { turbo_frame: "clients_content" } do %>
+                Todos
+              <% end %>
+              <%= link_to clients_path(filter: 'overdue'), 
+                  class: "px-3 py-2 text-sm font-medium rounded-lg transition-colors #{params[:filter] == 'overdue' ? 'bg-red-600 text-white' : 'text-gray-600 hover:bg-gray-100'}",
+                  data: { turbo_frame: "clients_content" } do %>
+                Inadimplentes
+              <% end %>
+            </div>
+            
+            <%= link_to new_client_path, 
+                class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm",
+                data: { turbo_stream: true } do %>
+              <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Novo Cliente
+            <% end %>
+          </div>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="w-full md:w-96 mb-2">
+          <%= form_with url: clients_path, method: :get, data: { 
+              turbo_frame: "clients_content",
+              controller: "search",
+              action: "input->search#submit"
+            } do |f| %>
+            <div class="relative">
+              <%= f.text_field :search, 
+                  value: params[:search],
+                  placeholder: "Buscar clientes...",
+                  class: "w-full px-4 py-2 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
+                  data: { search_target: "input" } %>
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+                <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <% if params[:search].present? %>
+                <%= link_to clients_path(filter: params[:filter]), 
+                    data: { turbo_frame: "clients_content" },
+                    class: "absolute inset-y-0 right-0 flex items-center pr-3" do %>
+                  <svg class="w-5 h-5 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                <% end %>
+              <% end %>
+            </div>
+            <%= f.hidden_field :filter, value: params[:filter] %>
+          <% end %>
+        </div>
+      </div>
+    </turbo-frame>
+
+    <!-- Stats Bar -->
+    <turbo-frame id="clients_stats">
+      <%= render 'stats', total_clients: @total_clients, current_clients: @current_clients, overdue_clients: @overdue_clients %>
+    </turbo-frame>
+
+    <!-- Clients Content -->
+    <turbo-frame id="clients_content">
+      <%= render 'clients_list' %>
+    </turbo-frame>
+  </div>
+<% end %>

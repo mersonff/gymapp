@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2023_01_20_215300) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_18_233812) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,6 +24,8 @@ ActiveRecord::Schema[8.0].define(version: 2023_01_20_215300) do
     t.datetime "updated_at", precision: nil
     t.integer "user_id"
     t.date "registration_date"
+    t.bigint "plan_id"
+    t.index ["plan_id"], name: "index_clients_on_plan_id"
   end
 
   create_table "measurements", force: :cascade do |t|
@@ -59,16 +61,16 @@ ActiveRecord::Schema[8.0].define(version: 2023_01_20_215300) do
   end
 
   create_table "skinfolds", force: :cascade do |t|
-    t.integer "chest", default: 0
-    t.integer "midaxilary", default: 0
-    t.integer "subscapular", default: 0
-    t.integer "bicep", default: 0
-    t.integer "tricep", default: 0
-    t.integer "lower_back", default: 0
-    t.integer "abdominal", default: 0
-    t.integer "suprailiac", default: 0
-    t.integer "thigh", default: 0
-    t.integer "calf", default: 0
+    t.decimal "chest", precision: 5, scale: 2, default: "0.0"
+    t.decimal "midaxilary", precision: 5, scale: 2, default: "0.0"
+    t.decimal "subscapular", precision: 5, scale: 2, default: "0.0"
+    t.decimal "bicep", precision: 5, scale: 2, default: "0.0"
+    t.decimal "tricep", precision: 5, scale: 2, default: "0.0"
+    t.decimal "lower_back", precision: 5, scale: 2, default: "0.0"
+    t.decimal "abdominal", precision: 5, scale: 2, default: "0.0"
+    t.decimal "suprailiac", precision: 5, scale: 2, default: "0.0"
+    t.decimal "thigh", precision: 5, scale: 2, default: "0.0"
+    t.decimal "calf", precision: 5, scale: 2, default: "0.0"
     t.integer "client_id"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
@@ -83,4 +85,6 @@ ActiveRecord::Schema[8.0].define(version: 2023_01_20_215300) do
     t.boolean "admin", default: false
     t.string "business_name"
   end
+
+  add_foreign_key "clients", "plans"
 end

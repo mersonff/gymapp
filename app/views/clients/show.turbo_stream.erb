@@ -1,0 +1,162 @@
+<%= turbo_stream.update "flash_messages" do %>
+  <%= render 'layouts/flash', flash: flash %>
+<% end %>
+
+<%= turbo_stream.update "main" do %>
+  <div class="max-w-6xl mx-auto">
+    <!-- Breadcrumb/Navigation -->
+    <div class="mb-6">
+      <%= link_to clients_path, 
+          class: "inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors",
+          data: { turbo_stream: true } do %>
+        <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Voltar para Clientes
+      <% end %>
+    </div>
+    
+    <!-- Header -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900"><%= @client.name %></h1>
+          <div class="flex items-center space-x-4 mt-2 text-sm text-gray-600">
+            <span>📱 <%= @client.cellphone || "Não informado" %></span>
+            <% if @client.birthdate %>
+              <span>🎂 <%= ClientPresenter.new(@client).age_text %></span>
+            <% end %>
+            <span>👤 <%= @client.gender || "Não informado" %></span>
+          </div>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to edit_client_path(@client), 
+              class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors",
+              data: { turbo_stream: true } do %>
+            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Editar
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid com Informações -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Medidas -->
+      <div class="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          Medidas Recentes
+        </h2>
+        
+        <% if @client_measurements.any? %>
+          <% @client_measurements.first(3).each do |measurement| %>
+            <div class="border-b pb-3 mb-3 last:border-b-0">
+              <div class="text-sm text-gray-500 mb-1">
+                <%= measurement.created_at.strftime("%d/%m/%Y") %>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-sm">
+                <div>Peso: <span class="font-medium"><%= measurement.weight %>kg</span></div>
+                <div>Altura: <span class="font-medium"><%= measurement.height %>cm</span></div>
+                <div>Peito: <span class="font-medium"><%= measurement.chest %>cm</span></div>
+                <div>Cintura: <span class="font-medium"><%= measurement.waist %>cm</span></div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-gray-500 text-sm">Nenhuma medida registrada</p>
+        <% end %>
+        
+        <%= link_to new_measurement_client_path(@client),
+            class: "w-full mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors block text-center",
+            data: { turbo_stream: true } do %>
+          + Adicionar Medida
+        <% end %>
+      </div>
+
+      <!-- Pagamentos -->
+      <div class="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 0h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v2m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V9z" />
+          </svg>
+          Pagamentos
+        </h2>
+        
+        <% if @client_payments.any? %>
+          <% presenter = ClientPresenter.new(@client) %>
+          <div class="mb-4 p-3 rounded-lg <%= presenter.payment_status == :overdue ? 'bg-red-50' : 'bg-green-50' %>">
+            <div class="text-sm font-medium <%= presenter.payment_status == :overdue ? 'text-red-800' : 'text-green-800' %>">
+              Status: <%= presenter.payment_status_text %>
+            </div>
+            <% if presenter.payment_status == :overdue %>
+              <div class="text-sm text-red-600 mt-1">
+                <%= presenter.days_overdue_text %>
+              </div>
+            <% else %>
+              <div class="text-sm text-green-600 mt-1">
+                Próximo: <%= presenter.next_payment_date_formatted %>
+              </div>
+            <% end %>
+          </div>
+          
+          <% @client_payments.first(3).each do |payment| %>
+            <div class="border-b pb-2 mb-2 last:border-b-0">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500"><%= payment.payment_date.strftime("%d/%m/%Y") %></span>
+                <span class="font-medium text-green-600">R$ <%= number_with_precision(payment.value, precision: 2) %></span>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-gray-500 text-sm">Nenhum pagamento registrado</p>
+        <% end %>
+        
+        <%= link_to new_payment_client_path(@client),
+            class: "w-full mt-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors block text-center",
+            data: { turbo_stream: true } do %>
+          + Registrar Pagamento
+        <% end %>
+      </div>
+
+      <!-- Dobras Cutâneas -->
+      <div class="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+          Dobras Cutâneas
+        </h2>
+        
+        <% if @client_skinfolds.any? %>
+          <% @client_skinfolds.first(3).each do |skinfold| %>
+            <div class="border-b pb-3 mb-3 last:border-b-0">
+              <div class="text-sm text-gray-500 mb-1">
+                <%= skinfold.created_at.strftime("%d/%m/%Y") %>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-sm">
+                <div>Tríceps: <span class="font-medium"><%= skinfold.tricep %>mm</span></div>
+                <div>Subesc.: <span class="font-medium"><%= skinfold.subscapular %>mm</span></div>
+                <div>Suprail.: <span class="font-medium"><%= skinfold.suprailiac %>mm</span></div>
+                <div>% Gordura: <span class="font-medium text-purple-600"><%= @client.fat_percentage(skinfold.id) %>%</span></div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-gray-500 text-sm">Nenhuma dobra registrada</p>
+        <% end %>
+        
+        <%= link_to new_skinfold_client_path(@client),
+            class: "w-full mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors block text-center",
+            data: { turbo_stream: true } do %>
+          + Adicionar Dobras
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
