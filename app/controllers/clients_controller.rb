@@ -1,29 +1,34 @@
 class ClientsController < ApplicationController
-  before_action :set_client, only: [:edit, :update, :show, :destroy]
+  before_action :set_client, only: [:edit, :update, :show, :destroy, :new_measurement, :create_measurement, :new_payment, :create_payment, :new_skinfold, :create_skinfold]
   before_action :require_user, except: [:index, :show]
   before_action :require_same_user, only: [:edit, :update, :destroy]
 
   def index
-    @clients = current_user.clients
+    # Query object para busca e filtros
+    query = ClientsQuery.new(current_user.clients)
+    query.search(params[:search]) if params[:search].present?
+    query.overdue if params[:filter] == 'overdue'
     
-    # Calcular estatísticas antes de aplicar filtros
-    @total_clients = @clients.joins(:payments).distinct.count
-    @overdue_clients = @clients.joins(:payments)
-      .where("payments.payment_date + INTERVAL '1 month' <= ?", Date.current)
-      .group("clients.id")
-      .having("MAX(payments.payment_date) = (SELECT MAX(p2.payment_date) FROM payments p2 WHERE p2.client_id = clients.id)")
-      .count.size
-    @current_clients = @total_clients - @overdue_clients
+    @clients = query.ordered.paginated(page: params[:page]).results
     
-    # Filtrar inadimplentes se solicitado - usando apenas ActiveRecord/SQL
-    if params[:filter] == 'overdue'
-      @clients = @clients.joins(:payments)
-        .where("payments.payment_date + INTERVAL '1 month' <= ?", Date.current)
-        .group("clients.id")
-        .having("MAX(payments.payment_date) = (SELECT MAX(p2.payment_date) FROM payments p2 WHERE p2.client_id = clients.id)")
+    # Service para estatísticas
+    stats = ClientStatisticsService.new(current_user).calculate
+    @total_clients = stats[:total]
+    @current_clients = stats[:current]
+    @overdue_clients = stats[:overdue]
+    
+    respond_to do |format|
+      format.html
+      format.turbo_stream do
+        # Se é uma busca/filtro, atualiza apenas a lista
+        if params[:search].present? || params[:filter].present?
+          render turbo_stream: turbo_stream.update("clients_content", partial: "clients_list", locals: { clients: @clients })
+        else
+          # Se é um redirect (após create/update), renderiza a página completa
+          render :index
+        end
+      end
     end
-    
-    @clients = @clients.paginate(page: params[:page], per_page: 10)
   end
 
   def new
@@ -31,31 +36,70 @@ class ClientsController < ApplicationController
       @client.measurements.build
       @client.skinfolds.build
       @client.payments.build
+      
+      respond_to do |format|
+        format.html
+        format.turbo_stream
+      end
   end
 
   def edit
-
+    # No edit, não construímos novos registros automaticamente
+    # O formulário deve trabalhar apenas com os dados existentes
+    # Se quiser adicionar novos, deve ser uma action separada
+    
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   def create
     @client = Client.new(client_params)
     @client.user = current_user
-    if @client.save
-      flash[:success] = "Cliente criado com sucesso"
-      redirect_to client_path(@client)
-    else
-      flash[:danger] = "Erro ao criar cliente: #{@client.errors.full_messages.join(', ')}"
-      redirect_to new_client_path
+    
+    respond_to do |format|
+      if @client.save
+        format.turbo_stream do
+          flash[:success] = "Cliente criado com sucesso"
+          redirect_to clients_path, status: :see_other
+        end
+        format.html do
+          flash[:success] = "Cliente criado com sucesso"
+          redirect_to client_path(@client)
+        end
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update("new_client_form", partial: "clients/form", locals: { client: @client })
+        end
+        format.html do
+          flash.now[:danger] = "Erro ao criar cliente: #{@client.errors.full_messages.join(', ')}"
+          render :new
+        end
+      end
     end
   end
 
   def update
-    if @client.update(client_params)
-      flash[:success] = "Cliente atualizado com sucesso"
-      redirect_to client_path(@client)
-    else
-      flash[:danger] = "Erro ao atualizar cliente: #{@client.errors.full_messages.join(', ')}"
-      redirect_to edit_client_path(@client)
+    respond_to do |format|
+      if @client.update(client_params)
+        format.turbo_stream do
+          flash[:success] = "Cliente atualizado com sucesso"
+          redirect_to clients_path, status: :see_other
+        end
+        format.html do
+          flash[:success] = "Cliente atualizado com sucesso"
+          redirect_to client_path(@client)
+        end
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update("edit_client_form", partial: "clients/form", locals: { client: @client })
+        end
+        format.html do
+          flash.now[:danger] = "Erro ao atualizar cliente: #{@client.errors.full_messages.join(', ')}"
+          render :edit
+        end
+      end
     end
   end
 
@@ -79,12 +123,119 @@ class ClientsController < ApplicationController
     # Dados para gráficos (últimas 10 medições para comparação)
     @measurements_chart_data = prepare_measurements_chart_data
     @skinfolds_chart_data = prepare_skinfolds_chart_data
+    
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
+  end
+
+  def new_measurement
+    @measurement = @client.measurements.build
+    
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def create_measurement
+    @measurement = @client.measurements.build(measurement_params)
+    
+    respond_to do |format|
+      if @measurement.save
+        format.turbo_stream do
+          flash[:success] = "Medida adicionada com sucesso"
+          redirect_to client_path(@client), status: :see_other
+        end
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update("measurement_form", partial: "clients/measurement_form", locals: { measurement: @measurement })
+        end
+      end
+    end
+  end
+
+  def new_payment
+    @payment = @client.payments.build
+    
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def create_payment
+    @payment = @client.payments.build(payment_params)
+    
+    respond_to do |format|
+      if @payment.save
+        format.turbo_stream do
+          flash[:success] = "Pagamento registrado com sucesso"
+          redirect_to client_path(@client), status: :see_other
+        end
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update("payment_form", partial: "clients/payment_form", locals: { payment: @payment })
+        end
+      end
+    end
+  end
+
+  def new_skinfold
+    @skinfold = @client.skinfolds.build
+    
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  def create_skinfold
+    @skinfold = @client.skinfolds.build(skinfold_params)
+    
+    respond_to do |format|
+      if @skinfold.save
+        format.turbo_stream do
+          flash[:success] = "Dobras cutâneas adicionadas com sucesso"
+          redirect_to client_path(@client), status: :see_other
+        end
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update("skinfold_form", partial: "clients/skinfold_form", locals: { skinfold: @skinfold })
+        end
+      end
+    end
   end
 
   def destroy
-    @client.destroy
-    flash[:danger] = "Cliente deletado com sucesso"
-    redirect_to clients_path
+    respond_to do |format|
+      if @client.destroy
+        # Service para recalcular estatísticas
+        stats = ClientStatisticsService.new(current_user).calculate
+        
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.remove("client_#{@client.id}"),
+            turbo_stream.update("flash_messages", partial: "layouts/flash", locals: { flash: { success: "Cliente deletado com sucesso" } }),
+            turbo_stream.update("clients_stats", partial: "clients/stats", locals: { 
+              total_clients: stats[:total],
+              current_clients: stats[:current],
+              overdue_clients: stats[:overdue]
+            })
+          ]
+        end
+        format.html do
+          flash[:success] = "Cliente deletado com sucesso"
+          redirect_to clients_path
+        end
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update("flash_messages", partial: "layouts/flash", locals: { flash: { danger: "Erro ao deletar cliente" } })
+        end
+        format.html do
+          flash[:danger] = "Erro ao deletar cliente"
+          redirect_to clients_path
+        end
+      end
+    end
   end
 
   private
@@ -94,10 +245,28 @@ class ClientsController < ApplicationController
   end
 
   def client_params
-    params.require(:client).permit(:name, :birthdate, :address, :cellphone, :gender,
-      measurements_attributes: [ :height, :weight, :chest, :left_arm, :right_arm, :waist, :abdomen, :hips, :left_thigh, :righ_thigh],
-      skinfolds_attributes: [ :chest, :midaxilary, :subscapular, :bicep, :tricep, :abdominal, :suprailiac, :thigh, :calf],
-      payments_attributes: [ :payment_date, :value ] )
+    # Se é criação de cliente novo, permite nested attributes
+    if action_name == 'create' || params[:with_measurements] == 'true'
+      params.require(:client).permit(:name, :birthdate, :address, :cellphone, :gender, :plan_id,
+        measurements_attributes: [ :id, :_destroy, :height, :weight, :chest, :left_arm, :right_arm, :waist, :abdomen, :hips, :left_thigh, :right_thigh],
+        skinfolds_attributes: [ :id, :_destroy, :chest, :midaxilary, :subscapular, :bicep, :tricep, :abdominal, :suprailiac, :thigh, :calf],
+        payments_attributes: [ :id, :_destroy, :payment_date, :value ] )
+    else
+      # Para edição, apenas dados básicos do cliente
+      params.require(:client).permit(:name, :birthdate, :address, :cellphone, :gender, :plan_id)
+    end
+  end
+
+  def measurement_params
+    params.require(:measurement).permit(:height, :weight, :chest, :left_arm, :right_arm, :waist, :abdomen, :hips, :left_thigh, :right_thigh)
+  end
+
+  def payment_params
+    params.require(:payment).permit(:payment_date, :value)
+  end
+
+  def skinfold_params
+    params.require(:skinfold).permit(:chest, :midaxilary, :subscapular, :bicep, :tricep, :abdominal, :suprailiac, :thigh, :calf)
   end
 
   def require_same_user

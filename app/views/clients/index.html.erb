@@ -1,190 +1,94 @@
 <% content_for :page_title, "Clientes" %>
 
-<div class="space-y-6">
+<div class="space-y-6" data-controller="auto-refresh" data-auto-refresh-url-value="<%= clients_path %>" data-auto-refresh-interval-value="60000">
   <!-- Header with Actions -->
-  <div class="flex justify-between items-center">
-    <div>
-      <h1 class="text-2xl font-bold text-gray-900">
-        <% if params[:filter] == 'overdue' %>
-          Clientes Inadimplentes
-        <% else %>
-          Clientes
-        <% end %>
-      </h1>
-      <p class="text-gray-600">
-        <% if params[:filter] == 'overdue' %>
-          Clientes com pagamentos em atraso
-        <% else %>
-          Gerencie todos os clientes da sua academia
-        <% end %>
-      </p>
-    </div>
-    <div class="flex items-center gap-3">
-      <!-- Filtros -->
-      <div class="flex items-center gap-2">
-        <%= link_to clients_path, class: "px-3 py-2 text-sm font-medium rounded-lg transition-colors #{params[:filter].blank? ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
-          Todos
-        <% end %>
-        <%= link_to clients_path(filter: 'overdue'), class: "px-3 py-2 text-sm font-medium rounded-lg transition-colors #{params[:filter] == 'overdue' ? 'bg-red-600 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
-          Inadimplentes
-        <% end %>
-      </div>
-      
-      <%= link_to new_client_path, class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm" do %>
-        <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </svg>
-        Novo Cliente
-      <% end %>
-    </div>
-  </div>
-
-  <!-- Stats Bar -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div class="bg-white rounded-lg border border-gray-200 p-4">
-      <div class="flex items-center">
-        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-          <svg class="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-        </div>
+  <turbo-frame id="clients_header">
+    <div class="flex flex-col gap-4">
+      <div class="flex justify-between items-center">
         <div>
-          <p class="text-2xl font-bold text-gray-900"><%= @total_clients %></p>
-          <p class="text-sm text-gray-600">Total de Clientes</p>
+          <h1 class="text-2xl font-bold text-gray-900">
+            <% if params[:filter] == 'overdue' %>
+              Clientes Inadimplentes
+            <% else %>
+              Clientes
+            <% end %>
+          </h1>
+          <p class="text-gray-600">
+            <% if params[:filter] == 'overdue' %>
+              Clientes com pagamentos em atraso
+            <% else %>
+              Gerencie todos os clientes da sua academia
+            <% end %>
+          </p>
         </div>
-      </div>
-    </div>
-    <div class="bg-white rounded-lg border border-gray-200 p-4">
-      <div class="flex items-center">
-        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-          <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-green-600"><%= @current_clients %></p>
-          <p class="text-sm text-gray-600">Em Dia</p>
-        </div>
-      </div>
-    </div>
-    <div class="bg-white rounded-lg border border-gray-200 p-4">
-      <div class="flex items-center">
-        <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-          <svg class="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-red-600"><%= @overdue_clients %></p>
-          <p class="text-sm text-gray-600">Inadimplentes</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Clients Grid -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-    <div class="p-6">
-      <div class="grid gap-6">
-        <% if @clients.any? %>
-          <% @clients.each do |client| %>
-            <div class="group border border-gray-200 rounded-lg p-6 hover:shadow-md transition-all duration-200">
-              <div class="flex items-start justify-between">
-                <div class="flex items-start space-x-4 flex-1">
-                  <!-- Avatar -->
-                  <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                    <span class="text-white font-semibold text-lg">
-                      <%= client.name.first.upcase %>
-                    </span>
-                  </div>
-                  
-                  <!-- Client Info -->
-                  <div class="flex-1">
-                    <div class="flex items-center space-x-3 mb-2">
-                      <h3 class="text-lg font-semibold text-gray-900"><%= client.name %></h3>
-                      <% if client.payments.any? && (client.payments.last.payment_date + 1.month) <= Date.current %>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                          Inadimplente
-                        </span>
-                      <% else %>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Em dia
-                        </span>
-                      <% end %>
-                    </div>
-                    <p class="text-gray-600 mb-2">
-                      <svg class="w-4 h-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      <%= client.address %>
-                    </p>
-                    <% if client.payments.any? %>
-                      <p class="text-sm text-gray-500">
-                        Último pagamento: <%= client.payments.last.payment_date.strftime("%d/%m/%Y") %>
-                        • Próximo vencimento: <%= (client.payments.last.payment_date + 1.month).strftime("%d/%m/%Y") %>
-                      </p>
-                    <% else %>
-                      <p class="text-sm text-orange-600">Nenhum pagamento registrado</p>
-                    <% end %>
-                  </div>
-                </div>
-                
-                <!-- Actions -->
-                <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <%= link_to client_path(client), class: "p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors", title: "Ver detalhes" do %>
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  <% end %>
-                  
-                  <%= link_to edit_client_path(client), class: "p-2 text-gray-600 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors", title: "Editar cliente" do %>
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  <% end %>
-                  
-                  <%= link_to client, data: { turbo_method: :delete, turbo_confirm: 'Tem certeza que deseja excluir este cliente?' }, class: "p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors", title: "Excluir cliente" do %>
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          <% end %>
-        <% else %>
-          <!-- Empty State -->
-          <div class="text-center py-12">
-            <div class="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-              <svg class="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-            </div>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">Nenhum cliente cadastrado</h3>
-            <p class="text-gray-600 mb-4">Comece adicionando o primeiro cliente da sua academia.</p>
-            <%= link_to new_client_path, class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors" do %>
-              <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Cadastrar Primeiro Cliente
+        <div class="flex items-center gap-3">
+          <!-- Filtros -->
+          <div class="flex items-center gap-2">
+            <%= link_to clients_path, 
+                class: "px-3 py-2 text-sm font-medium rounded-lg transition-colors #{params[:filter].blank? ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}",
+                data: { turbo_frame: "clients_content" } do %>
+              Todos
+            <% end %>
+            <%= link_to clients_path(filter: 'overdue'), 
+                class: "px-3 py-2 text-sm font-medium rounded-lg transition-colors #{params[:filter] == 'overdue' ? 'bg-red-600 text-white' : 'text-gray-600 hover:bg-gray-100'}",
+                data: { turbo_frame: "clients_content" } do %>
+              Inadimplentes
             <% end %>
           </div>
+          
+          <%= link_to new_client_path, 
+              class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm",
+              data: { turbo_stream: true } do %>
+            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Novo Cliente
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Search Bar -->
+      <div class="w-full md:w-96 mb-2">
+        <%= form_with url: clients_path, method: :get, data: { 
+            turbo_frame: "clients_content",
+            controller: "search",
+            action: "input->search#submit"
+          } do |f| %>
+          <div class="relative">
+            <%= f.text_field :search, 
+                value: params[:search],
+                placeholder: "Buscar clientes...",
+                class: "w-full px-4 py-2 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
+                data: { search_target: "input" } %>
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+              <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <% if params[:search].present? %>
+              <%= link_to clients_path(filter: params[:filter]), 
+                  data: { turbo_frame: "clients_content" },
+                  class: "absolute inset-y-0 right-0 flex items-center pr-3" do %>
+                <svg class="w-5 h-5 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              <% end %>
+            <% end %>
+          </div>
+          <%= f.hidden_field :filter, value: params[:filter] %>
         <% end %>
       </div>
     </div>
+  </turbo-frame>
 
-    <!-- Pagination -->
-    <% if @clients.respond_to?(:total_pages) && @clients.total_pages > 1 %>
-      <div class="border-t border-gray-200 px-6 py-4">
-        <div class="flex justify-center">
-          <%= will_paginate @clients, 
-              previous_label: '← Anterior', 
-              next_label: 'Próxima →',
-              class: 'pagination flex space-x-2' %>
-        </div>
-      </div>
-    <% end %>
-  </div>
+  <!-- Stats Bar -->
+  <turbo-frame id="clients_stats">
+    <%= render 'stats', total_clients: @total_clients, current_clients: @current_clients, overdue_clients: @overdue_clients %>
+  </turbo-frame>
+
+  <!-- Clients Content -->
+  <turbo-frame id="clients_content">
+    <%= render 'clients_list' %>
+  </turbo-frame>
+
 </div>

@@ -1,0 +1,41 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+  <div class="bg-white rounded-lg border border-gray-200 p-4">
+    <div class="flex items-center">
+      <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+        <svg class="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      </div>
+      <div>
+        <p class="text-2xl font-bold text-gray-900"><%= total_clients %></p>
+        <p class="text-sm text-gray-600">Total de Clientes</p>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white rounded-lg border border-gray-200 p-4">
+    <div class="flex items-center">
+      <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+        <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div>
+        <p class="text-2xl font-bold text-green-600"><%= current_clients %></p>
+        <p class="text-sm text-gray-600">Em Dia</p>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white rounded-lg border border-gray-200 p-4">
+    <div class="flex items-center">
+      <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+        <svg class="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div>
+        <p class="text-2xl font-bold text-red-600"><%= overdue_clients %></p>
+        <p class="text-sm text-gray-600">Inadimplentes</p>
+      </div>
+    </div>
+  </div>
+</div>

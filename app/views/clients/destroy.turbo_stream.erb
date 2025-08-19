@@ -1,0 +1,5 @@
+<%= turbo_stream.remove "client_#{@client.id}" %>
+
+<%= turbo_stream.update "flash_messages" do %>
+  <%= render 'layouts/flash', flash: { success: "Cliente deletado com sucesso" } %>
+<% end %>

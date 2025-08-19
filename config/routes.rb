@@ -13,9 +13,20 @@ Rails.application.routes.draw do
     resources :payments, except: [:edit, :update, :show, :destroy]
     resources :measurements, except: [:edit, :update, :show, :destroy]
     resources :skinfolds, except: [:edit, :update, :show, :destroy]
+    
+    # Actions específicas para adicionar dados individuais
+    member do
+      get :new_measurement
+      post :create_measurement
+      get :new_payment
+      post :create_payment
+      get :new_skinfold
+      post :create_skinfold
+    end
   end
 
   get 'login', to: "sessions#new"
   post 'login', to: "sessions#create"
   delete 'logout', to: "sessions#destroy"
+  get 'logout', to: "sessions#destroy"
 end

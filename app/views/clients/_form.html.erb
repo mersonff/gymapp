@@ -1,4 +1,13 @@
-<%= form_with(model: client, local: true, class: "bg-white shadow-xl rounded-lg p-8 space-y-8") do |form| %>
+<%= form_with(model: client,
+              data: { 
+                controller: "form", 
+                form_target: "form",
+                turbo_stream: true
+              },
+              html: {
+                "accept" => "text/vnd.turbo-stream.html"
+              },
+              class: "space-y-8") do |form| %>
   <% if client.errors.any? %>
     <div id="error_explanation" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
       <h2 class="text-red-800 font-semibold text-lg mb-2">
@@ -18,95 +27,95 @@
   <% end %>
 
   <!-- Informações Pessoais -->
-  <div class="form-section">
-    <h3 class="form-section-title">
+  <div class="bg-white rounded-lg p-6 mb-6 border border-gray-200">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
       <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
       </svg>
       Informações Pessoais
     </h3>
     
-    <div class="form-grid">
-      <div class="form-field">
-        <%= form.label :name, "Nome Completo", class: "form-label required" %>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="space-y-1">
+        <%= form.label :name, "Nome Completo", class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.text_field :name, 
-            class: "form-input #{'form-input-error' if client.errors[:name].any?}",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 #{'border-red-500' if client.errors[:name].any?}",
             placeholder: "Digite o nome completo",
             required: true %>
         <% if client.errors[:name].any? %>
-          <p class="form-error"><%= client.errors[:name].first %></p>
+          <p class="text-sm text-red-600 mt-1"><%= client.errors[:name].first %></p>
         <% end %>
       </div>
 
-      <div class="form-field">
-        <%= form.label :birthdate, "Data de Nascimento", class: "form-label required" %>
+      <div class="space-y-1">
+        <%= form.label :birthdate, "Data de Nascimento", class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.date_field :birthdate, 
-            class: "form-input #{'form-input-error' if client.errors[:birthdate].any?}",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 #{'border-red-500' if client.errors[:birthdate].any?}",
             required: true %>
         <% if client.errors[:birthdate].any? %>
-          <p class="form-error"><%= client.errors[:birthdate].first %></p>
+          <p class="text-sm text-red-600 mt-1"><%= client.errors[:birthdate].first %></p>
         <% end %>
       </div>
 
-      <div class="form-field">
-        <%= form.label :phone, "Telefone", class: "form-label required" %>
-        <%= form.telephone_field :phone, 
-            class: "form-input #{'form-input-error' if client.errors[:phone].any?}",
+      <div class="space-y-1">
+        <%= form.label :cellphone, "Telefone", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.telephone_field :cellphone, 
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 #{'border-red-500' if client.errors[:cellphone].any?}",
             placeholder: "(00) 00000-0000",
             required: true %>
-        <% if client.errors[:phone].any? %>
-          <p class="form-error"><%= client.errors[:phone].first %></p>
+        <% if client.errors[:cellphone].any? %>
+          <p class="text-sm text-red-600 mt-1"><%= client.errors[:cellphone].first %></p>
         <% end %>
       </div>
 
-      <div class="form-field">
-        <%= form.label :gender, "Gênero", class: "form-label" %>
+      <div class="space-y-1">
+        <%= form.label :gender, "Gênero", class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.select :gender, 
             [['Masculino', 'M'], ['Feminino', 'F'], ['Outro', 'O']], 
             { prompt: 'Selecione o gênero' },
-            { class: "form-input #{'form-input-error' if client.errors[:gender].any?}" } %>
+            { class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 #{'border-red-500' if client.errors[:gender].any?}" } %>
         <% if client.errors[:gender].any? %>
-          <p class="form-error"><%= client.errors[:gender].first %></p>
+          <p class="text-sm text-red-600 mt-1"><%= client.errors[:gender].first %></p>
         <% end %>
       </div>
 
-      <div class="form-field col-span-2">
-        <%= form.label :address, "Endereço", class: "form-label" %>
+      <div class="space-y-1 md:col-span-2">
+        <%= form.label :address, "Endereço", class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.text_area :address, 
-            class: "form-input #{'form-input-error' if client.errors[:address].any?}",
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 #{'border-red-500' if client.errors[:address].any?}",
             rows: 3,
             placeholder: "Digite o endereço completo" %>
         <% if client.errors[:address].any? %>
-          <p class="form-error"><%= client.errors[:address].first %></p>
+          <p class="text-sm text-red-600 mt-1"><%= client.errors[:address].first %></p>
         <% end %>
       </div>
     </div>
   </div>
 
   <!-- Plano -->
-  <div class="form-section">
-    <h3 class="form-section-title">
+  <div class="bg-white rounded-lg p-6 mb-6 border border-gray-200">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
       <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
       </svg>
       Plano de Treino
     </h3>
     
-    <div class="form-field">
-      <%= form.label :plan_id, "Selecionar Plano", class: "form-label required" %>
+    <div class="space-y-1">
+      <%= form.label :plan_id, "Selecionar Plano", class: "block text-sm font-medium text-gray-700 mb-2" %>
       <%= form.collection_select :plan_id, Plan.all, :id, :description,
           { prompt: 'Escolha um plano' },
-          { class: "form-input #{'form-input-error' if client.errors[:plan_id].any?}",
+          { class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 #{'border-red-500' if client.errors[:plan_id].any?}",
             required: true } %>
       <% if client.errors[:plan_id].any? %>
-        <p class="form-error"><%= client.errors[:plan_id].first %></p>
+        <p class="text-sm text-red-600 mt-1"><%= client.errors[:plan_id].first %></p>
       <% end %>
     </div>
   </div>
 
   <!-- Medidas Corporais -->
-  <div class="form-section">
-    <h3 class="form-section-title">
+  <div class="bg-white rounded-lg p-6 mb-6 border border-gray-200">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
       <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
       </svg>
@@ -114,92 +123,92 @@
     </h3>
 
     <%= form.fields_for :measurements do |measurement_form| %>
-      <div class="form-grid">
-        <div class="form-field">
-          <%= measurement_form.label :height, "Altura (cm)", class: "form-label" %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-1">
+          <%= measurement_form.label :height, "Altura (cm)", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= measurement_form.number_field :height, 
-              class: "form-input",
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
               step: 1,
               min: 0,
               placeholder: "175" %>
         </div>
 
-        <div class="form-field">
-          <%= measurement_form.label :weight, "Peso (kg)", class: "form-label" %>
+        <div class="space-y-1">
+          <%= measurement_form.label :weight, "Peso (kg)", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= measurement_form.number_field :weight, 
-              class: "form-input",
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
               step: 1,
               min: 0,
               placeholder: "70" %>
         </div>
 
-        <div class="form-field">
-          <%= measurement_form.label :chest, "Peito (cm)", class: "form-label" %>
+        <div class="space-y-1">
+          <%= measurement_form.label :chest, "Peito (cm)", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= measurement_form.number_field :chest, 
-              class: "form-input",
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
               step: 1,
               min: 0,
               placeholder: "95" %>
         </div>
 
-        <div class="form-field">
-          <%= measurement_form.label :left_arm, "Braço Esquerdo (cm)", class: "form-label" %>
+        <div class="space-y-1">
+          <%= measurement_form.label :left_arm, "Braço Esquerdo (cm)", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= measurement_form.number_field :left_arm, 
-              class: "form-input",
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
               step: 1,
               min: 0,
               placeholder: "35" %>
         </div>
 
-        <div class="form-field">
-          <%= measurement_form.label :right_arm, "Braço Direito (cm)", class: "form-label" %>
+        <div class="space-y-1">
+          <%= measurement_form.label :right_arm, "Braço Direito (cm)", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= measurement_form.number_field :right_arm, 
-              class: "form-input",
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
               step: 1,
               min: 0,
               placeholder: "35" %>
         </div>
 
-        <div class="form-field">
-          <%= measurement_form.label :waist, "Cintura (cm)", class: "form-label" %>
+        <div class="space-y-1">
+          <%= measurement_form.label :waist, "Cintura (cm)", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= measurement_form.number_field :waist, 
-              class: "form-input",
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
               step: 1,
               min: 0,
               placeholder: "80" %>
         </div>
 
-        <div class="form-field">
-          <%= measurement_form.label :abdomen, "Abdômen (cm)", class: "form-label" %>
+        <div class="space-y-1">
+          <%= measurement_form.label :abdomen, "Abdômen (cm)", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= measurement_form.number_field :abdomen, 
-              class: "form-input",
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
               step: 1,
               min: 0,
               placeholder: "85" %>
         </div>
 
-        <div class="form-field">
-          <%= measurement_form.label :hips, "Quadris (cm)", class: "form-label" %>
+        <div class="space-y-1">
+          <%= measurement_form.label :hips, "Quadris (cm)", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= measurement_form.number_field :hips, 
-              class: "form-input",
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
               step: 1,
               min: 0,
               placeholder: "95" %>
         </div>
 
-        <div class="form-field">
-          <%= measurement_form.label :left_thigh, "Coxa Esquerda (cm)", class: "form-label" %>
+        <div class="space-y-1">
+          <%= measurement_form.label :left_thigh, "Coxa Esquerda (cm)", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= measurement_form.number_field :left_thigh, 
-              class: "form-input",
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
               step: 1,
               min: 0,
               placeholder: "55" %>
         </div>
 
-        <div class="form-field">
-          <%= measurement_form.label :righ_thigh, "Coxa Direita (cm)", class: "form-label" %>
+        <div class="space-y-1">
+          <%= measurement_form.label :righ_thigh, "Coxa Direita (cm)", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= measurement_form.number_field :righ_thigh, 
-              class: "form-input",
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
               step: 1,
               min: 0,
               placeholder: "55" %>
@@ -211,20 +220,21 @@
   <!-- Botões de Ação -->
   <div class="flex flex-col sm:flex-row gap-4 pt-8 border-t border-gray-200">
     <button type="submit" 
-            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center">
+            data-form-target="submit"
+            data-action="turbo:submit-start->form#submitStart turbo:submit-end->form#submitEnd"
+            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
       <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
       </svg>
       <%= client.persisted? ? 'Atualizar Cliente' : 'Cadastrar Cliente' %>
     </button>
     
-    <a href="<%= clients_path %>" 
-       class="flex-1 font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center"
-       style="background-color: #6b7280 !important; color: white !important; text-decoration: none !important; border: 2px solid #6b7280;">
-      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: white !important;">
+    <%= link_to clients_path, 
+        class: "flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105 flex items-center justify-center text-decoration-none" do %>
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
       </svg>
-      <span style="color: white !important;">Cancelar</span>
-    </a>
+      Cancelar
+    <% end %>
   </div>
 <% end %>

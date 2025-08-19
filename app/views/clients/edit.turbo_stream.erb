@@ -1,0 +1,61 @@
+<%= turbo_stream.update "main" do %>
+  <div class="max-w-4xl mx-auto">
+    <!-- Breadcrumb/Navigation -->
+    <div class="mb-6">
+      <%= link_to clients_path, 
+          class: "inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors",
+          data: { turbo_stream: true } do %>
+        <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Voltar para Clientes
+      <% end %>
+    </div>
+    
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <!-- Header -->
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Editar Cliente: <%= @client.name %></h2>
+        <p class="text-gray-600 mt-1">Atualize as informações do cliente</p>
+      </div>
+
+      <!-- Form -->
+      <div id="edit_client_form">
+        <%= render 'basic_form', client: @client %>
+      </div>
+      
+      <!-- Links para gerenciar medidas e pagamentos -->
+      <div class="border-t pt-6 mt-6">
+        <h4 class="text-md font-medium text-gray-900 mb-4">Gerenciar Dados Adicionais</h4>
+        <div class="flex flex-wrap gap-3">
+          <%= link_to client_path(@client), 
+              class: "inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors",
+              data: { turbo_stream: true } do %>
+            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Ver Perfil Completo
+          <% end %>
+          
+          <%= link_to new_measurement_client_path(@client),
+                  class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors",
+                  data: { turbo_stream: true } do %>
+            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Adicionar Medidas
+          <% end %>
+          
+          <%= link_to new_payment_client_path(@client),
+                  class: "inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors",
+                  data: { turbo_stream: true } do %>
+            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 0h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v2m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V9z" />
+            </svg>
+            Registrar Pagamento
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

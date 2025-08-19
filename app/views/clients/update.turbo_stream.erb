@@ -1,0 +1,9 @@
+<%= turbo_stream.update "client_#{@client.id}" do %>
+  <%= render 'client_card', client: @client %>
+<% end %>
+
+<%= turbo_stream.update "flash_messages" do %>
+  <%= render 'layouts/flash', flash: { success: "Cliente atualizado com sucesso" } %>
+<% end %>
+
+<%= turbo_stream.remove "modal_frame" %>

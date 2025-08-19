@@ -46,6 +46,8 @@ Rails.application.configure do
   # Configure logging for development
   config.log_level = :debug
   config.colorize_logging = true
+  config.logger = ActiveSupport::Logger.new(STDOUT)
+  config.logger.formatter = Logger::Formatter.new
   
   # Force logs to appear in STDOUT when debugging
   if ENV['RAILS_LOG_TO_STDOUT'].present?
