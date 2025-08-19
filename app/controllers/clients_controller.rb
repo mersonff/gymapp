@@ -1,9 +1,11 @@
 class ClientsController < ApplicationController
   before_action :set_client, only: [:edit, :update, :show, :destroy, :new_measurement, :create_measurement, :new_payment, :create_payment, :new_skinfold, :create_skinfold]
-  before_action :require_user, except: [:index, :show]
+  before_action :require_user, except: [:index]
   before_action :require_same_user, only: [:edit, :update, :destroy]
 
   def index
+    return redirect_to(login_path) unless logged_in?
+    
     # Query object para busca e filtros
     query = ClientsQuery.new(current_user.clients)
     query.search(params[:search]) if params[:search].present?
@@ -66,7 +68,7 @@ class ClientsController < ApplicationController
         end
         format.html do
           flash[:success] = "Cliente criado com sucesso"
-          redirect_to client_path(@client)
+          redirect_to clients_path
         end
       else
         format.turbo_stream do
@@ -89,7 +91,7 @@ class ClientsController < ApplicationController
         end
         format.html do
           flash[:success] = "Cliente atualizado com sucesso"
-          redirect_to client_path(@client)
+          redirect_to clients_path
         end
       else
         format.turbo_stream do
@@ -135,11 +137,12 @@ class ClientsController < ApplicationController
     
     respond_to do |format|
       format.turbo_stream
+      format.html
     end
   end
 
   def create_measurement
-    @measurement = @client.measurements.build(measurement_params)
+    @measurement = @client.measurements.build(clean_measurement_params)
     
     respond_to do |format|
       if @measurement.save
@@ -147,10 +150,12 @@ class ClientsController < ApplicationController
           flash[:success] = "Medida adicionada com sucesso"
           redirect_to client_path(@client), status: :see_other
         end
+        format.html { redirect_to client_path(@client) }
       else
         format.turbo_stream do
           render turbo_stream: turbo_stream.update("measurement_form", partial: "clients/measurement_form", locals: { measurement: @measurement })
         end
+        format.html { redirect_to client_path(@client), alert: "Erro ao criar medida" }
       end
     end
   end
@@ -160,6 +165,7 @@ class ClientsController < ApplicationController
     
     respond_to do |format|
       format.turbo_stream
+      format.html
     end
   end
 
@@ -172,10 +178,12 @@ class ClientsController < ApplicationController
           flash[:success] = "Pagamento registrado com sucesso"
           redirect_to client_path(@client), status: :see_other
         end
+        format.html { redirect_to client_path(@client) }
       else
         format.turbo_stream do
           render turbo_stream: turbo_stream.update("payment_form", partial: "clients/payment_form", locals: { payment: @payment })
         end
+        format.html { redirect_to client_path(@client), alert: "Erro ao criar pagamento" }
       end
     end
   end
@@ -185,6 +193,7 @@ class ClientsController < ApplicationController
     
     respond_to do |format|
       format.turbo_stream
+      format.html
     end
   end
 
@@ -197,10 +206,12 @@ class ClientsController < ApplicationController
           flash[:success] = "Dobras cutâneas adicionadas com sucesso"
           redirect_to client_path(@client), status: :see_other
         end
+        format.html { redirect_to client_path(@client) }
       else
         format.turbo_stream do
           render turbo_stream: turbo_stream.update("skinfold_form", partial: "clients/skinfold_form", locals: { skinfold: @skinfold })
         end
+        format.html { redirect_to client_path(@client), alert: "Erro ao criar dobras cutâneas" }
       end
     end
   end
@@ -241,14 +252,18 @@ class ClientsController < ApplicationController
   private
 
   def set_client
-    @client = Client.find(params[:id])
+    if current_user
+      @client = current_user.clients.find(params[:id])
+    else
+      @client = Client.find(params[:id])
+    end
   end
 
   def client_params
     # Se é criação de cliente novo, permite nested attributes
     if action_name == 'create' || params[:with_measurements] == 'true'
       params.require(:client).permit(:name, :birthdate, :address, :cellphone, :gender, :plan_id,
-        measurements_attributes: [ :id, :_destroy, :height, :weight, :chest, :left_arm, :right_arm, :waist, :abdomen, :hips, :left_thigh, :right_thigh],
+        measurements_attributes: [ :id, :_destroy, :height, :weight, :chest, :left_arm, :right_arm, :waist, :abdomen, :hips, :left_thigh, :righ_thigh],
         skinfolds_attributes: [ :id, :_destroy, :chest, :midaxilary, :subscapular, :bicep, :tricep, :abdominal, :suprailiac, :thigh, :calf],
         payments_attributes: [ :id, :_destroy, :payment_date, :value ] )
     else
@@ -258,7 +273,16 @@ class ClientsController < ApplicationController
   end
 
   def measurement_params
-    params.require(:measurement).permit(:height, :weight, :chest, :left_arm, :right_arm, :waist, :abdomen, :hips, :left_thigh, :right_thigh)
+    params.require(:measurement).permit(:height, :weight, :chest, :left_arm, :right_arm, :waist, :abdomen, :hips, :left_thigh, :righ_thigh)
+  end
+  
+  def clean_measurement_params
+    cleaned = measurement_params.to_h
+    # Convert empty strings to nil for numeric validations
+    cleaned.each do |key, value|
+      cleaned[key] = nil if value.blank?
+    end
+    cleaned
   end
 
   def payment_params

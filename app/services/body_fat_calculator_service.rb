@@ -13,12 +13,13 @@ class BodyFatCalculatorService
     age_coefficient: -0.00012828
   }.freeze
 
-  def initialize(client:, skinfold:)
+  def initialize(client)
     @client = client
-    @skinfold = skinfold
   end
 
-  def calculate
+  def calculate_for_skinfold(skinfold)
+    @skinfold = skinfold
+    return nil unless valid_skinfold_data?
     body_fat_percentage.round(1)
   end
 
@@ -40,15 +41,13 @@ class BodyFatCalculatorService
   end
 
   def total_skinfolds
-    @total_skinfolds ||= [
-      skinfold.chest,
-      skinfold.midaxilary,
-      skinfold.subscapular,
-      skinfold.tricep,
-      skinfold.abdominal,
-      skinfold.suprailiac,
-      skinfold.thigh
-    ].compact.sum(&:to_i)
+    @total_skinfolds ||= if male?
+      # Jackson-Pollock 3-site formula for men: chest, abdomen, thigh
+      [skinfold.chest, skinfold.abdominal, skinfold.thigh].compact.sum
+    else
+      # Jackson-Pollock 3-site formula for women: tricep, suprailiac, thigh
+      [skinfold.tricep, skinfold.suprailiac, skinfold.thigh].compact.sum
+    end
   end
 
   def age
@@ -56,6 +55,18 @@ class BodyFatCalculatorService
   end
 
   def male?
-    client.gender == "Masculino"
+    client.gender == "M"
+  end
+  
+  def valid_skinfold_data?
+    return false unless client.gender.in?(%w[M F])
+    
+    if male?
+      # For males, need chest, abdomen, and thigh
+      [skinfold.chest, skinfold.abdominal, skinfold.thigh].all? { |v| v&.positive? }
+    else
+      # For females, need tricep, suprailiac, and thigh
+      [skinfold.tricep, skinfold.suprailiac, skinfold.thigh].all? { |v| v&.positive? }
+    end
   end
 end

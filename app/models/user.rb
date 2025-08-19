@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  before_save { self.email = email.downcase }
+  before_save { self.email = email.downcase if email.present? }
 
   has_many :plans, dependent: :destroy
   has_many :clients, dependent: :destroy

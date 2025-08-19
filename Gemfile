@@ -24,6 +24,11 @@ group :development, :test do
   gem 'sqlite3', '~> 1.7'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'debug', '>= 1.0.0'
+  gem 'rspec-rails', '~> 6.0'
+  gem 'factory_bot_rails', '~> 6.2'
+  gem 'faker', '~> 3.2'
+  gem 'shoulda-matchers', '~> 5.3'
+  gem 'rails-controller-testing'
 end
 
 group :production do
@@ -32,7 +37,6 @@ end
 group :development do
   gem 'web-console'
   gem 'listen', '~> 3.8'
-  gem 'faker'
   gem 'foreman'
   gem 'better_errors'
   gem 'binding_of_caller'

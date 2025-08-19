@@ -12,22 +12,18 @@ class ClientStatisticsService
       overdue: overdue_clients
     }
   end
-
-  private
+  
+  alias_method :call, :calculate
 
   def total_clients
-    @total_clients ||= user.clients.joins(:payments).distinct.count
+    @total_clients ||= user.clients.count
   end
 
   def current_clients
-    total_clients - overdue_clients
+    @current_clients ||= user.clients.select { |client| client.current? }.count
   end
 
   def overdue_clients
-    @overdue_clients ||= user.clients.joins(:payments)
-      .where("payments.payment_date + INTERVAL '1 month' <= ?", Date.current)
-      .group("clients.id")
-      .having("MAX(payments.payment_date) = (SELECT MAX(p2.payment_date) FROM payments p2 WHERE p2.client_id = clients.id)")
-      .count.size
+    @overdue_clients ||= user.clients.select { |client| client.overdue? }.count
   end
 end
