@@ -5,6 +5,9 @@ require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
+require 'capybara/rails'
+require 'capybara/rspec'
+require 'selenium/webdriver'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -73,4 +76,33 @@ Shoulda::Matchers.configure do |config|
     with.test_framework :rspec
     with.library :rails
   end
+end
+
+# Configure Capybara for integration tests
+Capybara.default_driver = :rack_test
+Capybara.javascript_driver = :rack_test
+Capybara.default_max_wait_time = 5
+
+# Configure system tests to use rack_test in WSL environment
+# This allows testing without requiring Chrome/Selenium WebDriver
+RSpec.configure do |config|
+  config.before(:each, type: :system) do
+    driven_by :rack_test
+  end
+end
+
+RSpec.configure do |config|
+  # Helper method for authentication in system tests
+  config.include Module.new {
+    def login_as(user)
+      visit login_path
+      fill_in 'E-mail', with: user.email
+      fill_in 'Senha', with: user.password
+      click_button 'Acessar Sistema'
+    end
+    
+    def logout
+      click_link 'Logout' if page.has_link?('Logout')
+    end
+  }, type: :system
 end

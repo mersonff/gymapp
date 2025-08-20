@@ -28,7 +28,10 @@ group :development, :test do
   gem 'factory_bot_rails', '~> 6.2'
   gem 'faker', '~> 3.2'
   gem 'shoulda-matchers', '~> 5.3'
-  gem 'rails-controller-testing'
+  gem 'rails-controller-testing'  
+  gem 'capybara'
+  gem 'selenium-webdriver', '~> 4.11'
+  gem 'webdrivers'
 end
 
 group :production do

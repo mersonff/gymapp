@@ -1,0 +1,64 @@
+<%= form_with model: [measurement.client, measurement], local: true, class: "space-y-4" do |f| %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :height, "Altura (cm)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :height, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+      <% if measurement.errors[:height].any? %>
+        <p class="text-red-500 text-xs mt-1"><%= measurement.errors[:height].first %></p>
+      <% end %>
+    </div>
+
+    <div>
+      <%= f.label :weight, "Peso (kg)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :weight, step: 0.1, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+      <% if measurement.errors[:weight].any? %>
+        <p class="text-red-500 text-xs mt-1"><%= measurement.errors[:weight].first %></p>
+      <% end %>
+    </div>
+
+    <div>
+      <%= f.label :chest, "Peito (cm)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :chest, step: 0.1, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= f.label :left_arm, "Braço Esquerdo (cm)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :left_arm, step: 0.1, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= f.label :right_arm, "Braço Direito (cm)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :right_arm, step: 0.1, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= f.label :waist, "Cintura (cm)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :waist, step: 0.1, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= f.label :abdomen, "Abdômen (cm)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :abdomen, step: 0.1, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= f.label :hips, "Quadril (cm)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :hips, step: 0.1, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= f.label :left_thigh, "Coxa Esquerda (cm)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :left_thigh, step: 0.1, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= f.label :righ_thigh, "Coxa Direita (cm)", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :righ_thigh, step: 0.1, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3 pt-4">
+    <%= link_to "Cancelar", client_path(measurement.client), class: "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50" %>
+    <%= f.submit "Salvar", class: "px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700" %>
+  </div>
+<% end %>
