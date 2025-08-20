@@ -109,6 +109,9 @@ Rails/RakeEnvironment:
 Rails/UniqueValidationWithoutIndex:
   Enabled: false  # Would require database migrations
 
+Rails/StrongParametersExpect:
+  Enabled: false  # expect() doesn't work well with nested indexed attributes in Rails 8
+
 # RSpec specific - More tolerant settings for test files
 RSpec/ExampleLength:
   Max: 35  # Tests can be longer, especially integration tests

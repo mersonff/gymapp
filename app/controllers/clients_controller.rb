@@ -2,12 +2,10 @@ class ClientsController < ApplicationController
   before_action :set_client,
                 only: %i[edit update show destroy new_measurement create_measurement
                          new_payment create_payment new_skinfold create_skinfold]
-  before_action :require_user, except: [:index]
+  before_action :require_user
   before_action :require_same_user, only: %i[edit update destroy]
 
   def index
-    return redirect_to(login_path) unless logged_in?
-
     # Query object para busca e filtros
     query = ClientsQuery.new(current_user.clients)
     query.search(params[:search]) if params[:search].present?
@@ -76,10 +74,6 @@ class ClientsController < ApplicationController
   end
 
   def edit
-    # No edit, não construímos novos registros automaticamente
-    # O formulário deve trabalhar apenas com os dados existentes
-    # Se quiser adicionar novos, deve ser uma action separada
-
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -278,15 +272,15 @@ class ClientsController < ApplicationController
       # Use permit for nested attributes as expect doesn't handle indexed attributes well
       params.require(:client).permit(
         :name, :birthdate, :address, :cellphone, :gender, :plan_id,
-        measurements_attributes: [
-          :id, :_destroy, :height, :weight, :chest, :left_arm, :right_arm,
-          :waist, :abdomen, :hips, :left_thigh, :righ_thigh,
+        measurements_attributes: %i[
+          id _destroy height weight chest left_arm right_arm
+          waist abdomen hips left_thigh righ_thigh
         ],
-        skinfolds_attributes: [
-          :id, :_destroy, :chest, :midaxilary, :subscapular, :bicep, :tricep,
-          :abdominal, :suprailiac, :thigh, :calf,
+        skinfolds_attributes: %i[
+          id _destroy chest midaxilary subscapular bicep tricep
+          abdominal suprailiac thigh calf
         ],
-        payments_attributes: [:id, :_destroy, :payment_date, :value],
+        payments_attributes: %i[id _destroy payment_date value]
       )
     else
       # Para edição, apenas dados básicos do cliente

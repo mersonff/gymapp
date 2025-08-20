@@ -179,7 +179,7 @@ RSpec.describe ClientRepository, type: :repository do
   end
 
   describe '#paginated' do
-    before { 25.times { |i| create(:client, user: user, name: "Client #{i}") } }
+    before { create_list(:client, 25, user: user) }
 
     it 'paginates results' do
       page1 = repository.paginated(page: 1, per_page: 10)
