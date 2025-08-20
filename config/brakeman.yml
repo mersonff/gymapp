@@ -1,0 +1,60 @@
+# Brakeman Security Scanner Configuration
+# See https://brakemanscanner.org/docs/options/
+
+# Application settings
+app_path: "."
+rails_version: "8.0.2"
+
+# Output settings
+output_files:
+  - brakeman_report.html
+  - brakeman_report.json
+
+format: html
+
+# Check settings
+check_arguments: true
+check_headers: true
+url_safe_methods:
+  - sanitize
+
+# Confidence levels: 1 (High), 2 (Medium), 3 (Low)
+min_confidence: 2
+
+# Exclude certain files/directories
+skip_files:
+  - lib/tasks/auto_annotate_models.rake
+  - vendor/**/*
+  - spec/**/*
+  - test/**/*
+  - tmp/**/*
+  - log/**/*
+  - coverage/**/*
+
+# Skip specific checks
+skip_checks: []
+  # Skip checks that might not be relevant for this app
+  # - LinkTo  # Uncomment if you have many safe link_to calls
+  # - Render  # Uncomment if you have safe render calls
+
+# Ignore specific warnings (add fingerprints here)
+ignore: []
+  # Example: ignore a specific low-priority warning
+  # - warning_type: "Mass Assignment"
+  #   fingerprint: "abcd1234567890"
+  #   note: "This is a false positive because..."
+
+# Quiet output (reduce noise)
+quiet: false
+
+# Combine location information for similar warnings
+combine: true
+
+# Exit with error code if warnings found
+exit_on_warn: false
+
+# Parallel processing
+parallel_checks: true
+
+# Maximum number of files to check in parallel
+max_threads: 4

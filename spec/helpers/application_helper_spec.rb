@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ApplicationHelper, type: :helper do
+RSpec.describe ApplicationHelper do
   describe '#paginate' do
     let(:collection) { double('collection') }
     let(:custom_params) { { previous_label: 'Anterior', next_label: 'Próximo' } }
@@ -86,7 +86,7 @@ RSpec.describe ApplicationHelper, type: :helper do
   describe '#flash_icon' do
     it 'returns success checkmark icon for success' do
       result = helper.flash_icon('success')
-      
+
       expect(result).to include('<svg')
       expect(result).to include('text-green-400')
       expect(result).to include('M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z')
@@ -94,7 +94,7 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it 'returns error exclamation icon for danger' do
       result = helper.flash_icon('danger')
-      
+
       expect(result).to include('<svg')
       expect(result).to include('text-red-400')
       expect(result).to include('M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z')
@@ -102,7 +102,7 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it 'returns error exclamation icon for error' do
       result = helper.flash_icon('error')
-      
+
       expect(result).to include('<svg')
       expect(result).to include('text-red-400')
       expect(result).to include('M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z')
@@ -110,15 +110,17 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it 'returns warning triangle icon for warning' do
       result = helper.flash_icon('warning')
-      
+
       expect(result).to include('<svg')
       expect(result).to include('text-yellow-400')
-      expect(result).to include('M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z')
+      warning_svg_path = 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-' \
+                         '.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z'
+      expect(result).to include(warning_svg_path)
     end
 
     it 'returns info circle icon for unknown types' do
       result = helper.flash_icon('unknown')
-      
+
       expect(result).to include('<svg')
       expect(result).to include('text-blue-400')
       expect(result).to include('M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z')
@@ -126,19 +128,19 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it 'handles symbol types' do
       result = helper.flash_icon(:success)
-      
+
       expect(result).to include('text-green-400')
     end
 
     it 'handles nil type' do
       result = helper.flash_icon(nil)
-      
+
       expect(result).to include('text-blue-400')
     end
 
     it 'returns valid HTML structure' do
       result = helper.flash_icon('success')
-      
+
       expect(result).to include('w-5 h-5')
       expect(result).to include('fill="none"')
       expect(result).to include('viewBox="0 0 24 24"')
@@ -152,7 +154,7 @@ RSpec.describe ApplicationHelper, type: :helper do
   describe '#turbo_frame_tag' do
     it 'creates a turbo-frame tag with id' do
       result = helper.turbo_frame_tag('test-frame') { 'Content' }
-      
+
       expect(result).to include('<turbo-frame')
       expect(result).to include('id="test-frame"')
       expect(result).to include('Content')
@@ -161,15 +163,15 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it 'accepts additional options' do
       result = helper.turbo_frame_tag('test-frame', class: 'custom-class', src: '/path') { 'Content' }
-      
+
       expect(result).to include('id="test-frame"')
       expect(result).to include('class="custom-class"')
       expect(result).to include('src="/path"')
     end
 
     it 'works with empty block' do
-      result = helper.turbo_frame_tag('empty-frame') { }
-      
+      result = helper.turbo_frame_tag('empty-frame') {}
+
       expect(result).to include('<turbo-frame')
       expect(result).to include('id="empty-frame"')
       expect(result).to include('</turbo-frame>')
@@ -177,7 +179,7 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it 'overwrites id if provided in options' do
       result = helper.turbo_frame_tag('frame1', id: 'frame2') { 'Content' }
-      
+
       # The method sets options[:id] = id, so it should be 'frame1'
       expect(result).to include('id="frame1"')
       expect(result).not_to include('id="frame2"')
@@ -186,7 +188,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     it 'handles complex content' do
       content = '<div class="inner">Complex HTML</div>'.html_safe
       result = helper.turbo_frame_tag('complex-frame') { content }
-      
+
       expect(result).to include('<turbo-frame')
       expect(result).to include('id="complex-frame"')
       expect(result).to include('<div class="inner">Complex HTML</div>')
@@ -199,18 +201,18 @@ RSpec.describe ApplicationHelper, type: :helper do
       flash_type = 'success'
       css_class = helper.flash_class(flash_type)
       icon = helper.flash_icon(flash_type)
-      
+
       expect(css_class).to include('green')
       expect(icon).to include('green')
     end
 
     it 'handles all flash types consistently' do
-      types = ['success', 'danger', 'error', 'warning', 'info', 'notice', 'unknown']
-      
+      types = %w[success danger error warning info notice unknown]
+
       types.each do |type|
         css_class = helper.flash_class(type)
         icon = helper.flash_icon(type)
-        
+
         expect(css_class).to be_a(String)
         expect(css_class).not_to be_empty
         expect(icon).to include('<svg')

@@ -20,7 +20,7 @@ RSpec.describe ClientRepository, type: :repository do
       client1 = create(:client, user: user)
       client2 = create(:client, user: user)
       other_user_client = create(:client)
-      
+
       result = repository.all
       expect(result).to include(client1, client2)
       expect(result).not_to include(other_user_client)
@@ -41,16 +41,16 @@ RSpec.describe ClientRepository, type: :repository do
     end
 
     it 'raises RecordNotFound for non-existent client' do
-      expect {
-        repository.find(99999)
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      expect do
+        repository.find(99_999)
+      end.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'raises RecordNotFound for client belonging to different user' do
       other_user_client = create(:client)
-      expect {
+      expect do
         repository.find(other_user_client.id)
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      end.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
@@ -60,7 +60,7 @@ RSpec.describe ClientRepository, type: :repository do
 
     it 'delegates to ClientsQuery for searching' do
       expect(ClientsQuery).to receive(:new).with(user.clients).and_call_original
-      
+
       result = repository.search('John')
       expect(result).to include(john_doe)
       expect(result).not_to include(jane_smith)
@@ -89,7 +89,7 @@ RSpec.describe ClientRepository, type: :repository do
 
     it 'delegates to ClientsQuery for filtering' do
       expect(ClientsQuery).to receive(:new).with(user.clients).and_call_original
-      
+
       result = repository.filter('overdue')
       expect(result).to include(overdue_client)
       expect(result).not_to include(current_client)
@@ -126,9 +126,7 @@ RSpec.describe ClientRepository, type: :repository do
     it 'delegates to ClientsQuery with chained operations' do
       query_double = instance_double(ClientsQuery)
       allow(ClientsQuery).to receive(:new).and_return(query_double)
-      allow(query_double).to receive(:search).and_return(query_double)
-      allow(query_double).to receive(:filter).and_return(query_double)
-      allow(query_double).to receive(:all).and_return([])
+      allow(query_double).to receive_messages(search: query_double, filter: query_double, all: [])
 
       repository.search_and_filter('John', 'overdue')
 
@@ -160,15 +158,15 @@ RSpec.describe ClientRepository, type: :repository do
 
     it 'includes associated records to avoid N+1 queries' do
       # Performance test - should run without N+1 query issues
-      expect {
+      expect do
         clients = repository.with_includes
         clients.each do |client|
           client.measurements.to_a
           client.payments.to_a
           client.skinfolds.to_a
-          client.plan.description if client.plan
+          client.plan&.description
         end
-      }.not_to raise_error
+      end.not_to raise_error
     end
 
     it 'returns clients with preloaded associations' do
@@ -181,7 +179,7 @@ RSpec.describe ClientRepository, type: :repository do
   end
 
   describe '#paginated' do
-    before { 25.times { create(:client, user: user) } }
+    before { 25.times { |i| create(:client, user: user, name: "Client #{i}") } }
 
     it 'paginates results' do
       page1 = repository.paginated(page: 1, per_page: 10)
@@ -191,7 +189,7 @@ RSpec.describe ClientRepository, type: :repository do
     it 'returns different results for different pages' do
       page1 = repository.paginated(page: 1, per_page: 10)
       page2 = repository.paginated(page: 2, per_page: 10)
-      
+
       expect(page1.to_a).not_to eq(page2.to_a)
     end
 
@@ -269,17 +267,17 @@ RSpec.describe ClientRepository, type: :repository do
   describe 'error handling' do
     it 'handles database connection errors gracefully' do
       allow(user).to receive(:clients).and_raise(ActiveRecord::ConnectionNotEstablished)
-      
-      expect {
+
+      expect do
         repository.all
-      }.to raise_error(ActiveRecord::ConnectionNotEstablished)
+      end.to raise_error(ActiveRecord::ConnectionNotEstablished)
     end
 
     it 'handles invalid SQL gracefully in search' do
       # This should not raise an error due to proper parameter binding
-      expect {
+      expect do
         repository.search("test'; DROP TABLE clients; --")
-      }.not_to raise_error
+      end.not_to raise_error
     end
   end
 end

@@ -34,3 +34,5 @@
 .vscode
 /config/credentials/staging.key
 coverage
+brakeman_report.html
+brakeman_report.json

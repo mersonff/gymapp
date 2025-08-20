@@ -18,7 +18,8 @@ gem 'turbo-rails'
 gem 'stimulus-rails'
 gem 'tailwindcss-rails'
 gem "image_processing", "~> 1.2"
-
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem "redis", "~> 4.0"
 
 group :development, :test do
   gem 'sqlite3', '~> 1.7'
@@ -34,9 +35,7 @@ group :development, :test do
   gem 'webdrivers'
   gem 'simplecov', require: false
   gem 'simplecov-html', require: false
-end
-
-group :production do
+  gem 'rspec_junit_formatter', '~> 0.6', require: false
 end
 
 group :development do
@@ -45,9 +44,13 @@ group :development do
   gem 'foreman'
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'rubocop', '~> 1.60', require: false
+  gem 'rubocop-rails', '~> 2.23', require: false
+  gem 'rubocop-rspec', '~> 2.26', require: false
+  gem 'rubocop-performance', '~> 1.20', require: false
+  gem 'rubocop-capybara', '~> 2.20', require: false
+  gem 'rubocop-factory_bot', '~> 2.25', require: false
+  gem 'rubocop-rspec_rails', '~> 2.28', require: false
+  gem 'brakeman', '~> 6.1', require: false
 end
 
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-# Use Redis for Action Cable
-gem "redis", "~> 4.0"

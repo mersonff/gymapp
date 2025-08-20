@@ -1,14 +1,14 @@
 require 'rails_helper'
 
-RSpec.describe Payment, type: :model do
+RSpec.describe Payment do
   describe 'validations' do
-    it { should validate_presence_of(:value) }
-    it { should validate_presence_of(:payment_date) }
-    it { should validate_numericality_of(:value).is_greater_than(0) }
+    it { is_expected.to validate_presence_of(:value) }
+    it { is_expected.to validate_presence_of(:payment_date) }
+    it { is_expected.to validate_numericality_of(:value).is_greater_than(0) }
   end
 
   describe 'associations' do
-    it { should belong_to(:client) }
+    it { is_expected.to belong_to(:client) }
   end
 
   describe 'factory' do
@@ -86,7 +86,7 @@ RSpec.describe Payment, type: :model do
 
   describe 'scopes' do
     let(:client) { create(:client) }
-    
+
     before do
       create(:payment, client: client, payment_date: 1.week.ago)
       create(:payment, client: client, payment_date: Date.current)

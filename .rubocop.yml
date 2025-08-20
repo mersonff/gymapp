@@ -1,0 +1,203 @@
+plugins:
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-capybara
+  - rubocop-factory_bot
+
+require:
+  - rubocop-rspec
+  - rubocop-rspec_rails
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.3
+  SuggestExtensions: false
+  Exclude:
+    - 'bin/**/*'
+    - 'db/schema.rb'
+    - 'db/migrate/*'
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - 'coverage/**/*'
+    - 'tmp/**/*'
+    - 'log/**/*'
+    - 'public/**/*'
+    - 'config/boot.rb'
+    - 'config/environment.rb'
+    - 'config/application.rb'
+    - 'config/environments/*'
+    - 'config/initializers/*'
+    - 'config/puma.rb'
+    - 'Gemfile'
+    - 'Rakefile'
+    - 'config.ru'
+
+# Layout and Style
+Layout/LineLength:
+  Max: 120
+  AllowedPatterns: 
+    - '(\A|\s)#'       # Comments
+    - 'MAX\(.*\)'      # SQL queries with MAX functions
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+# Metrics - Adjusted for Rails application complexity
+Metrics/AbcSize:
+  Max: 30
+  Exclude:
+    - 'app/controllers/**/*'  # Controllers often have higher complexity
+
+Metrics/BlockLength:
+  Max: 35
+  AllowedMethods: ['describe', 'context', 'it', 'specify']
+  Exclude:
+    - 'spec/**/*'
+    - 'config/routes.rb'
+    - 'app/controllers/**/*'  # Controller response blocks can be longer
+    - 'db/seeds.rb'           # Seed files can have long blocks
+
+Metrics/ClassLength:
+  Max: 310  # Controllers can be longer in Rails apps
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/CyclomaticComplexity:
+  Max: 12
+
+Metrics/MethodLength:
+  Max: 25
+  Exclude:
+    - 'spec/**/*'             # Test methods can be longer
+    - 'app/controllers/**/*'  # Controller actions can be longer
+    - 'app/helpers/**/*'      # Helper methods with HTML can be longer
+
+Metrics/ModuleLength:
+  Max: 150
+
+Metrics/PerceivedComplexity:
+  Max: 12
+
+# Rails specific
+Rails:
+  Enabled: true
+
+Rails/FilePath:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Rails/RakeEnvironment:
+  Enabled: false
+
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false  # Would require database migrations
+
+# RSpec specific - More tolerant settings for test files
+RSpec/ExampleLength:
+  Max: 35  # Tests can be longer, especially integration tests
+
+RSpec/MultipleExpectations:
+  Max: 12  # Multiple expectations are common in integration tests
+
+RSpec/NestedGroups:
+  Max: 6
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 15
+
+RSpec/IndexedLet:
+  Enabled: false  # Allow indexed let statements in tests
+
+RSpec/LetSetup:
+  Enabled: false  # Allow let! for setup
+
+RSpec/AnyInstance:
+  Enabled: false  # Allow any_instance in tests
+
+RSpec/MessageSpies:
+  Enabled: false  # Allow expect().to receive
+
+RSpec/VerifiedDoubles:
+  Enabled: false  # Allow normal doubles in tests
+
+RSpec/PendingWithoutReason:
+  Enabled: false  # Allow skip/pending without reason during development
+
+RSpec/ExpectActual:
+  Enabled: false  # Allow flexible expect patterns in tests
+
+RSpec/IdenticalEqualityAssertion:
+  Enabled: false  # Allow identical assertions for clarity
+
+# Capybara rules - more tolerant for system tests
+Capybara/NegationMatcherAfterVisit:
+  Enabled: false  # Allow negation matchers after visit
+
+Capybara/SpecificMatcher:
+  Enabled: false  # Allow have_css for flexibility - sometimes more explicit than have_field
+
+# Style rules
+Style/CombinableLoops:
+  Enabled: false  # Allow separate loops for clarity
+
+Style/FormatString:
+  Enabled: false  # Allow % format in tests
+
+# Lint rules
+Lint/EmptyBlock:
+  Exclude:
+    - 'spec/**/*'  # Allow empty blocks in test setup
+
+# Performance
+Performance/StringReplacement:
+  Enabled: true
+
+Performance/RedundantBlockCall:
+  Enabled: true
+
+# Security
+Security/Open:
+  Enabled: true
+
+Security/Eval:
+  Enabled: true
+
+# Naming
+Naming/AccessorMethodName:
+  Enabled: false
+
+Naming/PredicatePrefix:
+  Enabled: false
+
+# Lint
+Lint/AmbiguousOperator:
+  Enabled: true
+
+Lint/AmbiguousRegexpLiteral:
+  Enabled: true
+
+Lint/UselessAssignment:
+  Enabled: true

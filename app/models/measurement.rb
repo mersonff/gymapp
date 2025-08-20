@@ -1,6 +1,6 @@
 class Measurement < ApplicationRecord
   belongs_to :client
-  
+
   validates :height, numericality: { greater_than: 0, allow_nil: true }
   validates :weight, numericality: { greater_than: 0, allow_nil: true }
   validates :chest, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
@@ -11,14 +11,16 @@ class Measurement < ApplicationRecord
   validates :hips, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
   validates :left_thigh, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
   validates :righ_thigh, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
-  
+
   def bmi
     return nil if height.nil? || weight.nil? || height.zero? || weight.zero?
-    weight / ((height / 100.0) ** 2)
+
+    weight / ((height / 100.0)**2)
   end
-  
+
   def bmi_category
     return nil unless bmi
+
     case bmi
     when 0..18.5
       'Abaixo do peso'

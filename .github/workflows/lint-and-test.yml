@@ -1,0 +1,170 @@
+name: Lint and Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  RAILS_ENV: test
+  RUBY_VERSION: 3.3.6
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: gymapp_test
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ env.RUBY_VERSION }}
+        bundler-cache: true
+
+    - name: Install jq for JSON parsing
+      run: sudo apt-get update && sudo apt-get install -y jq
+
+    - name: Run RuboCop
+      run: |
+        # Generate reports (continue on error to ensure reports are created)
+        bundle exec rubocop . --format json --out rubocop-report.json || true
+        bundle exec rubocop . --format html --out rubocop-report.html || true
+        
+        echo ""
+        echo "=== 📝 RuboCop Analysis ==="
+        
+        # Check if reports were generated
+        if [ -f rubocop-report.json ]; then
+          offense_count=$(jq '.summary.offense_count' rubocop-report.json)
+          target_file_count=$(jq '.summary.target_file_count' rubocop-report.json)
+          
+          echo "Files inspected: $target_file_count"
+          echo "Offenses found: $offense_count"
+          
+          if [ "$offense_count" -eq 0 ]; then
+            echo "✅ No style issues found!"
+          else
+            echo "❌ Style issues found - failing build"
+            echo ""
+            echo "Run 'bundle exec rubocop' locally to see detailed issues"
+            exit 1
+          fi
+        else
+          echo "❌ Failed to generate RuboCop reports"
+          exit 1
+        fi
+
+    - name: Upload RuboCop Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: rubocop-reports
+        path: |
+          rubocop-report.json
+          rubocop-report.html
+
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ env.RUBY_VERSION }}
+        bundler-cache: true
+
+    - name: Install system dependencies
+      run: sudo apt-get update && sudo apt-get install -y bc
+
+    - name: Setup database
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/gymapp_test
+        RAILS_ENV: test
+      run: |
+        bundle exec rails db:create
+        bundle exec rails db:schema:load
+
+    - name: Run tests with coverage
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/gymapp_test
+        RAILS_ENV: test
+        COVERAGE: true
+      run: |
+        bundle exec rspec --format progress --format RspecJunitFormatter --out rspec-results.xml
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: rspec-results.xml
+
+    - name: Upload coverage reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage/
+
+    - name: Check coverage threshold
+      run: |
+        coverage_percent=$(grep -oP 'covered_percent":\K[0-9.]+' coverage/.last_run.json)
+        echo "Test coverage: ${coverage_percent}%"
+        
+        # Define minimum coverage threshold
+        MIN_COVERAGE=80
+        
+        if (( $(echo "$coverage_percent < $MIN_COVERAGE" | bc -l) )); then
+          echo "❌ Coverage ${coverage_percent}% is below minimum threshold of ${MIN_COVERAGE}%"
+          exit 1
+        else
+          echo "✅ Coverage ${coverage_percent}% meets minimum threshold of ${MIN_COVERAGE}%"
+        fi
+
+    - name: Comment PR with coverage
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const coverage = JSON.parse(fs.readFileSync('coverage/.last_run.json', 'utf8'));
+          const coveragePercent = coverage.result.line.toFixed(2);
+          
+          const comment = `## 📊 Test Coverage Report
+          
+          **Coverage:** ${coveragePercent}%
+          
+          ${coveragePercent >= 80 ? '✅' : '❌'} Minimum threshold: 80%
+          
+          View full report in the [artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });

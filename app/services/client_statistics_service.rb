@@ -9,21 +9,21 @@ class ClientStatisticsService
     {
       total: total_clients,
       current: current_clients,
-      overdue: overdue_clients
+      overdue: overdue_clients,
     }
   end
-  
-  alias_method :call, :calculate
+
+  alias call calculate
 
   def total_clients
     @total_clients ||= user.clients.count
   end
 
   def current_clients
-    @current_clients ||= user.clients.select { |client| client.current? }.count
+    @current_clients ||= user.clients.count(&:current?)
   end
 
   def overdue_clients
-    @overdue_clients ||= user.clients.select { |client| client.overdue? }.count
+    @overdue_clients ||= user.clients.count(&:overdue?)
   end
 end

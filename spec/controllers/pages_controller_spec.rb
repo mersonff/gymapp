@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PagesController, type: :controller do
+RSpec.describe PagesController do
   let(:user) { create(:user) }
   let!(:plan) { create(:plan, user: user) }
   let!(:client1) { create(:client, user: user, plan: plan) }
@@ -109,10 +109,10 @@ RSpec.describe PagesController, type: :controller do
     context 'with year parameter only' do
       it 'returns monthly data for the year' do
         get :revenue_data, params: { year: 2024 }
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['chart_data']).to be_an(Array)
         expect(json_response['chart_data'].length).to eq(12) # 12 months
         expect(json_response['period_type']).to eq('monthly')
@@ -123,10 +123,10 @@ RSpec.describe PagesController, type: :controller do
     context 'with year and valid month parameters' do
       it 'returns daily data for the month' do
         get :revenue_data, params: { year: 2024, month: '1' }
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['chart_data']).to be_an(Array)
         expect(json_response['chart_data'].length).to be > 20 # Days in month
         expect(json_response['period_type']).to eq('daily')
@@ -137,47 +137,47 @@ RSpec.describe PagesController, type: :controller do
     context 'with invalid month parameter' do
       it 'returns monthly data when month is invalid' do
         get :revenue_data, params: { year: 2024, month: '13' }
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['period_type']).to eq('monthly')
         expect(json_response['chart_data'].length).to eq(12)
       end
 
       it 'returns monthly data when month is zero' do
         get :revenue_data, params: { year: 2024, month: '0' }
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['period_type']).to eq('monthly')
       end
 
       it 'returns monthly data when month is non-numeric' do
         get :revenue_data, params: { year: 2024, month: 'invalid' }
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['period_type']).to eq('monthly')
       end
 
       it 'handles empty month parameter' do
         get :revenue_data, params: { year: 2024, month: '' }
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['period_type']).to eq('monthly')
       end
 
       it 'handles whitespace month parameter' do
         get :revenue_data, params: { year: 2024, month: '  ' }
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['period_type']).to eq('monthly')
       end
     end
@@ -185,10 +185,10 @@ RSpec.describe PagesController, type: :controller do
     context 'with no year parameter' do
       it 'uses current year as default' do
         get :revenue_data
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['chart_data']).to be_an(Array)
         expect(json_response['period_type']).to eq('monthly')
       end
@@ -197,38 +197,38 @@ RSpec.describe PagesController, type: :controller do
     context 'with edge cases' do
       it 'handles February in leap year' do
         get :revenue_data, params: { year: 2024, month: '2' }
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['chart_data'].length).to eq(29) # Leap year February
         expect(json_response['period_type']).to eq('daily')
       end
 
       it 'handles February in non-leap year' do
         get :revenue_data, params: { year: 2023, month: '2' }
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['chart_data'].length).to eq(28) # Non-leap year February
       end
 
       it 'handles month with 31 days' do
         get :revenue_data, params: { year: 2024, month: '1' }
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['chart_data'].length).to eq(31) # January has 31 days
       end
 
       it 'handles month with 30 days' do
         get :revenue_data, params: { year: 2024, month: '4' }
-        
+
         expect(response).to be_successful
-        json_response = JSON.parse(response.body)
-        
+        json_response = response.parsed_body
+
         expect(json_response['chart_data'].length).to eq(30) # April has 30 days
       end
     end
@@ -236,11 +236,11 @@ RSpec.describe PagesController, type: :controller do
     context 'data format validation' do
       it 'returns properly formatted JSON' do
         get :revenue_data, params: { year: 2024 }
-        
+
         expect(response).to be_successful
         expect(response.content_type).to include('application/json')
-        
-        json_response = JSON.parse(response.body)
+
+        json_response = response.parsed_body
         expect(json_response).to have_key('chart_data')
         expect(json_response).to have_key('total_revenue')
         expect(json_response).to have_key('period_type')
@@ -248,10 +248,10 @@ RSpec.describe PagesController, type: :controller do
 
       it 'returns chart data in correct format for monthly view' do
         get :revenue_data, params: { year: 2024 }
-        
-        json_response = JSON.parse(response.body)
+
+        json_response = response.parsed_body
         chart_data = json_response['chart_data']
-        
+
         chart_data.each do |data_point|
           expect(data_point).to be_an(Array)
           expect(data_point.length).to eq(2)
@@ -262,10 +262,10 @@ RSpec.describe PagesController, type: :controller do
 
       it 'returns chart data in correct format for daily view' do
         get :revenue_data, params: { year: 2024, month: '1' }
-        
-        json_response = JSON.parse(response.body)
+
+        json_response = response.parsed_body
         chart_data = json_response['chart_data']
-        
+
         chart_data.each do |data_point|
           expect(data_point).to be_an(Array)
           expect(data_point.length).to eq(2)
@@ -282,10 +282,10 @@ RSpec.describe PagesController, type: :controller do
 
       it 'only includes current user revenue data' do
         get :revenue_data, params: { year: 2024 }
-        
-        json_response = JSON.parse(response.body)
+
+        json_response = response.parsed_body
         total_revenue = json_response['total_revenue']
-        
+
         # Should only include user's payments (300.0), not other_user's payment (500.0)
         expect(total_revenue).to eq(300.0)
       end

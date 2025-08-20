@@ -12,9 +12,15 @@ RSpec.describe ClientsQuery, type: :query do
   end
 
   describe '#search' do
-    let!(:john_doe) { create(:client, name: 'John Doe', cellphone: '(11) 99999-1111', address: '123 Main St', user: user) }
-    let!(:jane_smith) { create(:client, name: 'Jane Smith', cellphone: '(11) 99999-2222', address: '456 Oak Ave', user: user) }
-    let!(:bob_johnson) { create(:client, name: 'Bob Johnson', cellphone: '(11) 99999-3333', address: '789 Pine Rd', user: user) }
+    let!(:john_doe) do
+      create(:client, name: 'John Doe', cellphone: '(11) 99999-1111', address: '123 Main St', user: user)
+    end
+    let!(:jane_smith) do
+      create(:client, name: 'Jane Smith', cellphone: '(11) 99999-2222', address: '456 Oak Ave', user: user)
+    end
+    let!(:bob_johnson) do
+      create(:client, name: 'Bob Johnson', cellphone: '(11) 99999-3333', address: '789 Pine Rd', user: user)
+    end
 
     context 'with empty search term' do
       it 'returns all clients when term is blank' do
@@ -166,7 +172,7 @@ RSpec.describe ClientsQuery, type: :query do
       it 'can be chained with search' do
         overdue_john = create(:client, :overdue, name: 'John Overdue', user: user)
         current_john = create(:client, name: 'John Current', user: user)
-        
+
         result = query.search('John').filter('overdue').all
         expect(result).to include(overdue_john)
         expect(result).not_to include(current_john)
@@ -222,7 +228,7 @@ RSpec.describe ClientsQuery, type: :query do
   describe 'performance' do
     it 'uses efficient SQL queries' do
       create_list(:client, 10, user: user)
-      
+
       # Performance test - should run without errors
       expect { query.search('test').filter('overdue').all.to_a }.not_to raise_error
     end

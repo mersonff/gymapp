@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ApplicationController, type: :controller do
+RSpec.describe ApplicationController do
   controller do
     def index
       render plain: 'test'
@@ -27,7 +27,7 @@ RSpec.describe ApplicationController, type: :controller do
     end
 
     context 'when user_id is invalid' do
-      before { session[:user_id] = 999999 }
+      before { session[:user_id] = 999_999 }
 
       it 'returns nil' do
         allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)

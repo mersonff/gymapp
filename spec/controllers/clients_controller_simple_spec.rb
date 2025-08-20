@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ClientsController, type: :controller do
+RSpec.describe ClientsController do
   let(:user) { create(:user) }
 
   before do
@@ -54,14 +54,14 @@ RSpec.describe ClientsController, type: :controller do
         cellphone: '(11) 99999-9999',
         address: '123 Main St',
         birthdate: 25.years.ago.to_date,
-        gender: 'M'
+        gender: 'M',
       }
     end
 
     it 'creates a new client with valid parameters' do
-      expect {
+      expect do
         post :create, params: { client: valid_params }
-      }.to change(Client, :count).by(1)
+      end.to change(Client, :count).by(1)
     end
 
     it 'assigns the client to the current user' do

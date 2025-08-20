@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SkinfoldsController, type: :controller do
+RSpec.describe SkinfoldsController do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
   let(:plan) { create(:plan, user: user) }
@@ -25,14 +25,13 @@ RSpec.describe SkinfoldsController, type: :controller do
       end
 
       it 'orders skinfolds by created_at DESC' do
-        old_skinfold = create(:skinfold, client: client, created_at: 2.days.ago)
+        create(:skinfold, client: client, created_at: 2.days.ago)
         new_skinfold = create(:skinfold, client: client, created_at: 1.day.ago)
         get :index, params: { client_id: client.id }
         expect(assigns(:skinfolds).first).to eq(new_skinfold)
       end
     end
   end
-
 
   describe 'GET #new' do
     context 'when user is logged in' do
@@ -62,7 +61,6 @@ RSpec.describe SkinfoldsController, type: :controller do
     end
   end
 
-
   describe 'POST #create' do
     let(:valid_attributes) do
       {
@@ -74,7 +72,7 @@ RSpec.describe SkinfoldsController, type: :controller do
         abdominal: 15.3,
         suprailiac: 11.7,
         thigh: 14.2,
-        calf: 8.9
+        calf: 8.9,
       }
     end
 
@@ -108,7 +106,7 @@ RSpec.describe SkinfoldsController, type: :controller do
         it 'does not create a new skinfold' do
           expect do
             post :create, params: { client_id: client.id, skinfold: { chest: -10 } }
-          end.to change(Skinfold, :count).by(0)
+          end.not_to change(Skinfold, :count)
         end
 
         it 'renders the new template' do
@@ -126,8 +124,6 @@ RSpec.describe SkinfoldsController, type: :controller do
     end
   end
 
-
-
   describe 'authorization' do
     context 'when user is not logged in' do
       it 'redirects new to login' do
@@ -135,13 +131,10 @@ RSpec.describe SkinfoldsController, type: :controller do
         expect(response).to redirect_to(login_path)
       end
 
-
       it 'redirects create to login' do
         post :create, params: { client_id: client.id, skinfold: { chest: 10.5 } }
         expect(response).to redirect_to(login_path)
       end
-
-
     end
   end
 end

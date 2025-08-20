@@ -1,14 +1,14 @@
 require 'rails_helper'
 
-RSpec.describe Plan, type: :model do
+RSpec.describe Plan do
   describe 'validations' do
-    it { should validate_presence_of(:description) }
-    it { should validate_presence_of(:value) }
-    it { should validate_length_of(:description).is_at_least(10).is_at_most(300) }
+    it { is_expected.to validate_presence_of(:description) }
+    it { is_expected.to validate_presence_of(:value) }
+    it { is_expected.to validate_length_of(:description).is_at_least(10).is_at_most(300) }
   end
 
   describe 'associations' do
-    it { should belong_to(:user) }
+    it { is_expected.to belong_to(:user) }
   end
 
   describe 'factory' do
@@ -56,7 +56,7 @@ RSpec.describe Plan, type: :model do
     it 'returns formatted plan string with value and description' do
       plan = create(:plan, value: 99.99, description: 'Premium Membership Plan')
       result = plan.plan_string
-      
+
       expect(result).to include('R$ 99,99')
       expect(result).to include('Premium Membership Plan')
     end
@@ -64,7 +64,7 @@ RSpec.describe Plan, type: :model do
     it 'handles zero value correctly' do
       plan = create(:plan, value: 0, description: 'Free Plan for basic membership')
       result = plan.plan_string
-      
+
       expect(result).to include('R$ 0,00')
       expect(result).to include('Free Plan for basic membership')
     end

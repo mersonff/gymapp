@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UsersController, type: :controller do
+RSpec.describe UsersController do
   let(:user) { create(:user) }
   let(:admin_user) { create(:user, admin: true) }
   let(:other_user) { create(:user) }
@@ -12,7 +12,7 @@ RSpec.describe UsersController, type: :controller do
     end
 
     it 'assigns paginated users' do
-      6.times { create(:user) }
+      create_list(:user, 6)
       get :index
       expect(assigns(:users)).to respond_to(:current_page) # WillPaginate collection
     end
@@ -42,7 +42,7 @@ RSpec.describe UsersController, type: :controller do
         business_name: 'Test Gym',
         email: 'test@example.com',
         password: 'password123',
-        password_confirmation: 'password123'
+        password_confirmation: 'password123',
       }
     end
 
@@ -76,7 +76,7 @@ RSpec.describe UsersController, type: :controller do
         it 'does not create a new user' do
           expect do
             post :create, params: { user: { username: '' } }
-          end.to change(User, :count).by(0)
+          end.not_to change(User, :count)
         end
 
         it 'redirects to signup path' do

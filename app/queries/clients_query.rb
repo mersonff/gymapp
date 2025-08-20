@@ -6,21 +6,26 @@ class ClientsQuery
   end
 
   def search(term)
-    return self unless term.present?
-    
+    return self if term.blank?
+
     search_term = "%#{term.downcase}%"
-    
+
     # If the search term looks like a phone number (only digits), also search in phone numbers without formatting
     if term.match?(/^\d+$/)
       phone_search_term = "%#{term}%"
       @relation = @relation.where(
-        "LOWER(clients.name) LIKE :term OR LOWER(clients.cellphone) LIKE :term OR LOWER(clients.address) LIKE :term OR REGEXP_REPLACE(clients.cellphone, '[^0-9]', '', 'g') LIKE :phone_term",
+        <<~SQL.squish,
+          LOWER(clients.name) LIKE :term OR#{' '}
+          LOWER(clients.cellphone) LIKE :term OR#{' '}
+          LOWER(clients.address) LIKE :term OR#{' '}
+          REGEXP_REPLACE(clients.cellphone, '[^0-9]', '', 'g') LIKE :phone_term
+        SQL
         term: search_term,
         phone_term: phone_search_term
       )
     else
       @relation = @relation.where(
-        "LOWER(clients.name) LIKE :term OR LOWER(clients.cellphone) LIKE :term OR LOWER(clients.address) LIKE :term",
+        'LOWER(clients.name) LIKE :term OR LOWER(clients.cellphone) LIKE :term OR LOWER(clients.address) LIKE :term',
         term: search_term
       )
     end
@@ -29,18 +34,16 @@ class ClientsQuery
 
   def overdue
     @relation = @relation
-      .joins(:payments)
-      .where("payments.payment_date < ?", Date.current)
-      .distinct
+                .joins(:payments)
+                .where(payments: { payment_date: ...Date.current })
+                .distinct
     self
   end
-  
+
   def filter(filter_type)
     case filter_type
     when 'overdue'
       overdue
-    when 'all', '', nil
-      self
     else
       self
     end
@@ -64,6 +67,6 @@ class ClientsQuery
   def results
     @relation
   end
-  
-  alias_method :all, :results
+
+  alias all results
 end

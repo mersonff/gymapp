@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ClientsController, type: :controller do
+RSpec.describe ClientsController do
   let(:user) { create(:user) }
   let(:plan) { create(:plan, user: user) }
   let(:client) { create(:client, user: user, plan: plan) }
@@ -23,9 +23,9 @@ RSpec.describe ClientsController, type: :controller do
           abdomen: 85,
           hips: 95,
           left_thigh: 55,
-          righ_thigh: 55
-        }
-      }
+          righ_thigh: 55,
+        },
+      },
     }
   end
 
@@ -48,7 +48,7 @@ RSpec.describe ClientsController, type: :controller do
     it 'calculates statistics' do
       create(:client, :overdue, user: user)
       get :index
-      
+
       expect(assigns(:total_clients)).to eq(1)
       expect(assigns(:overdue_clients)).to eq(1)
     end
@@ -57,9 +57,9 @@ RSpec.describe ClientsController, type: :controller do
       it 'filters clients by search term' do
         matching_client = create(:client, name: 'John Doe', user: user)
         non_matching_client = create(:client, name: 'Jane Smith', user: user)
-        
+
         get :index, params: { search: 'John' }
-        
+
         expect(assigns(:clients)).to include(matching_client)
         expect(assigns(:clients)).not_to include(non_matching_client)
       end
@@ -69,9 +69,9 @@ RSpec.describe ClientsController, type: :controller do
       it 'filters overdue clients' do
         overdue_client = create(:client, :overdue, user: user)
         current_client = create(:client, user: user)
-        
+
         get :index, params: { filter: 'overdue' }
-        
+
         expect(assigns(:clients)).to include(overdue_client)
         expect(assigns(:clients)).not_to include(current_client)
       end
@@ -123,15 +123,15 @@ RSpec.describe ClientsController, type: :controller do
   describe 'POST #create' do
     context 'with valid parameters' do
       it 'creates a new client' do
-        expect {
+        expect do
           post :create, params: { client: valid_attributes }
-        }.to change(Client, :count).by(1)
+        end.to change(Client, :count).by(1)
       end
 
       it 'creates a measurement for the client' do
-        expect {
+        expect do
           post :create, params: { client: valid_attributes }
-        }.to change(Measurement, :count).by(1)
+        end.to change(Measurement, :count).by(1)
       end
 
       it 'assigns the client to the current user' do
@@ -149,9 +149,9 @@ RSpec.describe ClientsController, type: :controller do
       let(:invalid_attributes) { { name: '', cellphone: '' } }
 
       it 'does not create a new client' do
-        expect {
+        expect do
           post :create, params: { client: invalid_attributes }
-        }.not_to change(Client, :count)
+        end.not_to change(Client, :count)
       end
 
       it 'renders the new template' do
@@ -197,9 +197,9 @@ RSpec.describe ClientsController, type: :controller do
   describe 'DELETE #destroy' do
     it 'destroys the requested client' do
       client
-      expect {
+      expect do
         delete :destroy, params: { id: client.id }
-      }.to change(Client, :count).by(-1)
+      end.to change(Client, :count).by(-1)
     end
 
     it 'redirects to clients index' do
@@ -229,9 +229,9 @@ RSpec.describe ClientsController, type: :controller do
     let(:measurement_attributes) { { height: 180, weight: 75 } }
 
     it 'creates a new measurement' do
-      expect {
+      expect do
         post :create_measurement, params: { id: client.id, measurement: measurement_attributes }
-      }.to change(client.measurements, :count).by(1)
+      end.to change(client.measurements, :count).by(1)
     end
 
     it 'assigns the measurement to the client' do
@@ -261,9 +261,9 @@ RSpec.describe ClientsController, type: :controller do
     let(:payment_attributes) { { value: 99.99, payment_date: Date.current } }
 
     it 'creates a new payment' do
-      expect {
+      expect do
         post :create_payment, params: { id: client.id, payment: payment_attributes }
-      }.to change(client.payments, :count).by(1)
+      end.to change(client.payments, :count).by(1)
     end
 
     it 'assigns the payment to the client' do
@@ -293,9 +293,9 @@ RSpec.describe ClientsController, type: :controller do
     let(:skinfold_attributes) { { chest: 10.5, abdomen: 15.2, thigh: 12.8 } }
 
     it 'creates a new skinfold' do
-      expect {
+      expect do
         post :create_skinfold, params: { id: client.id, skinfold: skinfold_attributes }
-      }.to change(client.skinfolds, :count).by(1)
+      end.to change(client.skinfolds, :count).by(1)
     end
 
     it 'assigns the skinfold to the client' do
@@ -324,15 +324,15 @@ RSpec.describe ClientsController, type: :controller do
       let(:other_client) { create(:client, user: other_user) }
 
       it 'raises RecordNotFound for show' do
-        expect {
+        expect do
           get :show, params: { id: other_client.id }
-        }.to raise_error(ActiveRecord::RecordNotFound)
+        end.to raise_error(ActiveRecord::RecordNotFound)
       end
 
       it 'raises RecordNotFound for edit' do
-        expect {
+        expect do
           get :edit, params: { id: other_client.id }
-        }.to raise_error(ActiveRecord::RecordNotFound)
+        end.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end

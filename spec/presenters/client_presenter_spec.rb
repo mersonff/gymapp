@@ -232,8 +232,8 @@ RSpec.describe ClientPresenter, type: :presenter do
       let!(:measurement) { create(:measurement, client: client, height: 180, weight: 75) }
 
       it 'returns formatted BMI' do
-        expected_bmi = 75.0 / ((180.0 / 100) ** 2)
-        expect(presenter.bmi).to eq("%.1f" % expected_bmi)
+        expected_bmi = 75.0 / ((180.0 / 100)**2)
+        expect(presenter.bmi).to eq('%.1f' % expected_bmi)
       end
     end
 
@@ -375,7 +375,7 @@ RSpec.describe ClientPresenter, type: :presenter do
     end
 
     it 'handles very large plan prices' do
-      plan.update(value: 999999.99)
+      plan.update(value: 999_999.99)
       expect(presenter.plan_price).to eq('R$ 999999,99')
     end
   end

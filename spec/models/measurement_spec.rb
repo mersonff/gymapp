@@ -1,21 +1,21 @@
 require 'rails_helper'
 
-RSpec.describe Measurement, type: :model do
+RSpec.describe Measurement do
   describe 'associations' do
-    it { should belong_to(:client) }
+    it { is_expected.to belong_to(:client) }
   end
 
   describe 'validations' do
-    it { should validate_numericality_of(:height).is_greater_than(0).allow_nil }
-    it { should validate_numericality_of(:weight).is_greater_than(0).allow_nil }
-    it { should validate_numericality_of(:chest).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:left_arm).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:right_arm).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:waist).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:abdomen).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:hips).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:left_thigh).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:righ_thigh).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:height).is_greater_than(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:weight).is_greater_than(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:chest).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:left_arm).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:right_arm).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:waist).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:abdomen).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:hips).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:left_thigh).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:righ_thigh).is_greater_than_or_equal_to(0).allow_nil }
   end
 
   describe 'factory' do
@@ -27,7 +27,7 @@ RSpec.describe Measurement, type: :model do
 
   describe 'default values' do
     it 'sets default values to 0' do
-      measurement = Measurement.new
+      measurement = described_class.new
       expect(measurement.height).to eq(0)
       expect(measurement.weight).to eq(0)
       expect(measurement.chest).to eq(0)
@@ -44,7 +44,7 @@ RSpec.describe Measurement, type: :model do
   describe '#bmi' do
     it 'calculates BMI correctly' do
       measurement = create(:measurement, height: 170, weight: 70)
-      expected_bmi = 70.0 / ((170.0 / 100) ** 2)
+      expected_bmi = 70.0 / ((170.0 / 100)**2)
       expect(measurement.bmi).to be_within(0.01).of(expected_bmi)
     end
 

@@ -1,21 +1,21 @@
 require 'rails_helper'
 
-RSpec.describe Skinfold, type: :model do
+RSpec.describe Skinfold do
   describe 'associations' do
-    it { should belong_to(:client) }
+    it { is_expected.to belong_to(:client) }
   end
 
   describe 'validations' do
-    it { should validate_numericality_of(:chest).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:abdominal).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:thigh).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:tricep).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:subscapular).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:suprailiac).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:midaxilary).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:bicep).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:lower_back).is_greater_than_or_equal_to(0).allow_nil }
-    it { should validate_numericality_of(:calf).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:chest).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:abdominal).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:thigh).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:tricep).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:subscapular).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:suprailiac).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:midaxilary).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:bicep).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:lower_back).is_greater_than_or_equal_to(0).allow_nil }
+    it { is_expected.to validate_numericality_of(:calf).is_greater_than_or_equal_to(0).allow_nil }
   end
 
   describe 'factory' do
@@ -27,7 +27,7 @@ RSpec.describe Skinfold, type: :model do
 
   describe 'default values' do
     it 'sets default values to 0.0' do
-      skinfold = Skinfold.new
+      skinfold = described_class.new
       expect(skinfold.chest).to eq(0.0)
       expect(skinfold.abdomen).to eq(0.0)
       expect(skinfold.thigh).to eq(0.0)
@@ -44,13 +44,12 @@ RSpec.describe Skinfold, type: :model do
 
     context 'for male clients' do
       it 'calculates body fat percentage using 3-site formula' do
-        skinfold = create(:skinfold, 
-          client: male_client,
-          chest: 10.0,
-          abdomen: 15.0,
-          thigh: 12.0
-        )
-        
+        skinfold = create(:skinfold,
+                          client: male_client,
+                          chest: 10.0,
+                          abdomen: 15.0,
+                          thigh: 12.0)
+
         # Should use BodyFatCalculatorService
         expect(skinfold.body_fat_percentage).to be_a(Numeric)
         expect(skinfold.body_fat_percentage).to be > 0
@@ -60,12 +59,11 @@ RSpec.describe Skinfold, type: :model do
     context 'for female clients' do
       it 'calculates body fat percentage using 3-site formula' do
         skinfold = create(:skinfold,
-          client: female_client,
-          triceps: 15.0,
-          suprailiac: 12.0,
-          thigh: 18.0
-        )
-        
+                          client: female_client,
+                          triceps: 15.0,
+                          suprailiac: 12.0,
+                          thigh: 18.0)
+
         # Should use BodyFatCalculatorService
         expect(skinfold.body_fat_percentage).to be_a(Numeric)
         expect(skinfold.body_fat_percentage).to be > 0
@@ -82,7 +80,7 @@ RSpec.describe Skinfold, type: :model do
     it 'stores decimal values correctly' do
       skinfold = create(:skinfold, chest: 10.25, abdomen: 15.75)
       skinfold.reload
-      
+
       expect(skinfold.chest).to eq(10.25)
       expect(skinfold.abdomen).to eq(15.75)
     end
@@ -90,7 +88,7 @@ RSpec.describe Skinfold, type: :model do
     it 'handles precise decimal values' do
       skinfold = create(:skinfold, chest: 9.99, abdomen: 12.01)
       skinfold.reload
-      
+
       expect(skinfold.chest).to eq(9.99)
       expect(skinfold.abdomen).to eq(12.01)
     end

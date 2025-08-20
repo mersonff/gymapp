@@ -1,0 +1,127 @@
+name: Security Scan
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run security scan daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+env:
+  RUBY_VERSION: 3.3.6
+
+jobs:
+  brakeman:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ env.RUBY_VERSION }}
+        bundler-cache: true
+
+    - name: Install jq for JSON parsing
+      run: sudo apt-get update && sudo apt-get install -y jq bc
+
+    - name: Run Brakeman Security Scan
+      run: |
+        bundle exec brakeman --format json --output brakeman-report.json || true
+        bundle exec brakeman --format html --output brakeman-report.html || true
+        
+        # Parse results and check for critical issues
+        if [ -f brakeman-report.json ]; then
+          # Count critical warnings (confidence level 0 = High confidence)
+          critical_count=$(jq '[.warnings[] | select(.confidence == 0)] | length' brakeman-report.json)
+          high_warnings=$(jq '[.warnings[] | select(.confidence == 0)] | length' brakeman-report.json)
+          medium_warnings=$(jq '[.warnings[] | select(.confidence == 1)] | length' brakeman-report.json)
+          low_warnings=$(jq '[.warnings[] | select(.confidence == 2)] | length' brakeman-report.json)
+          total_warnings=$(jq '.warnings | length' brakeman-report.json)
+          
+          echo "=== 🛡️ Brakeman Security Scan Results ==="
+          echo "Critical Issues: $critical_count"
+          echo "High Confidence: $high_warnings"
+          echo "Medium Confidence: $medium_warnings"  
+          echo "Low Confidence: $low_warnings"
+          echo "Total Warnings: $total_warnings"
+          echo "========================================="
+          
+          # Fail only if critical issues are found
+          if [ "$critical_count" -gt 0 ]; then
+            echo "❌ CRITICAL security issues found!"
+            echo ""
+            echo "Critical issues details:"
+            jq '.warnings[] | select(.confidence == 0) | {type: .warning_type, message: .message, file: .file, line: .line}' brakeman-report.json
+            exit 1
+          else
+            echo "✅ No critical security issues found"
+          fi
+        else
+          echo "❌ Failed to generate Brakeman report"
+          exit 1
+        fi
+
+    - name: Upload Brakeman Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: brakeman-reports
+        path: |
+          brakeman-report.json
+          brakeman-report.html
+
+    - name: Comment PR with Security Summary
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          
+          try {
+            const report = JSON.parse(fs.readFileSync('brakeman-report.json', 'utf8'));
+            const criticalCount = report.warnings.filter(w => w.confidence === 0).length;
+            const highCount = report.warnings.filter(w => w.confidence === 0).length;
+            const mediumCount = report.warnings.filter(w => w.confidence === 1).length;
+            const lowCount = report.warnings.filter(w => w.confidence === 2).length;
+            
+            const status = criticalCount > 0 ? '❌ FAILED' : '✅ PASSED';
+            const emoji = criticalCount > 0 ? '🚨' : '🛡️';
+            
+            let comment = `## ${emoji} Security Scan Report
+            
+            **Status:** ${status}
+            
+            | Severity | Count |
+            |----------|-------|
+            | 🔴 Critical (High Confidence) | ${highCount} |
+            | 🟡 Medium Confidence | ${mediumCount} |
+            | 🟢 Low Confidence | ${lowCount} |
+            | **Total** | **${report.warnings.length}** |
+            `;
+            
+            if (criticalCount > 0) {
+              comment += `\n### ⚠️ Critical Issues Found\n\n`;
+              const criticalIssues = report.warnings.filter(w => w.confidence === 0);
+              criticalIssues.forEach(issue => {
+                comment += `- **${issue.warning_type}**: ${issue.message}\n`;
+                comment += `  - File: \`${issue.file}:${issue.line}\`\n`;
+              });
+            }
+            
+            comment += `\n[View Full Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          } catch (error) {
+            console.error('Failed to parse Brakeman report:', error);
+          }
+

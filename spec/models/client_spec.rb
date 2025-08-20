@@ -1,21 +1,21 @@
 require 'rails_helper'
 
-RSpec.describe Client, type: :model do
+RSpec.describe Client do
   describe 'validations' do
-    it { should validate_presence_of(:name) }
-    it { should validate_presence_of(:cellphone) }
-    it { should validate_presence_of(:birthdate) }
-    it { should validate_presence_of(:gender) }
-    it { should validate_inclusion_of(:gender).in_array(%w[M F O]) }
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_presence_of(:cellphone) }
+    it { is_expected.to validate_presence_of(:birthdate) }
+    it { is_expected.to validate_presence_of(:gender) }
+    it { is_expected.to validate_inclusion_of(:gender).in_array(%w[M F O]) }
   end
 
   describe 'associations' do
-    it { should belong_to(:user) }
-    it { should belong_to(:plan).optional }
-    it { should have_many(:measurements).dependent(:destroy) }
-    it { should have_many(:payments).dependent(:destroy) }
-    it { should have_many(:skinfolds).dependent(:destroy) }
-    it { should accept_nested_attributes_for(:measurements) }
+    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:plan).optional }
+    it { is_expected.to have_many(:measurements).dependent(:destroy) }
+    it { is_expected.to have_many(:payments).dependent(:destroy) }
+    it { is_expected.to have_many(:skinfolds).dependent(:destroy) }
+    it { is_expected.to accept_nested_attributes_for(:measurements) }
   end
 
   describe 'factory' do
@@ -36,8 +36,8 @@ RSpec.describe Client, type: :model do
   end
 
   describe 'concerns' do
-    it { should respond_to(:overdue?) }
-    it { should respond_to(:current?) }
+    it { is_expected.to respond_to(:overdue?) }
+    it { is_expected.to respond_to(:current?) }
   end
 
   describe 'callbacks' do
@@ -72,9 +72,9 @@ RSpec.describe Client, type: :model do
     let(:client) { create(:client) }
 
     it 'returns the most recent measurement' do
-      old_measurement = create(:measurement, client: client, created_at: 2.days.ago)
+      create(:measurement, client: client, created_at: 2.days.ago)
       recent_measurement = create(:measurement, client: client, created_at: 1.day.ago)
-      
+
       expect(client.latest_measurement).to eq(recent_measurement)
     end
 
@@ -87,9 +87,9 @@ RSpec.describe Client, type: :model do
     let(:client) { create(:client) }
 
     it 'returns the most recent skinfold' do
-      old_skinfold = create(:skinfold, client: client, created_at: 2.days.ago)
+      create(:skinfold, client: client, created_at: 2.days.ago)
       recent_skinfold = create(:skinfold, client: client, created_at: 1.day.ago)
-      
+
       expect(client.latest_skinfold).to eq(recent_skinfold)
     end
 
