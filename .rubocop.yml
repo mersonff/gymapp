@@ -204,3 +204,6 @@ Lint/AmbiguousRegexpLiteral:
 
 Lint/UselessAssignment:
   Enabled: true
+
+FactoryBot/ExcessiveCreateList:
+  Enabled: false  # Allow create_list with large numbers in tests
