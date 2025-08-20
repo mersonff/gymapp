@@ -97,7 +97,7 @@ jobs:
         bundler-cache: true
 
     - name: Install system dependencies
-      run: sudo apt-get update && sudo apt-get install -y bc
+      run: sudo apt-get update && sudo apt-get install -y bc jq
 
     - name: Setup database
       env:
@@ -137,7 +137,7 @@ jobs:
 
     - name: Check coverage threshold
       run: |
-        coverage_percent=$(grep -oP 'covered_percent":\K[0-9.]+' coverage/.last_run.json)
+        coverage_percent=$(jq -r '.result.line' coverage/.last_run.json)
         echo "Test coverage: ${coverage_percent}%"
         
         # Define minimum coverage threshold
