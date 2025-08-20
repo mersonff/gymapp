@@ -32,6 +32,8 @@ group :development, :test do
   gem 'capybara'
   gem 'selenium-webdriver', '~> 4.11'
   gem 'webdrivers'
+  gem 'simplecov', require: false
+  gem 'simplecov-html', require: false
 end
 
 group :production do

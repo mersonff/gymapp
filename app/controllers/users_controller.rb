@@ -79,12 +79,4 @@ class UsersController < ApplicationController
       redirect_to root_path
     end
   end
-
-  def check_logged_in
-    if logged_in?
-      flash[:danger] = "Você já está logado!"
-      redirect_to root_path
-    end
-  end
-
 end

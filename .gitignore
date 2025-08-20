@@ -33,3 +33,4 @@
 !/app/assets/builds/.keep
 .vscode
 /config/credentials/staging.key
+coverage
