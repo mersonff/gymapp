@@ -107,6 +107,12 @@ jobs:
         bundle exec rails db:create
         bundle exec rails db:schema:load
 
+    - name: Compile assets
+      env:
+        RAILS_ENV: test
+      run: |
+        bundle exec rails assets:precompile
+
     - name: Run tests with coverage
       env:
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/gymapp_test

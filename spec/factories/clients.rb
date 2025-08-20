@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :client do
-    sequence(:name) { |n| "Client #{n}" }
+    sequence(:name) { |n| "Client #{n} ##{SecureRandom.hex(4)}" }
     cellphone { Faker::PhoneNumber.cell_phone }
     address { Faker::Address.full_address }
     birthdate { Faker::Date.birthday(min_age: 18, max_age: 65) }
