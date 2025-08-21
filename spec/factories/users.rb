@@ -4,6 +4,6 @@ FactoryBot.define do
     email { Faker::Internet.email }
     password { 'password123' }
     password_confirmation { 'password123' }
-    business_name { Faker::Company.name }
+    sequence(:business_name) { |n| "#{Faker::Company.name} #{n}" }
   end
 end
