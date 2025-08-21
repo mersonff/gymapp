@@ -41,8 +41,8 @@ RSpec.describe 'Authentication' do
     before { login_as(user) }
 
     it 'allows user to log out' do
-      # Find logout link in navigation
-      within '.border-t.border-slate-700' do
+      # Find logout link in navigation - use desktop version
+      within '.hidden.lg\\:block .border-t.border-slate-700' do
         click_button 'Sair do sistema'
       end
 
