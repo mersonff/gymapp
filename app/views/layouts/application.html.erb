@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <%= javascript_importmap_tags %>
   </head>
-  <body class="bg-gray-50" data-turbo-permanent>
+  <body class="bg-gray-50 overflow-x-hidden" data-turbo-permanent>
     <!-- Loading indicator -->
     <div id="turbo-progress-bar" class="fixed top-0 left-0 z-50 h-1 bg-blue-600 transition-all duration-300 ease-out" style="width: 0%"></div>
     
@@ -21,19 +21,43 @@
       </div>
     <% end %>
     
+    <!-- Mobile Menu Button -->
+    <% if logged_in? %>
+      <div class="lg:hidden fixed top-4 left-4 z-50">
+        <button onclick="toggleMobileMenu()" class="p-2 bg-slate-900 text-white rounded-lg shadow-lg hover:bg-slate-800 transition-colors">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Mobile Overlay -->
+      <div id="mobile-overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="closeMobileMenu()"></div>
+      
+      <!-- Sidebar Mobile -->
+      <aside id="sidebar-mobile" class="lg:hidden fixed inset-y-0 left-0 w-64 -translate-x-full transition-transform duration-300 ease-in-out z-40">
+        <%= render 'layouts/navigation' %>
+      </aside>
+    <% end %>
+    
     <div class="min-h-screen flex">
       <% if logged_in? %>
-        <%= render 'layouts/navigation' %>
+        <!-- Sidebar Desktop -->
+        <div class="hidden lg:block w-64 flex-shrink-0">
+          <div class="fixed w-64 h-full">
+            <%= render 'layouts/navigation' %>
+          </div>
+        </div>
       <% end %>
       
-      <div class="flex-1 flex flex-col">
+      <div class="flex-1 flex flex-col min-w-0">
         <!-- Flash Messages -->
         <div id="flash_messages" data-turbo-permanent>
           <%= render 'layouts/flash', flash: flash %>
         </div>
         
         <!-- Main Content -->
-        <main class="flex-1 p-6" id="main">
+        <main class="flex-1 p-4 lg:p-6 <%= logged_in? ? 'pt-16 lg:pt-6' : '' %> w-full" id="main">
           <%= yield %>
         </main>
       </div>
@@ -52,4 +76,22 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
   </style>
+  
+  <script>
+    function toggleMobileMenu() {
+      const sidebar = document.getElementById('sidebar-mobile');
+      const overlay = document.getElementById('mobile-overlay');
+      
+      sidebar.classList.toggle('-translate-x-full');
+      overlay.classList.toggle('hidden');
+    }
+    
+    function closeMobileMenu() {
+      const sidebar = document.getElementById('sidebar-mobile');
+      const overlay = document.getElementById('mobile-overlay');
+      
+      sidebar.classList.add('-translate-x-full');
+      overlay.classList.add('hidden');
+    }
+  </script>
 </html>
